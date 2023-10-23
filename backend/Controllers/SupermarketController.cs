@@ -24,10 +24,4 @@ public class SupermarketController : ControllerBase
     {
         return _dapper.LoadData<Supermarket>(@"SELECT * FROM R8titSchema.Supermarkets", null);
     }
-
-    [HttpGet("TestConnection")]
-    public DateTime TestConnection()
-    {
-        return _dapper.LoadDataSingle<DateTime>("SELECT GETDATE()");
-    }
 }

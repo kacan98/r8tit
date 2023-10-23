@@ -13,19 +13,40 @@ namespace R8titAPI.Data
             _config = config;
         }
 
-        public int ExecuteSql(string sql, DynamicParameters? parameters)
+        public bool ExecuteSql(string sql)
         {
             IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            return dbConnection.Execute(sql, parameters);
+            return dbConnection.Execute(sql) > 0;
         }
 
-        public T LoadDataSingle<T>(string sql, DynamicParameters parameters = null)
+        public bool ExecuteSql(string sql, DynamicParameters parameters)
+        {
+            IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return dbConnection.Execute(sql, parameters) > 0;
+        }
+
+
+        public T LoadDataSingle<T>(string sql)
+        {
+            IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return dbConnection.QuerySingle<T>(sql);
+        }
+
+        
+        public T LoadDataSingle<T>(string sql, DynamicParameters parameters)
         {
             IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             return dbConnection.QuerySingle<T>(sql, parameters);
         }
 
-        public IEnumerable<T> LoadData<T>(string sql, DynamicParameters parameters = null)
+
+        public IEnumerable<T> LoadData<T>(string sql)
+        {
+            IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return dbConnection.Query<T>(sql);
+        }
+
+        public IEnumerable<T> LoadData<T>(string sql, DynamicParameters parameters)
         {
             IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             return dbConnection.Query<T>(sql, parameters);

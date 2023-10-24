@@ -1,4 +1,4 @@
-USE DotNetCourseDatabase
+USE master
 GO
 
 CREATE OR ALTER PROCEDURE R8titSchema.spSupermarkets_Upsert

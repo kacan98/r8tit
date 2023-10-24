@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using R8titAPI.Models;
 using R8titAPI.Data;
 using Dapper;
+using System.Security.Claims;
 
+[Authorize]
 [ApiController]
 [Route("[controller]")]
 public class SupermarketController : ControllerBase
@@ -37,19 +39,22 @@ public class SupermarketController : ControllerBase
         sql += "@CreatedByUserId = @CreatedByUserIdParam, ";
 
         // TODO: change to userId from token
-        // sqlParameters.Add("@UserId", this.User.FindFirst("userId")?.Value, DbType.Int32);
+        sqlParameters.Add("@UserId", this.User.FindFirst("userId")?.Value, DbType.Int32);
 
-        if(supermarket.SupermarketId != 0){
+        if (supermarket.SupermarketId != 0)
+        {
             sqlParameters.Add("@SupermarketIdParam", supermarket.SupermarketId, DbType.Int32);
             sql += "@SupermarketId = @SupermarketIdParam, ";
         }
-        
-        if(supermarket.ImageId != 0){
+
+        if (supermarket.ImageId != 0)
+        {
             sqlParameters.Add("@ImageIdParam", supermarket.ImageId, DbType.Int32);
             sql += "@ImageId = @ImageIdParam, ";
         }
 
-        if(supermarket.Name == null){
+        if (supermarket.Name == null)
+        {
             return BadRequest("Name must be provided!");
         }
         sqlParameters.Add("@NameParam", supermarket.Name, DbType.String);
@@ -71,7 +76,8 @@ public class SupermarketController : ControllerBase
         sql += "@Active = @ActiveParam, ";
 
 
-        if(_dapper.ExecuteSql(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters)){
+        if (_dapper.ExecuteSql(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters))
+        {
             return Ok();
         }
 
@@ -85,7 +91,8 @@ public class SupermarketController : ControllerBase
 
         DynamicParameters sqlParameters = new DynamicParameters();
         sqlParameters.Add("@UserId", this.User.FindFirst("userId")?.Value, DbType.Int32);
-        sqlParameters.Add("@SupermarketId", supermarketId, DbType.Int32);
+        sqlParameters.Add("@SupermarketIdParam", supermarketId, DbType.Int32);
+        sql += " @SupermarketId = @SupermarketIdParam";
 
         if (_dapper.ExecuteSql(sql, sqlParameters))
         {

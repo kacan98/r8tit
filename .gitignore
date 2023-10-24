@@ -1,5 +1,3 @@
-backend/appsettings.json
-backend/appsettings.Development.json
 bin/
 obj/
-.env
+backend/Controllers/UserControler.cs

@@ -63,7 +63,6 @@ namespace R8titAPI.Controllers
 
                 if (_dapper.AtLeastOneEntryExists(sqlToGetObject, parametersToGetObject) == false)
                 {
-                    Console.WriteLine("object is false");
                     return new ObjectResult(new { message = "Invalid relatedObjectId" })
                     {
                         StatusCode = 400
@@ -81,7 +80,6 @@ namespace R8titAPI.Controllers
 
                 if (_dapper.AtLeastOneEntryExists(sqlToGetRelatedObject, parametersToGetRelatedObject) == false)
                 {
-                    Console.WriteLine("relatedObject is false");
                     return new ObjectResult(new { message = "You can only add images for objects you created" })
                     {
                         StatusCode = 403

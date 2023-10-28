@@ -30,7 +30,6 @@ namespace R8titAPI.Helpers
 
             while (size > maxSizeInKb)
             {
-                Console.WriteLine("quality: " + quality);
                 quality -= 5;
                 if (quality < 5)
                 {
@@ -48,14 +47,11 @@ namespace R8titAPI.Helpers
                 Headers = file.Headers,
                 ContentType = file.ContentType
             };
-            Console.WriteLine("compressedImage: " + compressedImage);
 
             if (size > 10000000)
             {
                 throw new Exception("Image is too big. It must be less than 10MB");
             }
-            Console.WriteLine("size: " + size);
-
             return compressedImage;
         }
 

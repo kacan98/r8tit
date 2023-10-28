@@ -23,9 +23,7 @@ namespace R8titAPI.Controllers
         }
 
         //TODO: 
-        // 1. Implement a file size limit for image uploads.
-        // 2. Validate the file type of the uploaded image.
-        // 3. Use dependency injection for SqlHelper and DataContextDapper instances.
+        // Use dependency injection for SqlHelper and DataContextDapper instances.
 
         // The user can only add images for objects (s)he created
         [HttpPost("upload")]

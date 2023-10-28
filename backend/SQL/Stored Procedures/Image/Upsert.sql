@@ -25,7 +25,7 @@ BEGIN
                 @ImageData,
                 GETDATE()
             )
-            @ImageId = SCOPE_IDENTITY()
+            SET @ImageId = SCOPE_IDENTITY()
         END
     ELSE
         BEGIN

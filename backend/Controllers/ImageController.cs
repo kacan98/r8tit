@@ -4,8 +4,6 @@ using R8titAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Dapper;
-using ImageMagick;
-
 
 namespace R8titAPI.Controllers
 {

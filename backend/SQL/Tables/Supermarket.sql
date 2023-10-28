@@ -1,3 +1,4 @@
+-- TODO: Rename this to Supermarkets
 DROP TABLE IF EXISTS R8titSchema.Supermarket
 
 CREATE TABLE R8titSchema.Supermarket

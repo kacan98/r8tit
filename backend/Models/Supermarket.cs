@@ -11,5 +11,7 @@ namespace R8titAPI.Models
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public bool? Active { get; set; }
+        public DateTime DateCreated { get; set; }
+        public DateTime? DateUpdated { get; set; } 
     }
 }

@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS R8titSchema.Supermarkets
+DROP TABLE IF EXISTS R8titSchema.Supermarket
 
-CREATE TABLE R8titSchema.Supermarkets
+CREATE TABLE R8titSchema.Supermarket
 (
     SupermarketId INT IDENTITY(1, 1) PRIMARY KEY
     , ImageId INT

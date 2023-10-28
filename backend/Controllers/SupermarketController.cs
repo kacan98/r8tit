@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using R8titAPI.Models;
 using R8titAPI.Data;
 using Dapper;
-using System.Security.Claims;
 
 [Authorize]
 [ApiController]
@@ -25,20 +24,19 @@ public class SupermarketController : ControllerBase
     [HttpGet("GetAll")]
     public IEnumerable<Supermarket> GetAll()
     {
-        return _dapper.LoadData<Supermarket>(@"SELECT * FROM R8titSchema.Supermarkets");
+        return _dapper.LoadData<Supermarket>(@"SELECT * FROM R8titSchema.Supermarket");
     }
 
     [HttpPut("Upsert")]
     public IActionResult Upsert(Supermarket supermarket)
     {
-        string sql = @"EXEC R8titSchema.spSupermarkets_Upsert ";
+        string sql = @"EXEC R8titSchema.spSupermarket_Upsert ";
 
         DynamicParameters sqlParameters = new DynamicParameters();
 
         sqlParameters.Add("@CreatedByUserIdParam", 0, DbType.Int32);
         sql += "@CreatedByUserId = @CreatedByUserIdParam, ";
 
-        // TODO: change to userId from token
         sqlParameters.Add("@UserId", this.User.FindFirst("userId")?.Value, DbType.Int32);
 
         if (supermarket.SupermarketId != 0)
@@ -87,7 +85,7 @@ public class SupermarketController : ControllerBase
     [HttpDelete("{supermarketId}")]
     public IActionResult DeleteSupermarket(int supermarketId)
     {
-        string sql = @"EXEC R8titSchema.spSupermarkets_Delete";
+        string sql = @"EXEC R8titSchema.spSupermarket_Delete";
 
         DynamicParameters sqlParameters = new DynamicParameters();
         sqlParameters.Add("@UserId", this.User.FindFirst("userId")?.Value, DbType.Int32);

@@ -1,7 +1,6 @@
 using System.Data;
 using Dapper;
 using Microsoft.Data.SqlClient;
-using System.Runtime.InteropServices;
 
 namespace R8titAPI.Data
 {
@@ -25,20 +24,18 @@ namespace R8titAPI.Data
             return dbConnection.Execute(sql, parameters) > 0;
         }
 
-
         public T LoadDataSingle<T>(string sql)
         {
             IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             return dbConnection.QuerySingle<T>(sql);
         }
 
-        
+
         public T LoadDataSingle<T>(string sql, DynamicParameters parameters)
         {
             IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             return dbConnection.QuerySingle<T>(sql, parameters);
         }
-
 
         public IEnumerable<T> LoadData<T>(string sql)
         {
@@ -50,6 +47,23 @@ namespace R8titAPI.Data
         {
             IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             return dbConnection.Query<T>(sql, parameters);
+        }
+
+        public bool DoesTableExist(string tableName)
+        {
+            using IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            string sql = "SELECT CASE WHEN EXISTS ((SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @TableName)) THEN 1 ELSE 0 END";
+            DynamicParameters dynParams = new();
+            dynParams.Add("@TableName", tableName);
+
+            bool exists = dbConnection.ExecuteScalar<bool>(sql, dynParams);
+            return exists;
+        }
+
+        public bool AtLeastOneEntryExists(string sql, DynamicParameters parameters)
+        {
+            IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return dbConnection.ExecuteScalar<bool>(sql, parameters);
         }
     }
 }

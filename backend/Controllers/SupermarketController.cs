@@ -51,9 +51,9 @@ public class SupermarketController : ControllerBase
             sql += "@ImageId = @ImageIdParam, ";
         }
 
-        if (supermarket.Name == null)
+        if (supermarket.Name == "" || supermarket.City == "" || supermarket.Country == "" || supermarket.Latitude == 0 || supermarket.Longitude == 0)
         {
-            return BadRequest("Name must be provided!");
+            return BadRequest("Name, City, Country, Latitude and Longitude are required");
         }
         sqlParameters.Add("@NameParam", supermarket.Name, DbType.String);
         sql += "@Name = @NameParam, ";
@@ -70,13 +70,23 @@ public class SupermarketController : ControllerBase
         sqlParameters.Add("@LongitudeParam", supermarket.Longitude, DbType.Decimal);
         sql += "@Longitude = @LongitudeParam, ";
 
-        sqlParameters.Add("@ActiveParam", supermarket.Active, DbType.Boolean);
-        sql += "@Active = @ActiveParam, ";
-
-
-        if (_dapper.ExecuteSql(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters))
+        if (supermarket.Active != null)
         {
-            return Ok();
+            sqlParameters.Add("@ActiveParam", supermarket.Active, DbType.Boolean);
+            sql += "@Active = @ActiveParam, ";
+        }
+
+        try
+        {
+            var supermarketUpserted = _dapper.UpsertSql<Supermarket>(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters);
+            if (supermarketUpserted != null)
+            {
+                return Ok(new { message = "Supermarket upserted successfully", supermarket = supermarketUpserted });
+            }
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
 
         throw new Exception("failed to upsert supermarket!");

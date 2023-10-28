@@ -36,7 +36,8 @@ BEGIN
                 DateCreated,
                 DateUpdated,
                 Active
-            ) VALUES (
+            ) 
+            VALUES (
                 @CreatedByUserId,
                 @Name,
                 @City,
@@ -45,9 +46,10 @@ BEGIN
                 @Longitude,
                 @ImageId,
                 GETDATE(),
-                GETDATE(),
+                NULL,
                 @Active
             )
+            SET @SupermarketId = SCOPE_IDENTITY()
         END
     ELSE
         BEGIN
@@ -62,4 +64,7 @@ BEGIN
                     Active = @Active
                 WHERE SupermarketId = @SupermarketId
         END
+    BEGIN
+    SELECT * FROM R8titSchema.Supermarket WHERE SupermarketId = @SupermarketId
+    END
 END

@@ -4,6 +4,7 @@ using R8titAPI.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Dapper;
+using ImageMagick;
 
 
 namespace R8titAPI.Controllers
@@ -16,10 +17,12 @@ namespace R8titAPI.Controllers
 
         private readonly SqlHelper _sqlHelper;
         private readonly DataContextDapper _dapper;
+        private readonly ImageHelper _imageHelper;
         public ImageController(IConfiguration config)
         {
             _sqlHelper = new SqlHelper(config);
             _dapper = new DataContextDapper(config);
+            _imageHelper = new ImageHelper(config);
         }
 
         //TODO: 
@@ -58,9 +61,6 @@ namespace R8titAPI.Controllers
                 DynamicParameters parametersToGetObject = new DynamicParameters();
                 parametersToGetObject.Add("@RelatedObjectIdParam", relatedObjectId);
 
-
-                Console.WriteLine("sqlToGetObject: " + sqlToGetObject);
-
                 if (_dapper.AtLeastOneEntryExists(sqlToGetObject, parametersToGetObject) == false)
                 {
                     Console.WriteLine("object is false");
@@ -75,7 +75,6 @@ namespace R8titAPI.Controllers
                                             WHERE {relatedObjectTable}Id = @RelatedObjectIdParam 
                                             AND CreatedByUserId = @UserMakingRequest";
 
-                Console.WriteLine("sqlToGetRelatedObject: " + sqlToGetRelatedObject);
                 DynamicParameters parametersToGetRelatedObject = new DynamicParameters();
                 parametersToGetRelatedObject.Add("@RelatedObjectIdParam", relatedObjectId);
                 parametersToGetRelatedObject.Add("@UserMakingRequest", this.User.FindFirst("userId")?.Value);
@@ -89,15 +88,8 @@ namespace R8titAPI.Controllers
                     };
                 }
 
-                // Make sure the file is not bigger then 300KB
-                int maxFileSize = 300000;
-                if (file.Length > 300000)
-                {
-                    return new ObjectResult(new { message = $"File is too big. It must be less than {maxFileSize / 1000}KB" })
-                    {
-                        StatusCode = 400
-                    };
-                }
+                // Compress to 500kb
+                file = _imageHelper.CompressImage(file, 500, 100);
 
                 // Convert file to byte array
                 byte[] fileBytes;
@@ -126,12 +118,17 @@ namespace R8titAPI.Controllers
                 parameters.Add("@RelatedObjectTableParam", image.RelatedObjectTable);
                 parameters.Add("@ImageDataParam", image.ImageData);
                 parameters.Add("@UserMakingRequestParam", this.User.FindFirst("userId")?.Value);
-
-                if (_dapper.ExecuteSql(sql, parameters))
+                try
                 {
-                    return Ok();
+                    Image upsertedImage = _dapper.UpsertSql<Image>(sql, parameters);
+
+                    return Ok(new { message = "Image uploaded successfully", image = upsertedImage });
                 }
-                return BadRequest();
+                catch (Exception ex)
+                {
+
+                    return BadRequest(new { message = "Failed to upload image: " + ex.Message });
+                }
             }
             catch (Exception ex)
             {
@@ -162,6 +159,5 @@ namespace R8titAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
     }
 }

@@ -24,6 +24,12 @@ namespace R8titAPI.Data
             return dbConnection.Execute(sql, parameters) > 0;
         }
 
+        public T UpsertSql<T>(string sql, DynamicParameters parameters)
+        {
+            IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return dbConnection.QuerySingle<T>(sql, parameters);
+        }
+
         public T LoadDataSingle<T>(string sql)
         {
             IDbConnection dbConnection = new SqlConnection(_config.GetConnectionString("DefaultConnection"));

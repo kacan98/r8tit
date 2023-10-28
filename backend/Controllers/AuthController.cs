@@ -98,8 +98,6 @@ namespace R8titAPI.Controllers
                 }
                 string token = _authHelper.CreateToken(userForConfirmation.UserId);
                 return Ok(new { token });
-
-                throw new Exception("Wrong password!");
             }
             catch (System.Exception)
             {

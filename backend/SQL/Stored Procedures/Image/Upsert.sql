@@ -25,6 +25,7 @@ BEGIN
                 @ImageData,
                 GETDATE()
             )
+            @ImageId = SCOPE_IDENTITY()
         END
     ELSE
         BEGIN
@@ -35,4 +36,19 @@ BEGIN
                     ImageData = @ImageData
                 WHERE ImageId = @ImageId
         END
+        -- update the reference to the image in the related object
+        IF @RelatedObjectTable = 'R8titSchema.Supermarkets'
+            BEGIN
+                UPDATE R8titSchema.Supermarkets as Supermarkets
+                    SET Supermarkets.ImageId = @ImageId
+                    WHERE UserId = @RelatedObjectId
+            END
+        ELSE IF @RelatedObjectTable = 'R8titSchema.Users'
+            BEGIN
+                UPDATE R8titSchema.Users as Users
+                    SET Users.ImageId = @ImageId
+                    WHERE UserId = @RelatedObjectId
+            END
+
+    SELECT * FROM R8titSchema.Images WHERE ImageId = @ImageId
 END

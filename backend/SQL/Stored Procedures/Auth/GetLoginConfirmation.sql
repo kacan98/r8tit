@@ -3,8 +3,11 @@ CREATE OR ALTER PROCEDURE R8titSchema.spLoginConfirmation_Get
 AS
 BEGIN
     SELECT [Auth].[PasswordHash],
-        [Auth].[PasswordSalt] 
-    FROM R8titSchema.Auth AS Auth 
+        [Auth].[PasswordSalt],
+        [Users].[UserId]
+    FROM R8titSchema.Auth AS Auth
+        LEFT JOIN R8titSchema.Users AS Users
+                On Users.Email = Auth.Email
         WHERE Auth.Email = @Email
 END;
 GO

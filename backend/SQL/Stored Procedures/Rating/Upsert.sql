@@ -6,7 +6,8 @@ CREATE OR ALTER PROCEDURE R8titSchema.spRatings_Upsert
     @RatingId INT = NULL,
     @RatingValue INT,
     @RatingCategoryId INT,
-    @CreatedByUserId INT
+    @CreatedByUserId INT,
+    @RelatedObjectId INT
 AS
 BEGIN
     IF NOT EXISTS (SELECT * FROM R8titSchema.RatingCategories WHERE RatingCategoryId = @RatingCategoryId)
@@ -24,12 +25,14 @@ BEGIN
                 CreatedByUserId,
                 RatingValue,
                 RatingCategoryId,
-                RatingCreated
+                RatingCreated,
+                RelatedObjectId
             ) VALUES (
                 @CreatedByUserId,
                 @RatingValue,
                 @RatingCategoryId,
-                GETDATE()
+                GETDATE(),
+                @RelatedObjectId
             )
             SET @RatingId = SCOPE_IDENTITY()
         END

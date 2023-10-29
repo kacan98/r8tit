@@ -3,6 +3,7 @@ using Dapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using R8titAPI.Data;
+using R8titAPI.Dtos;
 using R8titAPI.Helpers;
 using R8titAPI.Models;
 
@@ -83,7 +84,7 @@ namespace R8titAPI.Controllers
 
             DynamicParameters sqlParameters = new();
 
-            if (rating.RatingId != 0)
+            if (rating.RatingId != null)
             {
                 sqlParameters.Add("@RatingIdParam", rating.RatingId, DbType.Int32);
                 sql += "@RatingId = @RatingIdParam, ";
@@ -96,9 +97,10 @@ namespace R8titAPI.Controllers
             sql += "@RatingValue = @RatingValueParam, ";
 
             sqlParameters.Add("@CreatedByUserIdParam", this.User.FindFirst("userId")?.Value, DbType.Int32);
-            sql += "@CreatedByUserId = @CreatedByUserIdParam ";
+            sql += "@CreatedByUserId = @CreatedByUserIdParam, ";
 
-            sqlParameters.Add("@RatingId", rating.RatingId, DbType.Int32, ParameterDirection.Output);
+            sqlParameters.Add("@RelatedObjectIdParam", rating.RelatedObjectId, DbType.Int32);
+            sql += "@RelatedObjectId = @RelatedObjectIdParam, ";
 
             try
             {
@@ -113,13 +115,13 @@ namespace R8titAPI.Controllers
         }
 
         [HttpPost("ratingCategory")]
-        public IActionResult PostRatingCategory(RatingCategory ratingCategory)
+        public IActionResult PostRatingCategory(RatingCategoryForUpsertDto ratingCategory)
         {
-            string sql = @"EXEC R8titSchema.spRatingCategory_Upsert ";
+            string sql = @"EXEC R8titSchema.spRatingCategories_Upsert ";
 
             DynamicParameters sqlParameters = new DynamicParameters();
 
-            if (ratingCategory.RatingCategoryId != 0)
+            if (ratingCategory.RatingCategoryId != null)
             {
                 sqlParameters.Add("@RatingCategoryIdParam", ratingCategory.RatingCategoryId, DbType.Int32);
                 sql += "@RatingCategoryId = @RatingCategoryIdParam, ";
@@ -129,9 +131,10 @@ namespace R8titAPI.Controllers
             sql += "@CategoryName = @CategoryNameParam, ";
 
             sqlParameters.Add("@CreatedByUserIdParam", this.User.FindFirst("userId")?.Value, DbType.Int32);
-            sql += "@CreatedByUserId = @CreatedByUserIdParam ";
+            sql += "@CreatedByUserId = @CreatedByUserIdParam, ";
 
-            sqlParameters.Add("@RatingCategoryId", ratingCategory.RatingCategoryId, DbType.Int32, ParameterDirection.Output);
+            sqlParameters.Add("@RelatedObjectTableParam", ratingCategory.RelatedObjectTable, DbType.String);
+            sql += "@RelatedObjectTable = @RelatedObjectTableParam, ";
 
             try
             {

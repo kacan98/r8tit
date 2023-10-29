@@ -4,8 +4,8 @@ CREATE TABLE R8titSchema.Users
 (
     UserId INT IDENTITY(1, 1) PRIMARY KEY
     , ImageId INT
-    , Active BIT
+    , Active BIT NOT NULL
     , Username NVARCHAR(50) NOT NULL
     , Email NVARCHAR(50) NOT NULL
-    , AdminRights BIT
+    , AdminRights BIT NOT NULL
 );

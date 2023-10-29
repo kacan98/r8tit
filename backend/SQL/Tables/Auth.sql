@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS R8titSchema.Auth
 
 CREATE TABLE R8titSchema.Auth (
-Email NVARCHAR (50)
-, PasswordHash VARBINARY (MAX)
-, PasswordSalt VARBINARY (MAX)
+Email NVARCHAR (50) NOT NULL
+, PasswordHash VARBINARY (MAX) NOT NULL
+, PasswordSalt VARBINARY (MAX) NOT NULL
 )
 
 

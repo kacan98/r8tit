@@ -14,6 +14,10 @@ BEGIN
             RAISERROR('Category does not exist', 16, 1)
             RETURN
         END
+    IF @RatingId IS NOT NULL AND NOT EXISTS (SELECT * FROM R8titSchema.Ratings WHERE RatingId = @RatingId)
+        BEGIN
+            THROW 50000, 'The rating you are trying to edit does not exist', 1;
+        END
     IF NOT EXISTS (SELECT * FROM R8titSchema.Ratings WHERE RatingId = @RatingId)
         BEGIN
             INSERT INTO R8titSchema.Ratings(

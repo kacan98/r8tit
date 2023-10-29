@@ -46,15 +46,23 @@ namespace R8titAPI.Controllers
         }
 
         [HttpGet("ratingsForObject")]
-        public IActionResult GetRatingsForObject(int objectId, int tableName)
+        public IActionResult GetRatingsForObject(int objectId, string tableName)
         {
-            string sql = @"SELECT * FROM R8titSchema.Ratings
-                            WHERE RelatedObjectId = @RelatedObjectIdParam
-                            AND RelatedObjectTable = @RelatedObjectTableParam";
+
+            // Check if relatedObjectTable exists
+            if (_dapper.DoesTableExist(tableName.ToString()) == false)
+            {
+                return new ObjectResult(new { message = "Invalid relatedObjectTable" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+            string sql = @"R8titSchema.spRating_GetRatings @RelatedObjectId, @RelatedObjectTable";
 
             DynamicParameters sqlParameters = new DynamicParameters();
-            sqlParameters.Add("@RelatedObjectIdParam", objectId, DbType.Int32);
-            sqlParameters.Add("@RelatedObjectTableParam", tableName, DbType.Int32);
+            sqlParameters.Add("@RelatedObjectId", objectId, DbType.Int32);
+            sqlParameters.Add("@RelatedObjectTable", tableName, DbType.String);
 
             try
             {
@@ -68,12 +76,12 @@ namespace R8titAPI.Controllers
             }
         }
 
-        [HttpPost("addRating")]
+        [HttpPost("rating")]
         public IActionResult AddRating(Rating rating)
         {
-            string sql = @"EXEC R8titSchema.spRating_Rate ";
+            string sql = @"EXEC R8titSchema.spRatings_Upsert ";
 
-            DynamicParameters sqlParameters = new DynamicParameters();
+            DynamicParameters sqlParameters = new();
 
             if (rating.RatingId != 0)
             {
@@ -81,11 +89,8 @@ namespace R8titAPI.Controllers
                 sql += "@RatingId = @RatingIdParam, ";
             }
 
-            if (rating.RatingCategoryId != 0)
-            {
-                sqlParameters.Add("@RatingCategoryIdParam", rating.RatingCategoryId, DbType.Int32);
-                sql += "@RatingCategoryId = @RatingCategoryIdParam, ";
-            }
+            sqlParameters.Add("@RatingCategoryIdParam", rating.RatingCategoryId, DbType.Int32);
+            sql += "@RatingCategoryId = @RatingCategoryIdParam, ";
 
             sqlParameters.Add("@RatingValueParam", rating.RatingValue, DbType.Int32);
             sql += "@RatingValue = @RatingValueParam, ";
@@ -107,8 +112,8 @@ namespace R8titAPI.Controllers
             }
         }
 
-        [HttpGet("addRatingCategory")]
-        public IActionResult AddRatingCategory(RatingCategory ratingCategory)
+        [HttpPost("ratingCategory")]
+        public IActionResult PostRatingCategory(RatingCategory ratingCategory)
         {
             string sql = @"EXEC R8titSchema.spRatingCategory_Upsert ";
 

@@ -24,13 +24,13 @@ public class SupermarketController : ControllerBase
     [HttpGet("GetAll")]
     public IEnumerable<Supermarket> GetAll()
     {
-        return _dapper.LoadData<Supermarket>(@"SELECT * FROM R8titSchema.Supermarket");
+        return _dapper.LoadData<Supermarket>(@"SELECT * FROM R8titSchema.Supermarkets");
     }
 
     [HttpPut("Upsert")]
     public IActionResult Upsert(Supermarket supermarket)
     {
-        string sql = @"EXEC R8titSchema.spSupermarket_Upsert ";
+        string sql = @"EXEC R8titSchema.spSupermarkets_Upsert ";
 
         DynamicParameters sqlParameters = new DynamicParameters();
 
@@ -95,7 +95,7 @@ public class SupermarketController : ControllerBase
     [HttpDelete("{supermarketId}")]
     public IActionResult DeleteSupermarket(int supermarketId)
     {
-        string sql = @"EXEC R8titSchema.spSupermarket_Delete";
+        string sql = @"EXEC R8titSchema.spSupermarkets_Delete";
 
         DynamicParameters sqlParameters = new DynamicParameters();
         sqlParameters.Add("@UserId", this.User.FindFirst("userId")?.Value, DbType.Int32);

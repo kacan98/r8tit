@@ -37,15 +37,15 @@ BEGIN
                 WHERE ImageId = @ImageId
         END
         -- update the reference to the image in the related object
-        IF @RelatedObjectTable = 'R8titSchema.Supermarkets'
+        IF @RelatedObjectTable = 'Supermarkets'
             BEGIN
-                UPDATE R8titSchema.Supermarkets as Supermarkets
+                UPDATE R8titSchema.Supermarkets
                     SET Supermarkets.ImageId = @ImageId
-                    WHERE UserId = @RelatedObjectId
+                    WHERE SupermarketId = @RelatedObjectId
             END
-        ELSE IF @RelatedObjectTable = 'R8titSchema.Users'
+        ELSE IF @RelatedObjectTable = 'Users'
             BEGIN
-                UPDATE R8titSchema.Users as Users
+                UPDATE R8titSchema.Users
                     SET Users.ImageId = @ImageId
                     WHERE UserId = @RelatedObjectId
             END

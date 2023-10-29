@@ -54,8 +54,9 @@ namespace R8titAPI.Controllers
 
                 // Check if object exists
                 // Should be safe to use relatedObjectTable here because we checked if it exists above
+                string relatedObjectColumnName = relatedObjectTable.TrimEnd(new char[] { 's' }) + "Id"; //eg. SupermarketId
                 string sqlToGetObject = $@"SELECT * FROM R8titSchema.{relatedObjectTable}
-                                        WHERE {relatedObjectTable}Id = @RelatedObjectIdParam";
+                                        WHERE {relatedObjectColumnName} = @RelatedObjectIdParam";
                 DynamicParameters parametersToGetObject = new DynamicParameters();
                 parametersToGetObject.Add("@RelatedObjectIdParam", relatedObjectId);
 
@@ -69,7 +70,7 @@ namespace R8titAPI.Controllers
 
                 // Check if user created object
                 string sqlToGetRelatedObject = $@"SELECT * FROM R8titSchema.{relatedObjectTable}
-                                            WHERE {relatedObjectTable}Id = @RelatedObjectIdParam 
+                                            WHERE {relatedObjectColumnName} = @RelatedObjectIdParam 
                                             AND CreatedByUserId = @UserMakingRequest";
 
                 DynamicParameters parametersToGetRelatedObject = new DynamicParameters();

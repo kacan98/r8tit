@@ -1,8 +1,8 @@
 USE master
 GO
 
-CREATE OR ALTER PROCEDURE R8titSchema.spSupermarket_Upsert
--- EXEC R8titSchema.spSupermarket_Upsert
+CREATE OR ALTER PROCEDURE R8titSchema.spSupermarkets_Upsert
+-- EXEC R8titSchema.spSupermarkets_Upsert
 --     @SupermarketId = 1
 --     , @CreatedByUserId = 1
 --     , @Name = 'Lidl'
@@ -23,9 +23,9 @@ CREATE OR ALTER PROCEDURE R8titSchema.spSupermarket_Upsert
     , @Active BIT = 1
 AS
 BEGIN
-    IF NOT EXISTS (SELECT * FROM R8titSchema.Supermarket WHERE SupermarketId = @SupermarketId)
+    IF NOT EXISTS (SELECT * FROM R8titSchema.Supermarkets WHERE SupermarketId = @SupermarketId)
         BEGIN
-            INSERT INTO R8titSchema.Supermarket(
+            INSERT INTO R8titSchema.Supermarkets(
                 CreatedByUserId,
                 Name,
                 City,
@@ -53,7 +53,7 @@ BEGIN
         END
     ELSE
         BEGIN
-            UPDATE R8titSchema.Supermarket
+            UPDATE R8titSchema.Supermarkets
                 SET Name = @Name,
                     City = @City,
                     Country = @Country,
@@ -65,6 +65,6 @@ BEGIN
                 WHERE SupermarketId = @SupermarketId
         END
     BEGIN
-    SELECT * FROM R8titSchema.Supermarket WHERE SupermarketId = @SupermarketId
+    SELECT * FROM R8titSchema.Supermarkets WHERE SupermarketId = @SupermarketId
     END
 END

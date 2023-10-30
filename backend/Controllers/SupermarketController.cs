@@ -34,10 +34,8 @@ public class SupermarketController : ControllerBase
 
         DynamicParameters sqlParameters = new DynamicParameters();
 
-        sqlParameters.Add("@CreatedByUserIdParam", 0, DbType.Int32);
+        sqlParameters.Add("@CreatedByUserIdParam", this.User.FindFirst("userId")?.Value, DbType.Int32);
         sql += "@CreatedByUserId = @CreatedByUserIdParam, ";
-
-        sqlParameters.Add("@UserId", this.User.FindFirst("userId")?.Value, DbType.Int32);
 
         if (supermarket.SupermarketId != 0)
         {

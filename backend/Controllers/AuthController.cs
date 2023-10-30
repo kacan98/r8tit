@@ -41,6 +41,12 @@ namespace R8titAPI.Controllers
         [HttpPost("register")]
         public IActionResult Register(UserForRegistrationDto userForRegistration)
         {
+            //check that email is not an email
+            if(AuthHelper.IsEmailValid(userForRegistration.Email) == false)
+            {
+                return BadRequest("Invalid email!");
+            }
+
             if (userForRegistration.Password == userForRegistration.PasswordConfirm)
             {
                 string sqlCheckUserExists = "SELECT Email FROM R8titSchema.Auth WHERE Email = '" +
@@ -79,7 +85,7 @@ namespace R8titAPI.Controllers
             string sqlForHashAndSalt = @"EXEC R8titSchema.spLoginConfirmation_Get
                 @Email = @EmailParameter";
 
-            DynamicParameters sqlParameters = new DynamicParameters();
+            DynamicParameters sqlParameters = new();
             sqlParameters.Add("@EmailParameter", userForLogin.Email, DbType.String);
 
             try

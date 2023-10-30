@@ -16,10 +16,12 @@ namespace R8titAPI.Controllers
     {
         private readonly SqlHelper _sqlHelper;
         private readonly DataContextDapper _dapper;
+        private readonly RatingHelper _ratingHelper;
         public RatingController(IConfiguration config)
         {
             _sqlHelper = new SqlHelper(config);
             _dapper = new DataContextDapper(config);
+            _ratingHelper = new RatingHelper(config);
         }
 
         [HttpGet("ratingCategories")]
@@ -80,38 +82,81 @@ namespace R8titAPI.Controllers
         [HttpPost("rating")]
         public IActionResult AddRating(Rating rating)
         {
-            string sql = @"EXEC R8titSchema.spRatings_Upsert ";
-
-            DynamicParameters sqlParameters = new();
-
-            if (rating.RatingId != null)
+            var userIdClaim = User.FindFirst("userId");
+            if (userIdClaim == null)
             {
-                sqlParameters.Add("@RatingIdParam", rating.RatingId, DbType.Int32);
-                sql += "@RatingId = @RatingIdParam, ";
+                return Unauthorized();
             }
 
-            sqlParameters.Add("@RatingCategoryIdParam", rating.RatingCategoryId, DbType.Int32);
-            sql += "@RatingCategoryId = @RatingCategoryIdParam, ";
+            //validate if rating can be inserted
+            ObjectResult validationResult = _ratingHelper.ValidateIfRatingCanBeInsterted(rating, int.Parse(userIdClaim.Value));
+            if (validationResult.StatusCode != 200)
+            {
+                return validationResult;
+            }
 
-            sqlParameters.Add("@RatingValueParam", rating.RatingValue, DbType.Int32);
-            sql += "@RatingValue = @RatingValueParam, ";
-
-            sqlParameters.Add("@CreatedByUserIdParam", this.User.FindFirst("userId")?.Value, DbType.Int32);
-            sql += "@CreatedByUserId = @CreatedByUserIdParam, ";
-
-            sqlParameters.Add("@RelatedObjectIdParam", rating.RelatedObjectId, DbType.Int32);
-            sql += "@RelatedObjectId = @RelatedObjectIdParam, ";
+            int currentUserId = int.Parse(userIdClaim.Value);
 
             try
             {
-                Rating upsertedRating = _dapper.UpsertSql<Rating>(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters);
+                Rating upsertedRating = _ratingHelper.UpsertRating(rating, currentUserId);
 
-                return Ok(new { Message = "Rating added successfully", Rating = upsertedRating });
+                return Ok(new { message = "Rating upserted successfully", rating = upsertedRating });
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return new ObjectResult(new { message = "Failed to upsert rating: " + ex.Message })
+                {
+                    StatusCode = 500
+                };
             }
+        }
+
+        [HttpPost("ratings")]
+        public IActionResult AddRatings(IEnumerable<Rating> ratings)
+        {
+            var userIdClaim = User.FindFirst("userId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            int currentUserId = int.Parse(userIdClaim.Value);
+
+            // make sure none of the ratings are invalid
+            foreach (Rating rating in ratings)
+            {
+                //This method will overwrite (or insert) the ratingId if it already exists in the database
+                ObjectResult result = _ratingHelper.ValidateIfRatingCanBeInsterted(rating, currentUserId);
+                if (result.StatusCode != 200)
+                {
+                    return result;
+                }
+                Console.WriteLine("Rating is valid: " + rating.RatingId);
+            }
+
+            List<Rating> upsertedRatings = new();
+            // All ratings can be upserted
+            foreach (Rating rating in ratings)
+            {
+                try
+                {
+                    Rating upsertedRating = _ratingHelper.UpsertRating(rating, currentUserId);
+                    Console.WriteLine("Rating upserted: " + upsertedRating.RatingId);
+                    Console.WriteLine("Rating value: " + upsertedRating.RatingValue);
+                    Console.WriteLine("Rating dateupdated: " + upsertedRating.RatingUpdated);
+                    upsertedRatings.Add(upsertedRating);
+                }
+                catch (Exception ex)
+                {
+                    return new ObjectResult(new { message = "Failed to upsert rating: " + ex.Message })
+                    {
+                        StatusCode = 500
+                    };
+                }
+            }
+
+            return Ok(new { message = "Ratings upserted successfully", ratings = upsertedRatings });
         }
 
         [HttpPost("ratingCategory")]

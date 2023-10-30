@@ -2,8 +2,6 @@ using System.Data;
 using Dapper;
 using R8titAPI.Models;
 using R8titAPI.Data;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 
 namespace R8titAPI.Helpers
@@ -25,7 +23,7 @@ namespace R8titAPI.Helpers
                 @Active = @ActiveParameter, 
                 @UserId = @UserIdParameter";
 
-            DynamicParameters sqlParameters = new DynamicParameters();
+            DynamicParameters sqlParameters = new();
 
             sqlParameters.Add("@UsernameParameter", user.Username, DbType.String);
             sqlParameters.Add("@EmailParameter", user.Email, DbType.String);

@@ -9,6 +9,7 @@ using R8titAPI.Dtos;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.RegularExpressions;
 
 namespace R8titAPI.Helpers
 {
@@ -93,6 +94,15 @@ namespace R8titAPI.Helpers
             sqlParameters.Add("@PasswordSaltParam", passwordSalt, DbType.Binary);
 
             return _dapper.ExecuteSql(sqlAddAuth, sqlParameters);
+        }
+
+        public static bool IsEmailValid(string email)
+        {
+            // Define a regular expression pattern for a simple email address validation
+            string pattern = @"^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$";
+
+            // Use Regex.IsMatch to check if the email matches the pattern
+            return Regex.IsMatch(email, pattern);
         }
     }
 }

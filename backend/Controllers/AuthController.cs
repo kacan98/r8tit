@@ -3,8 +3,6 @@ using R8titAPI.Data;
 using R8titAPI.Dtos;
 using R8titAPI.Models;
 using R8titAPI.Helpers;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 
@@ -41,41 +39,43 @@ namespace R8titAPI.Controllers
         [HttpPost("register")]
         public IActionResult Register(UserForRegistrationDto userForRegistration)
         {
-            //check that email is not an email
-            if(AuthHelper.IsEmailValid(userForRegistration.Email) == false)
+            if (AuthHelper.IsEmailValid(userForRegistration.Email) == false)
             {
                 return BadRequest("Invalid email!");
             }
 
             if (userForRegistration.Password == userForRegistration.PasswordConfirm)
             {
-                string sqlCheckUserExists = "SELECT Email FROM R8titSchema.Auth WHERE Email = '" +
-                    userForRegistration.Email + "'";
+                return BadRequest("Passwords do not match!");
+            }
 
-                IEnumerable<string> existingUsers = _dapper.LoadData<string>(sqlCheckUserExists);
-                if (existingUsers.Count() == 0)
-                {
-                    UserForLoginDto userForSetPassword = new UserForLoginDto()
-                    {
-                        Email = userForRegistration.Email,
-                        Password = userForRegistration.Password
-                    };
-                    if (_authHelper.SetPassword(userForSetPassword))
-                    {
-                        User user = _mapper.Map<User>(userForRegistration);
-                        user.Active = true;
+            string sqlCheckUserExists = "SELECT Email FROM R8titSchema.Auth WHERE Email = '" +
+                userForRegistration.Email + "'";
 
-                        if (_sqlHelper.UpsertUser(user))
-                        {
-                            return Ok();
-                        }
-                        throw new Exception("Failed to add user.");
-                    }
-                    throw new Exception("Failed to set password.");
-                }
+            IEnumerable<string> existingUsers = _dapper.LoadData<string>(sqlCheckUserExists);
+            if (existingUsers.Count() == 0)
+            {
                 return BadRequest("User with this email already exists!");
             }
-            return BadRequest("Passwords do not match!");
+
+            UserForLoginDto userForSetPassword = new UserForLoginDto()
+            {
+                Email = userForRegistration.Email,
+                Password = userForRegistration.Password
+            };
+            if (_authHelper.SetPassword(userForSetPassword))
+            {
+                throw new Exception("Failed to set password.");
+            }
+            User user = _mapper.Map<User>(userForRegistration);
+            user.Active = true;
+
+            if (_sqlHelper.UpsertUser(user))
+            {
+                return Ok();
+            }
+            throw new Exception("Failed to add user.");
+
         }
 
         [AllowAnonymous]
@@ -119,6 +119,19 @@ namespace R8titAPI.Controllers
                 return Ok();
             }
             throw new Exception("Failed to update password!");
+        }
+
+        [HttpPut("refreshToken")]
+        public IActionResult RefreshToken()
+        {
+            var userIdClaim = User.FindFirst("userId");
+            if (userIdClaim == null)
+            {
+                return Unauthorized();
+            }
+
+            string token = _authHelper.CreateToken(int.Parse(userIdClaim.Value));
+            return Ok(new { token });
         }
     }
 }

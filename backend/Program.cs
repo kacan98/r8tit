@@ -19,7 +19,7 @@ builder.Services.AddCors((options) =>
     {
         options.AddPolicy("DevCors", (corsBuilder) =>
             {
-                corsBuilder.WithOrigins("http://localhost:4200")
+                corsBuilder.WithOrigins("http://localhost:4200", "http://localhost:8100")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
@@ -37,17 +37,18 @@ builder.Services.AddCors((options) =>
 string? tokenKeyString = builder.Configuration.GetSection("AppSettings:TokenKey").Value;
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options => {
-        options.TokenValidationParameters = new TokenValidationParameters() 
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                     tokenKeyString != null ? tokenKeyString : ""
                 )),
-                ValidateIssuer = false,
-                ValidateAudience = false
-            };
-        });
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 
 var app = builder.Build();
 
@@ -57,6 +58,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("DevCors");  // Apply the CORS policy here
 
 app.UseHttpsRedirection();
 

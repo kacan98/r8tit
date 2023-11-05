@@ -1,0 +1,7 @@
+{
+  "name": "R8tit",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using R8titAPI.Models;
 using R8titAPI.Data;
+using R8titAPI.Dtos;
 using Dapper;
 
 [Authorize]
@@ -25,6 +26,12 @@ public class SupermarketController : ControllerBase
     public IEnumerable<Supermarket> GetAll()
     {
         return _dapper.LoadData<Supermarket>(@"SELECT * FROM R8titSchema.Supermarkets");
+    }
+
+    [HttpGet("GetAllList")]
+    public IEnumerable<ListSupermarketDTO> GetAllList()
+    {
+        return _dapper.LoadData<ListSupermarketDTO>(@"EXEC R8titSchema.spSupermarkets_GetList");
     }
 
     [HttpPut("Upsert")]

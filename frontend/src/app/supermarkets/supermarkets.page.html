@@ -1,9 +1,14 @@
-<ion-content [fullscreen]="true">
+<ion-content>
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tab 1</ion-title>
     </ion-toolbar>
   </ion-header>
-
-  <app-explore-container name="Tab 1 page"></app-explore-container>
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($any($event))">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-list *ngIf="supermarkets">
+   <app-supermarket-card *ngFor="let supermarket of supermarkets" [supermarket]="supermarket"
+   ></app-supermarket-card>
+  </ion-list>
 </ion-content>

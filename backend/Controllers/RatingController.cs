@@ -14,12 +14,10 @@ namespace R8titAPI.Controllers
     [ApiController]
     public class RatingController : ControllerBase
     {
-        private readonly SqlHelper _sqlHelper;
         private readonly DataContextDapper _dapper;
         private readonly RatingHelper _ratingHelper;
         public RatingController(IConfiguration config)
         {
-            _sqlHelper = new SqlHelper(config);
             _dapper = new DataContextDapper(config);
             _ratingHelper = new RatingHelper(config);
         }

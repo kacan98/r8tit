@@ -1,0 +1,9 @@
+<ion-card *ngIf="supermarket">
+  <img *ngIf="supermarket.imageURL$ | async as Image" alt="supermarket-image" [src]="Image">
+  <ion-card-header>
+    <ion-card-title>{{supermarket.name}}</ion-card-title>
+  </ion-card-header>
+  <ion-card-content>
+    {{supermarket.country}}
+  </ion-card-content>
+</ion-card>

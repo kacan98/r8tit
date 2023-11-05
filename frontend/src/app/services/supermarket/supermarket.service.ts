@@ -9,8 +9,6 @@ export class SupermarketService {
   constructor(private http: HttpClient) { }
 
   getAllSupermarkets() {
-    this.http.get('http://localhost:8080/supermarkets').subscribe(data => {
-      console.log(data);
-    })
+    return this.http.get('http://localhost:5204/Supermarket/GetAll')
   }
 }

@@ -44,7 +44,7 @@ namespace R8titAPI.Controllers
                 return BadRequest("Invalid email!");
             }
 
-            if (userForRegistration.Password == userForRegistration.PasswordConfirm)
+            if (userForRegistration.Password != userForRegistration.PasswordConfirm)
             {
                 return BadRequest("Passwords do not match!");
             }
@@ -53,7 +53,7 @@ namespace R8titAPI.Controllers
                 userForRegistration.Email + "'";
 
             IEnumerable<string> existingUsers = _dapper.LoadData<string>(sqlCheckUserExists);
-            if (existingUsers.Count() == 0)
+            if (existingUsers.Count() != 0)
             {
                 return BadRequest("User with this email already exists!");
             }
@@ -63,7 +63,7 @@ namespace R8titAPI.Controllers
                 Email = userForRegistration.Email,
                 Password = userForRegistration.Password
             };
-            if (_authHelper.SetPassword(userForSetPassword))
+            if (_authHelper.SetPassword(userForSetPassword) == false)
             {
                 throw new Exception("Failed to set password.");
             }

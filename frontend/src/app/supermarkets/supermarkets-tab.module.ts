@@ -17,4 +17,4 @@ import {SupermarketsTabRoutingModule} from "./supermarkets-tab-routing.module";
   ],
   declarations: [SupermarketsPage]
 })
-export class Tab1PageModule {}
+export class SupermarketsTabModule {}

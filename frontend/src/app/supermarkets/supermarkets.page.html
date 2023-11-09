@@ -7,8 +7,15 @@
   <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($any($event))">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-list *ngIf="supermarkets">
+  <ion-list *ngIf="supermarkets else skeletonSupermarkets">
    <app-supermarket-card *ngFor="let supermarket of supermarkets" [supermarket]="supermarket"
    ></app-supermarket-card>
   </ion-list>
+  <ng-template #skeletonSupermarkets>
+    <ion-list>
+      <ion-item *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]">
+        <app-supermarket-card></app-supermarket-card>
+      </ion-item>
+    </ion-list>
+  </ng-template>
 </ion-content>

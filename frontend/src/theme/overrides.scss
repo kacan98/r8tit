@@ -24,6 +24,9 @@
 
 html{
   --ion-font-family: 'Mulsih', sans-serif;
+
+  --app-padding: 8px;
+  --app-margin: 16px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -53,7 +56,15 @@ p{
   font-weight: 500;
 }
 
+.ion-margin{
+  margin: 16px;
+}
+
 ion-card{
   border: white 1px solid;
   --background: var(--ion-background-color);
+
+  ion-card-content{
+    padding: var(--app-padding);
+  }
 }

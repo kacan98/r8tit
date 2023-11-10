@@ -34,6 +34,22 @@ public class SupermarketController : ControllerBase
         return _dapper.LoadData<ListSupermarketDTO>(@"EXEC R8titSchema.spSupermarkets_GetList");
     }
 
+    [HttpGet("GetById/{supermarketId}")]
+    public Supermarket GetById(int supermarketId)
+    {
+        string sql = @"SELECT * FROM R8titSchema.Supermarkets WHERE SupermarketId = @SupermarketIdParam";
+
+        DynamicParameters sqlParameters = new();
+        sqlParameters.Add("@SupermarketIdParam", supermarketId, DbType.Int32);
+
+        Supermarket? supermarket = _dapper.LoadDataSingle<Supermarket>(sql, sqlParameters);
+        if (supermarket != null)
+        {
+            return supermarket;
+        }
+        throw new Exception("Supermarket not found!");
+    }
+
     [HttpPut("Upsert")]
     public IActionResult Upsert(Supermarket supermarket)
     {

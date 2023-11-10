@@ -2,7 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SupermarketService} from "../services/supermarket/supermarket.service";
 import {Subscription} from "rxjs";
 import {Supermarket} from "../services/supermarket/supermarkets.model";
-import {RefresherEventDetail} from "@ionic/angular";
+import {NavController, RefresherEventDetail} from "@ionic/angular";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-supermarkets-page',
@@ -13,7 +14,8 @@ export class SupermarketsPage implements OnInit, OnDestroy {
   supermarkets: Supermarket[] = [];
   private subscriptions: Subscription[] = [];
 
-  constructor(private supermarketService: SupermarketService) {
+  constructor(private supermarketService: SupermarketService, private navController: NavController, private route: ActivatedRoute
+  ) {
   }
 
   ngOnInit() {
@@ -26,6 +28,10 @@ export class SupermarketsPage implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+
+  async handleSupermarketClick(supermarket: Supermarket) {
+    await this.navController.navigateForward(['details', supermarket.supermarketId ], {relativeTo: this.route})
   }
 
   private getSupermarkets(event?: any) {

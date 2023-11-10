@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: 'details/:supermarketId',
     loadChildren: () =>
-      import('../shared/details/details.module').then(
+      import('../shared/details-page/details.module').then(
         (m) => m.DetailsPageModule
       ),
   }

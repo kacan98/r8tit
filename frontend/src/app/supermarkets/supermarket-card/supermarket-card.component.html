@@ -1,4 +1,4 @@
-<ion-card *ngIf="supermarket; else skeleton" class="ion-no-margin ion-margin-vertical">
+<ion-card *ngIf="supermarket; else skeleton" button="true" class="ion-no-margin ion-margin-vertical">
   <img *ngIf="supermarket.imageURL$ | async as Image; else imagePlaceholder" alt="supermarket-image" [src]="Image">
   <ion-card-header>
     <ion-card-title>{{supermarket.name}}</ion-card-title>

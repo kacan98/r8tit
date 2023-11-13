@@ -6,6 +6,8 @@ import { SupermarketsPage } from './supermarkets.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 import {SupermarketsTabRoutingModule} from "./supermarkets-tab-routing.module";
 import {SupermarketCardComponent} from "./supermarket-card/supermarket-card.component";
+import {NgxStarsModule} from "ngx-stars";
+import {SharedModule} from "../shared/shared.module";
 
 
 @NgModule({
@@ -15,8 +17,10 @@ import {SupermarketCardComponent} from "./supermarket-card/supermarket-card.comp
     FormsModule,
     ExploreContainerComponentModule,
     SupermarketsTabRoutingModule,
-    NgOptimizedImage
+    NgOptimizedImage,
+    NgxStarsModule,
+    SharedModule,
   ],
-  declarations: [SupermarketsPage, SupermarketCardComponent]
+  declarations: [SupermarketsPage, SupermarketCardComponent],
 })
 export class SupermarketsTabModule {}

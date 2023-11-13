@@ -1,24 +1,25 @@
-img{
+img {
   width: 100%;
   max-height: 350px;
   object-fit: cover;
 }
 
-ion-back-button{
+ion-back-button {
   position: absolute;
   top: 8px;
   left: 8px;
   z-index: 500;
-  background-color:black;
+  background-color: rgba(0,0,0,0.3);
   border-radius: 9999px;
 }
 
-.container{
+.container {
   margin: 8px var(--app-margin);
-}
 
-.place{
-  .place-icon{
-    padding-right: 4px;
+  .place {
+    margin: 4px 0 8px;
+    .place-icon {
+      padding-right: 4px;
+    }
   }
 }

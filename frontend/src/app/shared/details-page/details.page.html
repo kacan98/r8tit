@@ -2,8 +2,11 @@
   <ion-back-button defaultHref="/tabs/supermarkets"></ion-back-button>
   <img *ngIf="image$ | async as Image; else imagePlaceholder" alt="supermarket-image" [src]="Image">
   <div class="container">
-    <h2>{{title}}</h2>
-    <div class="place" *ngIf="place"><ion-icon name="location" class="place-icon"></ion-icon>{{place}}</div>
+    <div class="header">
+      <h2>{{title}}</h2>
+      <div class="place" *ngIf="place"><ion-icon name="location" class="place-icon"></ion-icon>{{place}}</div>
+      <app-stars></app-stars>
+    </div>
   </div>
 </ion-content>
 

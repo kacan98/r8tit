@@ -1,0 +1,62 @@
+<ion-content>
+  <div class="container ion-padding">
+    <form [formGroup]="formGroup">
+      <h2>New supermarket</h2>
+      <ion-input
+        label="Name"
+        type="text"
+        formControlName="name"
+        name="name"
+        fill="outline"
+        mode="md"
+        label-placement="floating"
+      ></ion-input>
+      <ion-input
+        label="Address"
+        type="text"
+        formControlName="address"
+        name="address"
+        fill="outline"
+        mode="md"
+        label-placement="floating"
+      ></ion-input>
+      <ion-input
+        label="City"
+        type="text"
+        formControlName="city"
+        name="city"
+        fill="outline"
+        mode="md"
+        label-placement="floating"
+      ></ion-input>
+      <ion-input
+        label="Country"
+        type="text"
+        formControlName="country"
+        name="country"
+        fill="outline"
+        mode="md"
+        label-placement="floating"
+      ></ion-input>
+      <ion-input
+        label="Latitude"
+        type="text"
+        formControlName="latitude"
+        name="latitude"
+        fill="outline"
+        mode="md"
+        label-placement="floating"
+      ></ion-input>
+      <ion-input
+        label="Longitude"
+        type="text"
+        formControlName="longitude"
+        name="longitude"
+        fill="outline"
+        mode="md"
+        label-placement="floating"
+      ></ion-input>
+    </form>
+    <ion-button expand="block" [disabled]="!formGroup.valid" (click)="save()">Save</ion-button>
+  </div>
+</ion-content>

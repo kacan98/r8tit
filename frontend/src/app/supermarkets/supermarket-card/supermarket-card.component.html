@@ -1,10 +1,20 @@
-<ion-card *ngIf="supermarket; else skeleton" button="true" class="ion-no-margin ion-margin-vertical">
-  <img *ngIf="supermarket.imageURL$ | async as Image; else imagePlaceholder" alt="supermarket-image" [src]="Image">
+<ion-card
+  *ngIf="supermarket; else skeleton"
+  button="true"
+  class="ion-no-margin ion-margin-vertical"
+>
+  <img
+    *ngIf="supermarket.imageURL$ | async as Image; else imagePlaceholder"
+    alt="supermarket-image"
+    [src]="Image"
+  />
   <ion-card-header>
-    <ion-card-title>{{supermarket.name}}</ion-card-title>
+    <ion-card-title>{{ supermarket.name }}</ion-card-title>
   </ion-card-header>
   <ion-card-content>
-    {{supermarket.country}}
+    <span *ngIf="supermarket.address">{{ supermarket.address }}, </span>
+    <span *ngIf="supermarket.city">{{ supermarket.city }}, </span>
+    <span *ngIf="supermarket.country">{{ supermarket.country }}</span>
     <app-stars></app-stars>
   </ion-card-content>
 </ion-card>
@@ -19,5 +29,8 @@
   </ion-card-content>
 </ng-template>
 <ng-template #imagePlaceholder>
-<img alt="supermarket-image" src="assets/placeholders/placeholder-image-dark.jpg">
+  <img
+    alt="supermarket-image"
+    src="assets/placeholders/placeholder-image-dark.jpg"
+  />
 </ng-template>

@@ -8,7 +8,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list class="ion-margin-horizontal">
-  <ion-button disabled="true" expand="block" fill="outline" class="ion-margin add-supermarket" size="medium">+ Add Supermarket</ion-button>
+  <ion-button (click)="openCreatePage()" expand="block" fill="outline" class="ion-margin add-supermarket" size="medium">+ Add Supermarket</ion-button>
   <ng-container *ngIf="supermarkets else skeletonSupermarkets">
    <app-supermarket-card *ngFor="let supermarket of supermarkets" [supermarket]="supermarket" (click)="handleSupermarketClick(supermarket)"
    ></app-supermarket-card>

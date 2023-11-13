@@ -1,15 +1,26 @@
 <ion-content [fullscreen]="true">
   <ion-back-button defaultHref="/tabs/supermarkets"></ion-back-button>
-  <img *ngIf="image$ | async as Image; else imagePlaceholder" alt="supermarket-image" [src]="Image">
+  <ng-container *ngIf="image$">
+    <img
+      *ngIf="image$ | async as Image; else imagePlaceholder"
+      alt="supermarket-image"
+      [src]="Image"
+    />
+  </ng-container>
   <div class="container">
     <div class="header">
       <h2>{{title}}</h2>
-      <div class="place" *ngIf="place"><ion-icon name="location" class="place-icon"></ion-icon>{{place}}</div>
+      <div class="place" *ngIf="place">
+        <ion-icon name="location" class="place-icon"></ion-icon>{{place}}
+      </div>
       <app-stars></app-stars>
     </div>
   </div>
 </ion-content>
 
 <ng-template #imagePlaceholder>
-  <img alt="supermarket-image" src="assets/placeholders/placeholder-image-dark.jpg">
+  <img
+    alt="supermarket-image"
+    src="assets/placeholders/placeholder-image-dark.jpg"
+  />
 </ng-template>

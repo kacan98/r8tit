@@ -2,7 +2,7 @@ namespace R8titAPI.Dtos
 {
     public class ListSupermarketDTO
     {
-        public int ImageId { get; set; }
+        public int? ImageId { get; set; }
         public DateTime SupermarketCreatedDate { get; set; }
         public DateTime? SupermarketUpdatedDate { get; set; }
         public int SupermarketId { get; set; }

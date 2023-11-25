@@ -32,7 +32,6 @@ namespace R8titAPI.Controllers
         {
             try
             {
-
                 // Check if file has the right extension
                 string fileExtension = Path.GetExtension(file.FileName);
                 if (fileExtension != ".jpg" && fileExtension != ".jpeg" && fileExtension != ".png")
@@ -85,8 +84,12 @@ namespace R8titAPI.Controllers
                     };
                 }
 
-                // Compress to 500kb
-                file = _imageHelper.CompressImage(file, 500, 100);
+                // Compress to 800kb
+                Console.WriteLine("Compressing image of size " + file.Length + " bytes");
+                if (file.Length > 800000)
+                {
+                    file = _imageHelper.CompressImage(file, 800, 100);
+                }
 
                 // Convert file to byte array
                 byte[] fileBytes;
@@ -94,6 +97,11 @@ namespace R8titAPI.Controllers
                 {
                     file.CopyTo(ms);
                     fileBytes = ms.ToArray();
+                }
+
+                if (fileBytes.Length == 0)
+                {
+                    return BadRequest(new { message = "Compression probably ruined the image" });
                 }
 
                 // Save to database

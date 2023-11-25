@@ -1,7 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button  (click)="dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title> <h2>New supermarket</h2></ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content>
   <div class="container ion-padding">
     <form [formGroup]="formGroup">
-      <h2>New supermarket</h2>
+<!--      TODO: Wrapper for inputs -->
       <ion-input
         label="Name"
         type="text"
@@ -10,6 +21,7 @@
         fill="outline"
         mode="md"
         label-placement="floating"
+        [clearInput]="true"
       ></ion-input>
       <ion-input
         label="Address"
@@ -19,6 +31,7 @@
         fill="outline"
         mode="md"
         label-placement="floating"
+        [clearInput]="true"
       ></ion-input>
       <ion-input
         label="City"
@@ -28,6 +41,7 @@
         fill="outline"
         mode="md"
         label-placement="floating"
+        [clearInput]="true"
       ></ion-input>
       <ion-input
         label="Country"
@@ -37,6 +51,7 @@
         fill="outline"
         mode="md"
         label-placement="floating"
+        [clearInput]="true"
       ></ion-input>
       <ion-input
         label="Latitude"
@@ -46,6 +61,7 @@
         fill="outline"
         mode="md"
         label-placement="floating"
+        [clearInput]="true"
       ></ion-input>
       <ion-input
         label="Longitude"
@@ -55,8 +71,11 @@
         fill="outline"
         mode="md"
         label-placement="floating"
+        [clearInput]="true"
       ></ion-input>
     </form>
-    <ion-button expand="block" [disabled]="!formGroup.valid" (click)="save()">Save</ion-button>
+    <ion-button expand="block" [disabled]="!formGroup.valid" (click)="save()"
+      >Save</ion-button
+    >
   </div>
 </ion-content>

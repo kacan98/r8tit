@@ -6,6 +6,10 @@
       alt="supermarket-image"
       [src]="Image"
     />
+    <ion-buttons class="image-actions" *ngIf="detailEntity">
+      <ion-button color="danger" fill="outline" [disabled]="true">Delete image</ion-button>
+      <ion-button color="primary" fill="outline" (click)="updateImage(detailEntity)">Add image</ion-button>
+    </ion-buttons>
   </ng-container>
   <div class="container">
     <div class="header">
@@ -24,3 +28,12 @@
     src="assets/placeholders/placeholder-image-dark.jpg"
   />
 </ng-template>
+
+<input
+  *ngIf="detailEntity"
+  #fileInput
+  type="file"
+  accept="image/*"
+  hidden
+  (change)="takeImageFromDevice(detailEntity, $any($event.target))"
+/>

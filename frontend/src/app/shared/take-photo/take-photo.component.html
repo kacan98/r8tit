@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" [title]="'Close modal'" (click)="closeModal()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>{{ "Take a picture" }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="webcamImage; else showWebcam">
+    <ion-img [src]="webcamImage.imageAsDataUrl"></ion-img>
+    <div class="ion-padding">
+      <ion-button (click)="closeModal(webcamImage)">{{
+        "Proceed with this image"
+      }}</ion-button>
+      <ion-button fill="clear" (click)="webcamImage = undefined">{{
+        "Take another one"
+      }}</ion-button>
+    </div>
+  </div>
+  <ng-template #showWebcam>
+    <div>
+      <webcam
+        [allowCameraSwitch]="true"
+        [trigger]="triggerObservable$"
+        (initError)="handleInitError($event)"
+        (imageCapture)="handleImage($event)"
+      ></webcam>
+      <ion-button
+        expand="block"
+        fill="clear"
+        size="large"
+        (click)="takePicture()"
+      >
+        <ion-icon slot="icon-only" name="aperture-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </ng-template>
+</ion-content>

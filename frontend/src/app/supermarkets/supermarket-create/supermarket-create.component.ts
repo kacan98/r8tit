@@ -8,6 +8,7 @@ import {
 } from '@ionic/angular';
 import { SupermarketForUpsert } from '../../services/supermarket/supermarkets.model';
 import { Subscription } from 'rxjs';
+import { LocationService } from '../../services/location/location.service';
 
 @Component({
   selector: 'app-supermarket-create',
@@ -27,6 +28,7 @@ export class SupermarketCreateComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   constructor(
     private supermarketService: SupermarketService,
+    private locationService: LocationService,
     private modalController: ModalController,
     private toastController: ToastController,
     private loadingController: LoadingController,
@@ -82,30 +84,32 @@ export class SupermarketCreateComponent implements OnInit, OnDestroy {
       });
 
       this.subscriptions.push(
-        this.supermarketService
-          .getLocationDetails(longitude, latitude)
-          .subscribe({
-            next: (locationData) => {
-              this.formGroup.patchValue({
-                address: locationData.name,
-                city: locationData.locality,
-                country: locationData.country,
-              });
-              loading.dismiss();
-            },
-            error: (error) => {
-              this.toastController.create({
-                message: `Something went wrong when loading the location: ${error.message}`,
-                duration: 3000,
-              });
-              loading.dismiss();
-            },
-          }),
+        this.locationService.getLocationDetails(longitude, latitude).subscribe({
+          next: (locationData) => {
+            this.formGroup.patchValue({
+              address: locationData.name,
+              city: locationData.locality,
+              country: locationData.country,
+            });
+            loading.dismiss();
+          },
+          error: (error) => {
+            this.toastController.create({
+              message: `Something went wrong when loading the location: ${error.message}`,
+              duration: 3000,
+            });
+            loading.dismiss();
+          },
+        }),
       );
     });
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+
+  dismiss() {
+    void this.modalController.dismiss(undefined, 'cancel');
   }
 }

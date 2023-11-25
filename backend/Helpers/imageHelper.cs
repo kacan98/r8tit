@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Dapper;
 using ImageMagick;
 using R8titAPI.Data;
@@ -15,8 +16,40 @@ namespace R8titAPI.Helpers
             _dapper = new DataContextDapper(config);
         }
 
+        public IFormFile ConvertToJpg(IFormFile file)
+        {
+            using MagickImage image = new(file.OpenReadStream());
+
+            using MemoryStream ms = new();
+            image.Format = MagickFormat.Jpeg;
+            image.Write(ms);
+            ms.Position = 0;
+
+            return new FormFile(ms, 0, ms.Length, file.Name, $"{Path.GetFileNameWithoutExtension(file.FileName)}.jpg");
+        }
+
         public IFormFile CompressImage(IFormFile file, int maxSizeInKb, int quality)
         {
+            if (file.Length == 0)
+            {
+                throw new Exception("Image is empty");
+            }
+
+            if (file.Length > 20000000)
+            {
+                throw new Exception("Image is too big. It must be less than 20MB");
+            }
+
+            if (quality < 5 || quality > 100)
+            {
+                throw new Exception("Quality must be between 5 and 100");
+            }
+
+            if (file.Length < maxSizeInKb)
+            {
+                return file;
+            }
+
             using var image = new MagickImage(file.OpenReadStream());
 
             // Calculate the new quality of the image
@@ -42,19 +75,7 @@ namespace R8titAPI.Helpers
                 size = imageBytes.Length / 1024;
             }
 
-            var compressedImage = new FormFile(new MemoryStream(imageBytes), 0, imageBytes.Length, file.Name, file.FileName)
-            {
-                Headers = file.Headers,
-                ContentType = file.ContentType
-            };
-
-            if (size > 10000000)
-            {
-                throw new Exception("Image is too big. It must be less than 10MB");
-            }
-            return compressedImage;
+            return new FormFile(new MemoryStream(imageBytes), 0, imageBytes.Length, file.Name, file.FileName);
         }
-
-
     }
 }

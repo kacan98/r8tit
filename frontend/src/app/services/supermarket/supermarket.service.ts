@@ -1,6 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, of } from 'rxjs';
+import {
+  BehaviorSubject,
+  map,
+  Observable,
+  of,
+  shareReplay,
+  switchMap,
+  tap,
+} from 'rxjs';
 import {
   SupermarketComplete,
   SupermarketForUpsert,
@@ -8,32 +16,13 @@ import {
 import { ImageService } from '../image/image.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
-interface LocationData {
-  latitude: number;
-  longitude: number;
-  type: string;
-  distance: number;
-  name: string;
-  number: null;
-  postal_code: null;
-  street: null;
-  confidence: number;
-  region: string;
-  region_code: string;
-  county: string;
-  locality: null;
-  administrative_area: null;
-  neighbourhood: null;
-  country: string;
-  country_code: string;
-  continent: string;
-  label: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class SupermarketService {
+  allSupermarkets$: BehaviorSubject<SupermarketComplete[] | undefined> =
+    new BehaviorSubject<SupermarketComplete[] | undefined>(undefined);
+
   constructor(
     private http: HttpClient,
     private imageService: ImageService,
@@ -41,6 +30,22 @@ export class SupermarketService {
   ) {}
 
   getAllSupermarkets(): Observable<SupermarketComplete[]> {
+    return this.allSupermarkets$.pipe(
+      switchMap((supermarkets) => {
+        if (supermarkets === undefined) {
+          return this.fetchAllSupermarkets().pipe(
+            tap((supermarkets) => {
+              this.allSupermarkets$.next(supermarkets);
+            }),
+          );
+        }
+        return of(supermarkets);
+      }),
+      shareReplay(),
+    );
+  }
+
+  fetchAllSupermarkets(): Observable<SupermarketComplete[]> {
     return this.http
       .get<SupermarketComplete[]>(
         'http://localhost:5204/Supermarket/GetAllList',
@@ -48,7 +53,7 @@ export class SupermarketService {
       .pipe(
         map((supermarkets) => {
           return supermarkets
-            .map((supermarket) => this.addImageToSupermarket(supermarket))
+            .map((supermarket) => this.attachImageToSupermarket(supermarket))
             .sort((a, b) =>
               a.supermarketUpdatedDate > b.supermarketUpdatedDate ? 1 : -1,
             );
@@ -57,13 +62,13 @@ export class SupermarketService {
   }
 
   getSupermarketDetails(
-    supermarketId: string,
+    supermarketId: number,
   ): Observable<SupermarketComplete> {
     return this.http
       .get<SupermarketComplete>(
         `http://localhost:5204/Supermarket/GetById/${supermarketId}`,
       )
-      .pipe(map((supermarket) => this.addImageToSupermarket(supermarket)));
+      .pipe(map((supermarket) => this.attachImageToSupermarket(supermarket)));
   }
 
   upsertSupermarket(supermarket: SupermarketForUpsert): Observable<any> {
@@ -72,16 +77,25 @@ export class SupermarketService {
       .pipe(map((result) => result));
   }
 
-  getLocationDetails(
-    longitude: number,
-    latitude: number,
-  ): Observable<LocationData> {
-    return this.http.get<LocationData>(
-      `http://localhost:5204/Location/GetLocationDetails?longitude=${longitude}&latitude=${latitude}`,
-    );
+  updateImage(supermarket: SupermarketComplete, file: File) {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+
+    return this.http
+      .post('http://localhost:5204/api/Image/upload', formData, {
+        params: {
+          relatedObjectId: supermarket.supermarketId,
+          relatedObjectTable: 'Supermarkets',
+        },
+      })
+      .pipe(
+        map((result) => {
+          return result;
+        }),
+      );
   }
 
-  private addImageToSupermarket(
+  private attachImageToSupermarket(
     supermarket: SupermarketComplete,
   ): SupermarketComplete {
     const imageURL$ =
@@ -90,7 +104,6 @@ export class SupermarketService {
         : this.imageService.getImage(supermarket.imageId).pipe(
             map((blob) => {
               let objectURL = URL.createObjectURL(blob);
-              console.log(objectURL);
               return this.sanitizer.bypassSecurityTrustUrl(objectURL);
             }),
           );

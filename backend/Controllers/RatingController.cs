@@ -130,7 +130,6 @@ namespace R8titAPI.Controllers
                 {
                     return result;
                 }
-                Console.WriteLine("Rating is valid: " + rating.RatingId);
             }
 
             List<Rating> upsertedRatings = new();
@@ -140,9 +139,6 @@ namespace R8titAPI.Controllers
                 try
                 {
                     Rating upsertedRating = _ratingHelper.UpsertRating(rating, currentUserId);
-                    Console.WriteLine("Rating upserted: " + upsertedRating.RatingId);
-                    Console.WriteLine("Rating value: " + upsertedRating.RatingValue);
-                    Console.WriteLine("Rating dateupdated: " + upsertedRating.RatingUpdated);
                     upsertedRatings.Add(upsertedRating);
                 }
                 catch (Exception ex)

@@ -20,3 +20,8 @@ export interface SupermarketForUpsert {
   latitude: number;
   longitude: number;
 }
+
+export interface SupermarketCreatedResponse {
+  message: string;
+  supermarket: SupermarketComplete;
+}

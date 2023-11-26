@@ -8,4 +8,5 @@ CREATE TABLE R8titSchema.Ratings(
     RatingCreated DATETIME NOT NULL,
     RatingUpdated DATETIME,
     RelatedObjectId INT NOT NULL,
+    RelatedObjectTable VARCHAR(50) NOT NULL,  -- e.g. 'Supermarkets'
 )

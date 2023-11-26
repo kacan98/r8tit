@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true">
+<ion-content *ngIf="!error; else showError">
   <ion-back-button defaultHref="/tabs/supermarkets"></ion-back-button>
   <ng-container *ngIf="image$">
     <img
@@ -7,8 +7,15 @@
       [src]="Image"
     />
     <ion-buttons class="image-actions" *ngIf="detailEntity">
-      <ion-button color="danger" fill="outline" [disabled]="true">Delete image</ion-button>
-      <ion-button color="primary" fill="outline" (click)="updateImage(detailEntity)">Add image</ion-button>
+      <ion-button color="danger" fill="outline" [disabled]="true"
+        >Delete image</ion-button
+      >
+      <ion-button
+        color="primary"
+        fill="outline"
+        (click)="updateImage(detailEntity)"
+        >Add image</ion-button
+      >
     </ion-buttons>
   </ng-container>
   <div class="container">
@@ -37,3 +44,9 @@
   hidden
   (change)="takeImageFromDevice(detailEntity, $any($event.target))"
 />
+
+<ng-template #showError>
+  <ion-content>
+    <app-error-message [message]="error"></app-error-message>
+  </ion-content>
+</ng-template>

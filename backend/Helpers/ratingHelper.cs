@@ -39,9 +39,6 @@ namespace R8titAPI.Helpers
             sqlParameters.Add("@RelatedObjectIdParam", rating.RelatedObjectId, DbType.Int32);
             sql += "@RelatedObjectId = @RelatedObjectIdParam, ";
 
-            Console.WriteLine("Upserting rating: " + sql.TrimEnd(new char[] { ',', ' ' }));
-            Console.WriteLine("UserId: " + currentUserId);
-
             return _dapper.UpsertSql<Rating>(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters);
         }
 
@@ -69,7 +66,6 @@ namespace R8titAPI.Helpers
 
             if (existingRating != null)
             {
-                Console.WriteLine("Rating already exists: " + existingRating.RatingId);
                 rating.RatingId = existingRating.RatingId;
             }
             return new ObjectResult(new { message = "Rating can be inserted" })

@@ -1,18 +1,5 @@
-ion-content{
-  .container{
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: space-between;
-    height: 100%;
-  }
+ion-list{
+  background-color: var(--ion-color-dark);
 
-  ion-input{
-    margin-bottom: var(--app-padding);
-  }
 
-  ion-button{
-    min-height: 40px;
-  }
 }
-

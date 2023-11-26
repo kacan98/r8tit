@@ -11,6 +11,7 @@ import {
 } from 'rxjs';
 import {
   SupermarketComplete,
+  SupermarketCreatedResponse,
   SupermarketForUpsert,
 } from './supermarkets.model';
 import { ImageService } from '../image/image.service';
@@ -33,7 +34,7 @@ export class SupermarketService {
     return this.allSupermarkets$.pipe(
       switchMap((supermarkets) => {
         if (supermarkets === undefined) {
-          return this.fetchAllSupermarkets().pipe(
+          return this.refreshSupermarkets().pipe(
             tap((supermarkets) => {
               this.allSupermarkets$.next(supermarkets);
             }),
@@ -45,7 +46,7 @@ export class SupermarketService {
     );
   }
 
-  fetchAllSupermarkets(): Observable<SupermarketComplete[]> {
+  refreshSupermarkets(): Observable<SupermarketComplete[]> {
     return this.http
       .get<SupermarketComplete[]>(
         'http://localhost:5204/Supermarket/GetAllList',
@@ -71,9 +72,14 @@ export class SupermarketService {
       .pipe(map((supermarket) => this.attachImageToSupermarket(supermarket)));
   }
 
-  upsertSupermarket(supermarket: SupermarketForUpsert): Observable<any> {
+  upsertSupermarket(
+    supermarket: SupermarketForUpsert,
+  ): Observable<SupermarketCreatedResponse> {
     return this.http
-      .put<boolean>('http://localhost:5204/Supermarket/Upsert', supermarket)
+      .put<SupermarketCreatedResponse>(
+        'http://localhost:5204/Supermarket/Upsert',
+        supermarket,
+      )
       .pipe(map((result) => result));
   }
 

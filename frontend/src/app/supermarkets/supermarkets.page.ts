@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SupermarketService } from '../services/supermarket/supermarket.service';
-import { Subscription } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { SupermarketComplete } from '../services/supermarket/supermarkets.model';
 import {
   ModalController,
@@ -9,6 +9,7 @@ import {
 } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { SupermarketCreateComponent } from './supermarket-create/supermarket-create.component';
+import { ErrorMessage } from '../shared/error-message/error-message.model';
 
 @Component({
   selector: 'app-supermarkets-page',
@@ -18,6 +19,8 @@ import { SupermarketCreateComponent } from './supermarket-create/supermarket-cre
 export class SupermarketsPage implements OnInit, OnDestroy {
   supermarkets?: SupermarketComplete[];
   private subscriptions: Subscription[] = [];
+
+  error?: ErrorMessage;
 
   constructor(
     private supermarketService: SupermarketService,
@@ -29,9 +32,8 @@ export class SupermarketsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.getSupermarkets();
   }
-
-  handleRefresh($event: RefresherEventDetail) {
-    this.getSupermarkets($event);
+  handleRefresh($event?: RefresherEventDetail) {
+    this.subscriptions.push(this.refresh($event).subscribe());
   }
 
   ngOnDestroy() {
@@ -45,9 +47,15 @@ export class SupermarketsPage implements OnInit, OnDestroy {
 
     await modal.present();
 
-    const { data } = await modal.onWillDismiss();
-    if (data === 'successfully created') {
-      this.getSupermarkets();
+    const { data, role } = await modal.onWillDismiss();
+    if (role === 'successfully created') {
+      this.refresh().subscribe({
+        next: () => {
+          this.navController.navigateForward(['details', data.supermarketId], {
+            relativeTo: this.route,
+          });
+        },
+      });
     }
   }
 
@@ -64,6 +72,25 @@ export class SupermarketsPage implements OnInit, OnDestroy {
         next: (supermarkets) => {
           this.supermarkets = supermarkets;
           event?.target.complete();
+        },
+      }),
+    );
+  }
+
+  private refresh($event?: RefresherEventDetail) {
+    this.error = undefined;
+    return this.supermarketService.refreshSupermarkets().pipe(
+      tap({
+        next: (supermarkets) => {
+          this.supermarkets = supermarkets;
+          $event?.complete();
+        },
+        error: (error) => {
+          this.error = {
+            text: error.message,
+            header: 'Error while refreshing',
+          };
+          $event?.complete();
         },
       }),
     );

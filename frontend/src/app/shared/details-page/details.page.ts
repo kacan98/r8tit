@@ -20,6 +20,7 @@ import { switchMap } from 'rxjs/operators';
 import { SupermarketComplete } from '../../services/supermarket/supermarkets.model';
 import { WebcamImage } from 'ngx-webcam';
 import { ImageService } from '../../services/image/image.service';
+import { ErrorMessage } from '../error-message/error-message.model';
 
 export type DetailEntity = SupermarketComplete;
 
@@ -38,6 +39,8 @@ export class DetailsPage implements OnInit, OnDestroy {
   image$?: Observable<SafeUrl>;
   place?: string;
   detailEntity?: DetailEntity;
+
+  error?: ErrorMessage;
 
   subscriptions: Subscription[] = [];
 
@@ -168,7 +171,10 @@ export class DetailsPage implements OnInit, OnDestroy {
           this.detailEntity = supermarket;
         },
         error: (e) => {
-          //TODO: Error handling
+          this.error = {
+            text: 'Failed to load supermarket details',
+            header: 'Error',
+          };
           console.error(e);
         },
       }),

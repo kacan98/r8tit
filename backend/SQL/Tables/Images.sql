@@ -5,7 +5,7 @@ CREATE TABLE R8titSchema.Images
     ImageId INT IDENTITY(1, 1) PRIMARY KEY,
     CreatedByUserId INT NOT NULL,
     RelatedObjectId INT NOT NULL,
-    RelatedObjectTable NVARCHAR(50) NOT NULL,
+    RelatedObjectTable NVARCHAR(50) NOT NULL, -- e.g. 'Supermarkets'
     ImageData VARBINARY(MAX) NOT NULL,
     CreatedDate DATETIME NOT NULL
 );

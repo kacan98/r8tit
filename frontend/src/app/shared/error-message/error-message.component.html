@@ -1,0 +1,27 @@
+<div *ngIf="message" class="error-container">
+  <ion-icon
+    *ngIf="message.headerIconName"
+    [name]="message.headerIconName"
+    class="header-icon"
+    color="primary"
+  ></ion-icon>
+  <ion-text>
+    <strong>{{ message.header }}</strong>
+  </ion-text>
+  <p data-test="message" class="ion-padding">
+    {{ message.text }}
+  </p>
+  <ion-buttons *ngIf="message.actions">
+    <ion-button
+      *ngFor="let button of message.actions"
+      fill="clear"
+      color="primary"
+      strong="true"
+      [title]="button.actionText"
+      (click)="button.callback()"
+    >
+      <ion-icon *ngIf="button.iconName" slot="start" [name]="button.iconName"></ion-icon>
+      {{ button.actionText }}
+    </ion-button>
+  </ion-buttons>
+</div>

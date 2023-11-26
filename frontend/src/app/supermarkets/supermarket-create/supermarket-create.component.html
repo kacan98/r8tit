@@ -1,7 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="end">
-      <ion-button  (click)="dismiss()">
+      <ion-button (click)="clearForm()">
+        <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+      </ion-button>
+      <ion-button (click)="dismiss()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -9,73 +12,75 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <div class="container ion-padding">
-    <form [formGroup]="formGroup">
-<!--      TODO: Wrapper for inputs -->
-      <ion-input
-        label="Name"
-        type="text"
-        formControlName="name"
-        name="name"
-        fill="outline"
-        mode="md"
-        label-placement="floating"
-        [clearInput]="true"
-      ></ion-input>
-      <ion-input
-        label="Address"
-        type="text"
-        formControlName="address"
-        name="address"
-        fill="outline"
-        mode="md"
-        label-placement="floating"
-        [clearInput]="true"
-      ></ion-input>
-      <ion-input
-        label="City"
-        type="text"
-        formControlName="city"
-        name="city"
-        fill="outline"
-        mode="md"
-        label-placement="floating"
-        [clearInput]="true"
-      ></ion-input>
-      <ion-input
-        label="Country"
-        type="text"
-        formControlName="country"
-        name="country"
-        fill="outline"
-        mode="md"
-        label-placement="floating"
-        [clearInput]="true"
-      ></ion-input>
-      <ion-input
-        label="Latitude"
-        type="text"
-        formControlName="latitude"
-        name="latitude"
-        fill="outline"
-        mode="md"
-        label-placement="floating"
-        [clearInput]="true"
-      ></ion-input>
-      <ion-input
-        label="Longitude"
-        type="text"
-        formControlName="longitude"
-        name="longitude"
-        fill="outline"
-        mode="md"
-        label-placement="floating"
-        [clearInput]="true"
-      ></ion-input>
-    </form>
-    <ion-button expand="block" [disabled]="!formGroup.valid" (click)="save()"
-      >Save</ion-button
-    >
-  </div>
+<ion-content [fullscreen]="true">
+  <form [formGroup]="formGroup">
+    <ion-list>
+      <ion-item>
+        <ion-input
+          type="text"
+          formControlName="name"
+          name="name"
+          [clearInput]="true"
+        >
+          <div slot="label">
+            Name <ion-text color="danger" class="ion-margin-end">(Required)</ion-text>
+          </div>
+        </ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          type="text"
+          formControlName="city"
+          name="city"
+          [clearInput]="true"
+        >
+          <div slot="label">
+            City <ion-text color="danger" class="ion-margin-end">(Required)</ion-text>
+          </div></ion-input
+        >
+      </ion-item>
+      <ion-item>
+        <ion-input
+          type="text"
+          formControlName="country"
+          name="country"
+          [clearInput]="true"
+        >
+          <div slot="label">
+            Country <ion-text color="danger" class="ion-margin-end">(Required)</ion-text>
+          </div></ion-input
+        >
+      </ion-item>
+      <ion-item>
+        <ion-input
+          label="Address"
+          type="text"
+          formControlName="address"
+          name="address"
+          [clearInput]="true"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          label="Latitude"
+          type="text"
+          formControlName="latitude"
+          name="latitude"
+          [clearInput]="true"
+        ></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input
+          label="Longitude"
+          type="text"
+          formControlName="longitude"
+          name="longitude"
+          [clearInput]="true"
+        ></ion-input>
+      </ion-item>
+      <ion-button expand="block" [disabled]="!formGroup.valid" (click)="save()"
+        >Save</ion-button
+      >
+    </ion-list>
+  </form>
 </ion-content>

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, Observable, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Geolocation } from '@capacitor/geolocation';
 
 export interface LocationData {
   latitude: number;
@@ -30,12 +31,13 @@ export interface LocationData {
 export class LocationService {
   constructor(private http: HttpClient) {}
 
-  getLocationDetails(
-    longitude: number,
-    latitude: number,
-  ): Observable<LocationData> {
-    return this.http.get<LocationData>(
-      `http://localhost:5204/Location/GetLocationDetails?longitude=${longitude}&latitude=${latitude}`,
+  getLocationDetails(): Observable<any> {
+    return from(Geolocation.getCurrentPosition()).pipe(
+      switchMap((position) => {
+        return this.http.get<LocationData>(
+          `http://localhost:5204/Location/GetLocationDetails?longitude=${position.coords.longitude}&latitude=${position.coords.latitude}`,
+        );
+      }),
     );
   }
 }

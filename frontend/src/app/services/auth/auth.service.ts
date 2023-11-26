@@ -1,29 +1,40 @@
-import {Injectable} from '@angular/core';
-import {map, Observable, ReplaySubject, tap} from "rxjs";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { Observable, ReplaySubject, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  currentToken$: ReplaySubject<string> = new ReplaySubject<string>()
+  private currentToken$: ReplaySubject<string> = new ReplaySubject<string>();
+  private currentUserId$: ReplaySubject<number> = new ReplaySubject<number>();
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {}
+
+  getToken(): Observable<string> {
+    return this.currentToken$.asObservable();
   }
 
-  getToken():Observable<string> {
-    return this.currentToken$.pipe()
+  getCurrentUserId(): Observable<number> {
+    return this.currentUserId$.asObservable();
   }
 
-  logIn(): Observable<string> {
+  logIn() {
     //TODO: Remove this user from the system
     return this.httpClient
-      .post<{ token: string }>('http://localhost:5204/api/Auth/login', {
-        email: 'testUser@test.com',
-        password: 'testTest',
-      }, {headers: { skipToken: 'true' }}).pipe(map((data) => data.token),
-        tap((token) => {
+      .post<{ token: string; userId: number }>(
+        'http://localhost:5204/api/Auth/login',
+        {
+          email: 'testUser@test.com',
+          password: 'testTest',
+        },
+        { headers: { skipToken: 'true' } },
+      )
+      .pipe(
+        tap(({ token, userId }) => {
           this.currentToken$.next(token);
-        }))
+          this.currentUserId$.next(userId);
+        }),
+      );
   }
 }

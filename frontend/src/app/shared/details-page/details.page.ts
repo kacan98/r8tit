@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SupermarketService } from '../../services/supermarket/supermarket.service';
-import { from, Observable, Subscription } from 'rxjs';
+import { combineLatestWith, from, Observable, Subscription } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
 import {
   AlertController,
@@ -21,6 +21,9 @@ import { SupermarketComplete } from '../../services/supermarket/supermarkets.mod
 import { WebcamImage } from 'ngx-webcam';
 import { ImageService } from '../../services/image/image.service';
 import { ErrorMessage } from '../error-message/error-message.model';
+import { RatingService } from '../../services/rating/rating.service';
+import { Rating } from '../../services/rating/rating.model';
+import { AuthService } from '../../services/auth/auth.service';
 
 export type DetailEntity = SupermarketComplete;
 
@@ -40,6 +43,9 @@ export class DetailsPage implements OnInit, OnDestroy {
   place?: string;
   detailEntity?: DetailEntity;
 
+  ratings?: Rating[];
+  haveWeRatedYet?: boolean;
+
   error?: ErrorMessage;
 
   subscriptions: Subscription[] = [];
@@ -52,11 +58,13 @@ export class DetailsPage implements OnInit, OnDestroy {
     private loadingController: LoadingController,
     private toastController: ToastController,
     private imageService: ImageService,
+    private ratingService: RatingService,
+    private authService: AuthService,
   ) {}
   ngOnInit() {
     this.supermarketId = this.activatedRoute.snapshot.params['supermarketId'];
     if (this.supermarketId) {
-      this.getSupermarketDetails(this.supermarketId);
+      this.initializeSupermarket(this.supermarketId);
     }
   }
 
@@ -145,7 +153,7 @@ export class DetailsPage implements OnInit, OnDestroy {
                 duration: 3000,
               })
               .then((toast) => toast.present());
-            this.getSupermarketDetails(supermarket.supermarketId);
+            this.initializeSupermarket(supermarket.supermarketId);
           },
           error: (e) => {
             void loadingElement.dismiss();
@@ -161,7 +169,7 @@ export class DetailsPage implements OnInit, OnDestroy {
     );
   }
 
-  private getSupermarketDetails(supermarketId: number) {
+  private initializeSupermarket(supermarketId: number) {
     this.subscriptions.push(
       this.supermarketService.getSupermarketDetails(supermarketId).subscribe({
         next: (supermarket) => {
@@ -178,6 +186,28 @@ export class DetailsPage implements OnInit, OnDestroy {
           console.error(e);
         },
       }),
+      this.ratingService
+        .getRatingsForObject(supermarketId, 'Supermarkets')
+        .pipe(combineLatestWith(this.authService.getCurrentUserId()))
+        .subscribe({
+          next: ([ratings, currentUser]) => {
+            this.ratings = ratings;
+            this.haveWeRatedYet = ratings.some(
+              (rating) => rating.userId === currentUser,
+            );
+          },
+          error: (e) => {
+            this.error = {
+              text: 'Failed to load supermarket ratings',
+              header: 'Error',
+            };
+            console.error(e);
+          },
+        }),
     );
+  }
+
+  openAddRating() {
+    //TODO
   }
 }

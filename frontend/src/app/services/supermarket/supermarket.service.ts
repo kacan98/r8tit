@@ -15,7 +15,7 @@ import {
   SupermarketForUpsert,
 } from './supermarkets.model';
 import { ImageService } from '../image/image.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
@@ -54,7 +54,10 @@ export class SupermarketService {
       .pipe(
         map((supermarkets) => {
           return supermarkets
-            .map((supermarket) => this.attachImageToSupermarket(supermarket))
+            .map((supermarket) => ({
+              ...supermarket,
+              imageURL$: this.getImageForSupermarket(supermarket),
+            }))
             .sort((a, b) =>
               a.supermarketUpdatedDate > b.supermarketUpdatedDate ? 1 : -1,
             );
@@ -69,7 +72,12 @@ export class SupermarketService {
       .get<SupermarketComplete>(
         `http://localhost:5204/Supermarket/GetById/${supermarketId}`,
       )
-      .pipe(map((supermarket) => this.attachImageToSupermarket(supermarket)));
+      .pipe(
+        map((supermarket) => ({
+          ...supermarket,
+          imageURL$: this.getImageForSupermarket(supermarket),
+        })),
+      );
   }
 
   upsertSupermarket(
@@ -101,21 +109,16 @@ export class SupermarketService {
       );
   }
 
-  private attachImageToSupermarket(
+  private getImageForSupermarket(
     supermarket: SupermarketComplete,
-  ): SupermarketComplete {
-    const imageURL$ =
-      supermarket.imageId === null
-        ? of('assets/placeholders/placeholder-image-dark.jpg')
-        : this.imageService.getImage(supermarket.imageId).pipe(
-            map((blob) => {
-              let objectURL = URL.createObjectURL(blob);
-              return this.sanitizer.bypassSecurityTrustUrl(objectURL);
-            }),
-          );
-    return {
-      ...supermarket,
-      imageURL$,
-    };
+  ): Observable<SafeUrl> {
+    return supermarket.imageId === null
+      ? of('assets/placeholders/placeholder-image-dark.jpg')
+      : this.imageService.getImage(supermarket.imageId).pipe(
+          map((blob) => {
+            let objectURL = URL.createObjectURL(blob);
+            return this.sanitizer.bypassSecurityTrustUrl(objectURL);
+          }),
+        );
   }
 }

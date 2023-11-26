@@ -7,6 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class StarsComponent implements OnInit {
   @Input() readonly: boolean = true;
+  @Input() initialStars: number = 2.5;
 
   //TODO: Custom stars
   // starUrls = {

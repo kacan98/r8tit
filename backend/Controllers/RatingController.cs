@@ -59,7 +59,17 @@ namespace R8titAPI.Controllers
                 };
             }
 
-            string sql = @"R8titSchema.spRating_GetRatings @RelatedObjectId, @RelatedObjectTable";
+            //check if object exists
+            if (_dapper.DoesObjectExist(tableName, objectId) == false)
+            {
+                return new ObjectResult(new { message = "Invalid objectId" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+
+            string sql = @"R8titSchema.spRating_GetRatingsForObject @RelatedObjectId, @RelatedObjectTable";
 
             DynamicParameters sqlParameters = new DynamicParameters();
             sqlParameters.Add("@RelatedObjectId", objectId, DbType.Int32);
@@ -67,7 +77,7 @@ namespace R8titAPI.Controllers
 
             try
             {
-                IEnumerable<Rating> ratings = _dapper.LoadData<Rating>(sql, sqlParameters);
+                IEnumerable<RatingForObjectDTO> ratings = _dapper.LoadData<RatingForObjectDTO>(sql, sqlParameters);
 
                 return Ok(ratings);
             }

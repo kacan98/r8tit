@@ -1,52 +1,62 @@
-<ion-content *ngIf="!error; else showError">
-  <ion-back-button defaultHref="/tabs/supermarkets"></ion-back-button>
-  <ng-container *ngIf="image$">
-    <img
-      *ngIf="image$ | async as Image; else imagePlaceholder"
-      alt="supermarket-image"
-      [src]="Image"
-    />
-    <ion-buttons class="image-actions" *ngIf="detailEntity">
-      <ion-button color="danger" fill="outline" [disabled]="true"
-        >Delete image</ion-button
-      >
-      <ion-button
-        color="primary"
-        fill="outline"
-        (click)="updateImage(detailEntity)"
-        >Add image</ion-button
-      >
-    </ion-buttons>
-  </ng-container>
-  <div class="container">
-    <div class="header">
-      <h2>{{title}}</h2>
-      <div class="place" *ngIf="place">
-        <ion-icon name="location" class="place-icon"></ion-icon>{{place}}
+<ng-container *ngIf="detailEntity; else loading">
+  <ion-content *ngIf="!error; else showError">
+    <ion-back-button defaultHref="/tabs/supermarkets"></ion-back-button>
+    <ng-container *ngIf="image$">
+      <img
+        *ngIf="image$ | async as Image; else imagePlaceholder"
+        alt="supermarket-image"
+        [src]="Image"
+      />
+      <ion-buttons class="image-actions" *ngIf="detailEntity">
+        <ion-button color="danger" fill="outline" [disabled]="true"
+          >Delete image</ion-button
+        >
+        <ion-button
+          color="primary"
+          fill="outline"
+          (click)="updateImage(detailEntity)"
+          >Add image</ion-button
+        >
+      </ion-buttons>
+    </ng-container>
+    <div class="container">
+      <div class="header">
+        <h2>{{title}}</h2>
+        <div class="place" *ngIf="place">
+          <ion-icon name="location" class="place-icon"></ion-icon>{{place}}
+        </div>
+        <app-stars></app-stars>
       </div>
-      <app-stars></app-stars>
+      <div class="ion-margin-vertical ratings"></div>
+      <ion-button *ngIf="!haveWeRatedYet" expand="full" (click)="openAddRating()">+ Add a rating</ion-button>
+      <app-rating [rating]="rating" *ngFor="let rating of ratings"></app-rating>
     </div>
-  </div>
-</ion-content>
-
-<ng-template #imagePlaceholder>
-  <img
-    alt="supermarket-image"
-    src="assets/placeholders/placeholder-image-dark.jpg"
-  />
-</ng-template>
-
-<input
-  *ngIf="detailEntity"
-  #fileInput
-  type="file"
-  accept="image/*"
-  hidden
-  (change)="takeImageFromDevice(detailEntity, $any($event.target))"
-/>
-
-<ng-template #showError>
-  <ion-content>
-    <app-error-message [message]="error"></app-error-message>
   </ion-content>
-</ng-template>
+
+  <ng-template #imagePlaceholder>
+    <img
+      alt="supermarket-image"
+      src="assets/placeholders/placeholder-image-dark.jpg"
+    />
+  </ng-template>
+
+  <input
+    *ngIf="detailEntity"
+    #fileInput
+    type="file"
+    accept="image/*"
+    hidden
+    (change)="takeImageFromDevice(detailEntity, $any($event.target))"
+  />
+
+  <ng-template #showError>
+    <ion-content>
+      <app-error-message [message]="error"></app-error-message>
+    </ion-content>
+  </ng-template>
+</ng-container>
+
+<ng-template #loading>
+  <ion-content>
+    <ion-spinner></ion-spinner> </ion-content
+></ng-template>

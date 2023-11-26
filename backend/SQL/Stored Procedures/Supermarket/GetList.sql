@@ -4,6 +4,7 @@ AS
         SELECT [Images].[ImageId],
         [Supermarkets].[SupermarketId],
         [Supermarkets].[Name],
+        [Supermarkets].[Address],
         [Supermarkets].[City],
         [Supermarkets].[Country],
         [Supermarkets].[Active],

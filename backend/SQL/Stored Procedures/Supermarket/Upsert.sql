@@ -6,6 +6,7 @@ CREATE OR ALTER PROCEDURE R8titSchema.spSupermarkets_Upsert
 --     @SupermarketId = 1
 --     , @CreatedByUserId = 1
 --     , @Name = 'Lidl'
+--     , @Address = 'Strada Sfântul Lazăr 1-3, București 030167'
 --     , @City = 'Bucharest'
 --     , @Country = 'Romania'
 --     , @Latitude = 44.4268
@@ -17,6 +18,7 @@ CREATE OR ALTER PROCEDURE R8titSchema.spSupermarkets_Upsert
     , @Name NVARCHAR(50)
     , @City NVARCHAR(50)
     , @Country NVARCHAR(50)
+    , @Address NVARCHAR(100) = null
     , @Latitude DECIMAL(8,6) = null
     , @Longitude DECIMAL(9,6) = null
     , @ImageId INT = null
@@ -29,6 +31,7 @@ BEGIN
                 CreatedByUserId,
                 Name,
                 City,
+                Address,
                 Country,
                 Latitude,
                 Longitude,
@@ -41,6 +44,7 @@ BEGIN
                 @CreatedByUserId,
                 @Name,
                 @City,
+                @Address,
                 @Country,
                 @Latitude,
                 @Longitude,
@@ -56,6 +60,7 @@ BEGIN
             UPDATE R8titSchema.Supermarkets
                 SET Name = @Name,
                     City = @City,
+                    Address = @Address,
                     Country = @Country,
                     Latitude = @Latitude,
                     Longitude = @Longitude,

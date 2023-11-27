@@ -5,10 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { ExploreContainerComponent } from './explore-container.component';
-
+//TODO: Delete this module and actually the whole component
 @NgModule({
-  imports: [ CommonModule, FormsModule, IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule],
   declarations: [ExploreContainerComponent],
-  exports: [ExploreContainerComponent]
+  exports: [ExploreContainerComponent],
 })
 export class ExploreContainerComponentModule {}

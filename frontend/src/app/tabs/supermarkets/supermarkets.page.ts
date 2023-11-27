@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SupermarketService } from '../services/supermarket/supermarket.service';
+import { SupermarketService } from '../../shared/services/supermarket/supermarket.service';
 import { Subscription, tap } from 'rxjs';
-import { SupermarketComplete } from '../services/supermarket/supermarkets.model';
+import { SupermarketComplete } from '../../shared/services/supermarket/supermarkets.model';
 import {
   ModalController,
   NavController,
@@ -9,7 +9,7 @@ import {
 } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { SupermarketCreateComponent } from './supermarket-create/supermarket-create.component';
-import { ErrorMessage } from '../shared/error-message/error-message.model';
+import { ErrorMessage } from '../../shared/components/error-message/error-message.model';
 
 @Component({
   selector: 'app-supermarkets-page',

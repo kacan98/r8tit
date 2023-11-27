@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SupermarketService } from '../../services/supermarket/supermarket.service';
+import { SupermarketService } from '../services/supermarket/supermarket.service';
 import { combineLatestWith, from, Observable, Subscription } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
 import {
@@ -15,15 +15,15 @@ import {
   ModalController,
   ToastController,
 } from '@ionic/angular';
-import { TakePhotoComponent } from '../take-photo/take-photo.component';
+import { TakePhotoComponent } from '../components/take-photo/take-photo.component';
 import { switchMap } from 'rxjs/operators';
-import { SupermarketComplete } from '../../services/supermarket/supermarkets.model';
+import { SupermarketComplete } from '../services/supermarket/supermarkets.model';
 import { WebcamImage } from 'ngx-webcam';
-import { ImageService } from '../../services/image/image.service';
-import { ErrorMessage } from '../error-message/error-message.model';
-import { RatingService } from '../../services/rating/rating.service';
-import { Rating } from '../../services/rating/rating.model';
-import { AuthService } from '../../services/auth/auth.service';
+import { ImageService } from '../services/image/image.service';
+import { ErrorMessage } from '../components/error-message/error-message.model';
+import { RatingService } from '../services/rating/rating.service';
+import { Rating } from '../services/rating/rating.model';
+import { AuthService } from '../../auth/auth.service';
 
 export type DetailEntity = SupermarketComplete;
 

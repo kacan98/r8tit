@@ -31,7 +31,7 @@ export interface LocationData {
 export class LocationService {
   constructor(private http: HttpClient) {}
 
-  getLocationDetails(): Observable<any> {
+  getLocationDetails(): Observable<LocationData> {
     return from(Geolocation.getCurrentPosition()).pipe(
       switchMap((position) => {
         return this.http.get<LocationData>(

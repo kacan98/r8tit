@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SupermarketComplete } from '../../services/supermarket/supermarkets.model';
+import { SupermarketComplete } from '../../../shared/services/supermarket/supermarkets.model';
 
 @Component({
   selector: 'app-supermarket-card',

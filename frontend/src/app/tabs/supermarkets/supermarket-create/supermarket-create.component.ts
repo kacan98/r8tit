@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { SupermarketService } from '../../services/supermarket/supermarket.service';
+import { SupermarketService } from '../../../shared/services/supermarket/supermarket.service';
 import {
   LoadingController,
   ModalController,
   ToastController,
 } from '@ionic/angular';
-import { SupermarketForUpsert } from '../../services/supermarket/supermarkets.model';
+import { SupermarketForUpsert } from '../../../shared/services/supermarket/supermarkets.model';
 import { Subscription } from 'rxjs';
-import { LocationService } from '../../services/location/location.service';
+import { LocationService } from '../../../shared/services/location/location.service';
 
 @Component({
   selector: 'app-supermarket-create',
@@ -85,6 +85,8 @@ export class SupermarketCreateComponent implements OnInit, OnDestroy {
             address: locationData.name,
             city: locationData.locality,
             country: locationData.country,
+            longitude: locationData.longitude,
+            latitude: locationData.latitude,
           });
           loading.dismiss();
         },

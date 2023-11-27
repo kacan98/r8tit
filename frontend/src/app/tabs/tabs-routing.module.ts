@@ -1,6 +1,6 @@
-import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
-import {TabsPage} from './tabs.page';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
@@ -9,24 +9,28 @@ const routes: Routes = [
     children: [
       {
         path: 'supermarkets',
-        loadChildren: () => import('../supermarkets/supermarkets-tab.module').then(m => m.SupermarketsTabModule)
+        loadChildren: () =>
+          import('./supermarkets/supermarkets-tab.module').then(
+            (m) => m.SupermarketsTabModule,
+          ),
       },
       {
         path: 'settings',
-        loadChildren: () => import('../tab2/tab2.module').then(m => m.Tab2PageModule)
+        loadChildren: () =>
+          import('./tab2/tab2.module').then((m) => m.Tab2PageModule),
       },
       {
         path: '',
         redirectTo: 'supermarkets',
-        pathMatch: 'full'
-      }
-    ]
+        pathMatch: 'full',
+      },
+    ],
   },
   {
     path: '',
     redirectTo: 'tabs/supermarkets',
-    pathMatch: 'full'
-  }
+    pathMatch: 'full',
+  },
 ];
 
 @NgModule({

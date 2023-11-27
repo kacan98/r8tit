@@ -41,30 +41,31 @@ namespace R8titAPI.Helpers
         public string CreateToken(int userId)
         {
             Claim[] claims = new Claim[] {
-                new Claim("userId", userId.ToString())
+                new("userId", userId.ToString())
             };
-            
+
             string? tokenKeyString = _config.GetSection("AppSettings:TokenKey").Value;
 
-            SymmetricSecurityKey tokenKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(
-                        tokenKeyString != null ? tokenKeyString : ""
-                    )
-                );
+            if (tokenKeyString == null)
+            {
+                throw new Exception("Token key not found in appsettings.json");
+            }
 
-            SigningCredentials credentials = new SigningCredentials(
-                    tokenKey, 
+            SymmetricSecurityKey tokenKey = new(Encoding.UTF8.GetBytes(tokenKeyString));
+
+            SigningCredentials credentials = new(
+                    tokenKey,
                     SecurityAlgorithms.HmacSha512Signature
                 );
 
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    SigningCredentials = credentials,
-                    Expires = DateTime.Now.AddDays(1)
-                };
+            {
+                Subject = new ClaimsIdentity(claims),
+                SigningCredentials = credentials,
+                Expires = DateTime.Now.AddDays(1)
+            };
 
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            JwtSecurityTokenHandler tokenHandler = new();
 
             SecurityToken token = tokenHandler.CreateToken(descriptor);
 
@@ -86,7 +87,7 @@ namespace R8titAPI.Helpers
                 @Email = @EmailParam, 
                 @PasswordHash = @PasswordHashParam, 
                 @PasswordSalt = @PasswordSaltParam";
-            
+
             DynamicParameters sqlParameters = new DynamicParameters();
 
             sqlParameters.Add("@EmailParam", userForSetPassword.Email, DbType.String);

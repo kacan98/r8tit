@@ -103,7 +103,7 @@ namespace R8titAPI.Controllers
                     }
                 }
                 string token = _authHelper.CreateToken(userForConfirmation.UserId);
-                return Ok(new { token });
+                return Ok(new { token, userId = userForConfirmation.UserId });
             }
             catch (System.Exception)
             {

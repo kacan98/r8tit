@@ -43,6 +43,8 @@ export class DetailsPage implements OnInit, OnDestroy {
   place?: string;
   detailEntity?: DetailEntity;
 
+  editImageButtonsDisplayed = false;
+
   ratings?: Rating[];
   haveWeRatedYet?: boolean;
 

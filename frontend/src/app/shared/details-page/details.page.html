@@ -3,15 +3,26 @@
     <ion-back-button defaultHref="/tabs/supermarkets"></ion-back-button>
     <ng-container *ngIf="image$">
       <img
+        (click)="editImageButtonsDisplayed = !editImageButtonsDisplayed"
         *ngIf="image$ | async as Image; else imagePlaceholder"
         alt="supermarket-image"
         [src]="Image"
       />
-      <ion-buttons class="image-actions" *ngIf="detailEntity">
-        <ion-button color="danger" fill="outline" [disabled]="true"
+      <ion-buttons
+        class="image-actions ion-padding"
+        *ngIf="detailEntity && editImageButtonsDisplayed"
+      >
+        <ion-button
+          color="danger"
+          expand="block"
+          fill="outline"
+          [disabled]="true"
+          class="ion-margin-horizontal"
           >Delete image</ion-button
         >
         <ion-button
+          expand="block"
+          class="ion-margin-end"
           color="primary"
           fill="outline"
           (click)="updateImage(detailEntity)"
@@ -25,11 +36,16 @@
         <div class="place" *ngIf="place">
           <ion-icon name="location" class="place-icon"></ion-icon>{{place}}
         </div>
-<!--        TODO: Add the average of all ratings on each supermarket -->
+        <!--        TODO: Add the average of all ratings on each supermarket -->
         <app-stars></app-stars>
       </div>
       <div class="ion-margin-vertical ratings"></div>
-      <ion-button *ngIf="!haveWeRatedYet" expand="full" (click)="openAddRating()">+ Add a rating</ion-button>
+      <ion-button
+        *ngIf="!haveWeRatedYet"
+        expand="full"
+        (click)="openAddRating()"
+        >+ Add a rating</ion-button
+      >
       <app-rating [rating]="rating" *ngFor="let rating of ratings"></app-rating>
     </div>
   </ion-content>
@@ -58,6 +74,5 @@
 </ng-container>
 
 <ng-template #loading>
-  <ion-content>
-    <ion-spinner></ion-spinner> </ion-content
+  <ion-content> <ion-spinner></ion-spinner> </ion-content
 ></ng-template>

@@ -1,0 +1,10 @@
+<ion-content [fullscreen]="true">
+  <div class="container" (click)="logOrRegOpen = true">
+    <h1><ion-icon name="storefront"></ion-icon> R8tit</h1>
+    <ng-container *ngIf="!logOrRegOpen">
+      <div>App for rating supermarkets</div>
+      <div>A demo app by Karel Čančara</div>
+    </ng-container>
+    <app-login *ngIf="logOrRegOpen"></app-login>
+  </div>
+</ion-content>

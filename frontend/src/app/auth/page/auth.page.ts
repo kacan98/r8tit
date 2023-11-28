@@ -12,6 +12,8 @@ export class AuthPage implements OnInit, OnDestroy {
   logOrRegOpen = false;
   currentForm?: 'login' | 'register';
 
+  emailForLogin?: string;
+
   subscriptions: Subscription[] = [];
 
   constructor(
@@ -20,6 +22,8 @@ export class AuthPage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    const latestEmail = localStorage.getItem('latestEmailLogin');
+    this.emailForLogin = latestEmail || undefined;
     this.subscriptions.push(
       this.authService.isSomeoneLoggedIn().subscribe((isSomeoneLoggedIn) => {
         if (isSomeoneLoggedIn) {
@@ -31,5 +35,10 @@ export class AuthPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+
+  registrationSuccess(email: string) {
+    this.currentForm = 'login';
+    this.emailForLogin = email;
   }
 }

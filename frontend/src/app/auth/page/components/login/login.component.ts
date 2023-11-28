@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../auth.service';
 import { LoadingController, NavController } from '@ionic/angular';
@@ -9,7 +9,8 @@ import { ErrorMessage } from '../../../../shared/components/error-message/error-
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
+  @Input() emailFromRegistration?: string;
   form = new FormGroup({
     email: new FormControl('', {
       validators: [Validators.required, Validators.email],
@@ -26,6 +27,12 @@ export class LoginComponent {
     private loadingController: LoadingController,
   ) {}
 
+  ngOnInit() {
+    if (this.emailFromRegistration) {
+      this.form.controls.email.setValue(this.emailFromRegistration);
+    }
+  }
+
   async logIn() {
     const loading = await this.loadingController.create({
       message: 'Logging in...',
@@ -37,6 +44,7 @@ export class LoginComponent {
     this.authService.logIn(email, password).subscribe({
       next: () => {
         loading.dismiss();
+        localStorage.setItem('latestEmailLogin', email);
         void this.navController.navigateForward('/tabs');
       },
       error: (error) => {

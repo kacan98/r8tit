@@ -1,4 +1,4 @@
-<form [formGroup]="form">
+<form [formGroup]="form" (ngSubmit)="form.valid && logIn()" (keyup.enter)="form.valid && logIn()">
   <ion-card *ngIf="error" color="danger">
     <ion-card-header>
       {{ error.header }}
@@ -15,6 +15,7 @@
       type="email"
       placeholder="your.email@domain.com"
       autocomplete="email"
+      clearInput="true"
     ></ion-input>
   </ion-item>
   <ion-item>
@@ -27,9 +28,9 @@
     ></ion-input>
   </ion-item>
   <ion-button
+    class="ion-margin-top"
     type="submit"
     expand="block"
-    (click)="logIn()"
     [disabled]="!form.valid"
     >Log in</ion-button
   >

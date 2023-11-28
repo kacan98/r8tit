@@ -41,12 +41,24 @@ namespace R8titAPI.Controllers
         {
             if (AuthHelper.IsEmailValid(userForRegistration.Email) == false)
             {
-                return BadRequest("Invalid email!");
+                return new ObjectResult(new { message = "Invalid email!" })
+                {
+                    StatusCode = 400
+                };
             }
 
             if (userForRegistration.Password != userForRegistration.PasswordConfirm)
             {
                 return BadRequest("Passwords do not match!");
+            }
+
+            //Check that the password is strong enough
+            if (AuthHelper.IsPasswordStrongEnough(userForRegistration.Password) == false)
+            {
+                return new ObjectResult(new { message = "Password is not strong enough!" })
+                {
+                    StatusCode = 400
+                };
             }
 
             string sqlCheckUserExists = "SELECT Email FROM R8titSchema.Auth WHERE Email = '" +

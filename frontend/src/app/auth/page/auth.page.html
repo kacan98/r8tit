@@ -13,13 +13,13 @@
           <ion-button expand="block" (click)="currentForm = 'login'"
             >Login</ion-button
           >
-          <ion-button expand="block" (click)="currentForm = 'register'"
+          <ion-button fill="outline" expand="block" (click)="currentForm = 'register'"
             >Register</ion-button
           >
         </ng-container>
         <ng-container [ngSwitch]="currentForm">
           <ng-container *ngSwitchCase="'login'">
-            <app-login></app-login>
+            <app-login class="ion-margin-bottom" [emailFromRegistration]="emailForLogin"></app-login>
             <ion-button
               expand="block"
               fill="outline"
@@ -28,7 +28,7 @@
             >
           </ng-container>
           <ng-container *ngSwitchCase="'register'">
-            <app-register (registrationSuccessful)="currentForm = 'login'"></app-register>
+            <app-register class="ion-margin-bottom" (registrationSuccessful)="registrationSuccess($event.email)"></app-register>
             <ion-button
               expand="block"
               fill="outline"

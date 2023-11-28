@@ -1,8 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import {
+  AbstractControl,
   FormControl,
   FormGroup,
   ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../../auth.service';
@@ -15,7 +17,39 @@ import { ErrorMessage } from '../../../../shared/components/error-message/error-
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  @Output() registrationSuccessful = new EventEmitter<boolean>();
+  @Output() registrationSuccessful = new EventEmitter<{ email: string }>();
+
+  passwordValidators: {
+    name: string;
+    validator: ValidatorFn;
+    errorName: string;
+  }[] = [
+    {
+      name: 'At least 6 characters',
+      errorName: 'tooShort',
+      validator: generateValidator('tooShort', /^.{6,}$/),
+    },
+    {
+      name: 'At least one number',
+      errorName: 'noNumber',
+      validator: generateValidator('noNumber', /[0-9]/),
+    },
+    {
+      name: 'At least one uppercase letter',
+      errorName: 'noUppercase',
+      validator: generateValidator('noUppercase', /[A-Z]/),
+    },
+    {
+      name: 'At least one lowercase letter',
+      errorName: 'noLowercase',
+      validator: generateValidator('noLowercase', /[a-z]/),
+    },
+    {
+      name: 'At least one special character',
+      errorName: 'noSpecialCharacter',
+      validator: generateValidator('noSpecialCharacter', /[^A-Za-z0-9]/),
+    },
+  ];
 
   form = new FormGroup(
     {
@@ -37,7 +71,10 @@ export class RegisterComponent {
         ],
         nonNullable: true,
       }),
-      password: new FormControl('', [Validators.required]),
+      password: new FormControl('', [
+        Validators.required,
+        ...this.passwordValidators.map(({ validator }) => validator),
+      ]),
       passwordConfirm: new FormControl('', [Validators.required]),
     },
     {
@@ -87,7 +124,7 @@ export class RegisterComponent {
               toast.present();
             });
 
-          this.registrationSuccessful.emit(true);
+          this.registrationSuccessful.emit({ email });
         },
         error: (error) => {
           loading.dismiss();
@@ -106,3 +143,12 @@ export class RegisterComponent {
       });
   }
 }
+
+export const generateValidator = (
+  nameOfError: string,
+  regex: RegExp,
+): ValidatorFn => {
+  return (control: AbstractControl): ValidationErrors | null => {
+    return control.value.match(regex) !== null ? null : { [nameOfError]: true };
+  };
+};

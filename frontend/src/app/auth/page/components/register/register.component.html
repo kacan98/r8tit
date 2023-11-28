@@ -1,4 +1,8 @@
-<form [formGroup]="form">
+<form
+  [formGroup]="form"
+  (ngSubmit)="form.valid && register()"
+  (keyup.enter)="form.valid && register()"
+>
   <ion-card *ngIf="error" color="danger">
     <ion-card-header>
       {{ error.header }}
@@ -37,6 +41,25 @@
       autocomplete="current-password"
     ></ion-input>
   </ion-item>
+  <ng-container *ngIf="!form.controls.password.pristine && !form.controls.password.valid">
+    <div
+      *ngFor="let passwordValidator of passwordValidators"
+      [class.success]="!form.hasError('passwordMismatch')"
+      class="ion-padding-start password-strength"
+    >
+      <span
+        *ngIf="
+          form.controls.password.hasError(passwordValidator.errorName);
+          else cross
+        "
+        >❌</span
+      >
+      <ng-template #cross>
+        <span>✅</span>
+      </ng-template>
+      {{ passwordValidator.name }}
+    </div>
+  </ng-container>
   <ion-item>
     <ion-input
       formControlName="passwordConfirm"
@@ -53,11 +76,7 @@
   >
     Passwords do not match
   </div>
-  <ion-button
-    type="submit"
-    expand="block"
-    (click)="register()"
-    [disabled]="!form.valid"
+  <ion-button class="ion-margin-top" type="submit" expand="block" [disabled]="!form.valid"
     >Register</ion-button
   >
 </form>

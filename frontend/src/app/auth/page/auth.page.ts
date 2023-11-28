@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 })
 export class AuthPage implements OnInit, OnDestroy {
   logOrRegOpen = false;
+  currentForm?: 'login' | 'register';
 
   subscriptions: Subscription[] = [];
 

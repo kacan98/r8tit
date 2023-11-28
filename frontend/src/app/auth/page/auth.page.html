@@ -1,10 +1,43 @@
 <ion-content [fullscreen]="true">
   <div class="container" (click)="logOrRegOpen = true">
-    <h1><ion-icon name="storefront"></ion-icon> R8tit</h1>
+    <h1 [class.cursor]="!logOrRegOpen"><ion-icon name="storefront"></ion-icon> R8tit</h1>
     <ng-container *ngIf="!logOrRegOpen">
-      <div>App for rating supermarkets</div>
-      <div>A demo app by Karel Čančara</div>
+      <div class="cursor">
+        <p>A Simple App for Rating Supermarkets</p>
+        <p class="demo-by-karel">by Karel Čančara</p>
+      </div>
     </ng-container>
-    <app-login *ngIf="logOrRegOpen"></app-login>
+    <div class="forms">
+      <ng-container *ngIf="logOrRegOpen">
+        <ng-container *ngIf="!currentForm">
+          <ion-button expand="block" (click)="currentForm = 'login'"
+            >Login</ion-button
+          >
+          <ion-button expand="block" (click)="currentForm = 'register'"
+            >Register</ion-button
+          >
+        </ng-container>
+        <ng-container [ngSwitch]="currentForm">
+          <ng-container *ngSwitchCase="'login'">
+            <app-login></app-login>
+            <ion-button
+              expand="block"
+              fill="outline"
+              (click)="currentForm = 'register'"
+              >Register instead</ion-button
+            >
+          </ng-container>
+          <ng-container *ngSwitchCase="'register'">
+            <app-register (registrationSuccessful)="currentForm = 'login'"></app-register>
+            <ion-button
+              expand="block"
+              fill="outline"
+              (click)="currentForm = 'login'"
+              >Login instead</ion-button
+            >
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </div>
   </div>
 </ion-content>

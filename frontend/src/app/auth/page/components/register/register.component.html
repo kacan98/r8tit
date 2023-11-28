@@ -1,0 +1,63 @@
+<form [formGroup]="form">
+  <ion-card *ngIf="error" color="danger">
+    <ion-card-header>
+      {{ error.header }}
+    </ion-card-header>
+    <ion-card-content>
+      {{ error.text }}
+    </ion-card-content>
+  </ion-card>
+  <ion-item>
+    <ion-input
+      formControlName="username"
+      label="Username"
+      label-placement="floating"
+      type="username"
+      placeholder="Name you will be displayed under"
+      autocomplete="username"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input
+      formControlName="email"
+      label="Email"
+      label-placement="floating"
+      type="email"
+      placeholder="your.email@domain.com"
+      autocomplete="email"
+      errorText="Please enter a valid email address"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input
+      formControlName="password"
+      label="Password"
+      label-placement="floating"
+      type="password"
+      autocomplete="current-password"
+    ></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input
+      formControlName="passwordConfirm"
+      label="Confirm password"
+      label-placement="floating"
+      type="password"
+      autocomplete="current-password"
+    ></ion-input>
+  </ion-item>
+  <!--  I tried using the errorText property on the ion-input, but it did not work with the error in the form s -->
+  <div
+    *ngIf="form.hasError('passwordMismatch')"
+    class="ion-padding-start error"
+  >
+    Passwords do not match
+  </div>
+  <ion-button
+    type="submit"
+    expand="block"
+    (click)="register()"
+    [disabled]="!form.valid"
+    >Register</ion-button
+  >
+</form>

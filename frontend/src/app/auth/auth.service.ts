@@ -61,7 +61,6 @@ export class AuthService {
   canActivate(): Observable<boolean | UrlTree> {
     return this.getCurrentUser$().pipe(
       switchMap((currentAuth) => {
-        console.log('currentAuth', currentAuth);
         if (!currentAuth) return this.navController.navigateRoot('/auth');
         return of(true);
       }),
@@ -85,5 +84,23 @@ export class AuthService {
         userId: +userId,
       });
     } else return new BehaviorSubject<CurrentAuth | undefined>(undefined);
+  }
+
+  register(
+    username: string,
+    email: string,
+    password: string,
+    passwordConfirm: string,
+  ) {
+    return this.httpClient.post<{ token: string; userId: number }>(
+      'http://localhost:5204/api/Auth/register',
+      {
+        username,
+        email,
+        password,
+        passwordConfirm,
+      },
+      { headers: { skipToken: 'true' } },
+    );
   }
 }

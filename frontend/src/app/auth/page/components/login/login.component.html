@@ -1,10 +1,20 @@
 <form [formGroup]="form">
+  <ion-card *ngIf="error" color="danger">
+    <ion-card-header>
+      {{ error.header }}
+    </ion-card-header>
+    <ion-card-content>
+      {{ error.text }}
+    </ion-card-content>
+  </ion-card>
   <ion-item>
     <ion-input
       formControlName="email"
       label="Email"
       label-placement="floating"
       type="email"
+      placeholder="your.email@domain.com"
+      autocomplete="email"
     ></ion-input>
   </ion-item>
   <ion-item>
@@ -13,6 +23,7 @@
       label="Password"
       label-placement="floating"
       type="password"
+      autocomplete="current-password"
     ></ion-input>
   </ion-item>
   <ion-button

@@ -1,4 +1,4 @@
-<ion-content>
+<ion-content *ngIf="supermarkets; else errorMessage">
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Tab 1</ion-title>
@@ -8,13 +8,29 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list class="ion-margin-horizontal">
-  <ion-button (click)="openCreatePage()" expand="block" fill="outline" class="ion-margin add-supermarket" size="medium">+ Add Supermarket</ion-button>
-  <ng-container *ngIf="supermarkets else skeletonSupermarkets">
-   <app-supermarket-card *ngFor="let supermarket of supermarkets" [supermarket]="supermarket" (click)="handleSupermarketClick(supermarket)"
-   ></app-supermarket-card>
-  </ng-container>
+    <ion-button
+      (click)="openCreatePage()"
+      expand="block"
+      fill="outline"
+      class="ion-margin add-supermarket"
+      size="medium"
+      >+ Add Supermarket</ion-button
+    >
+    <ng-container *ngIf="supermarkets else skeletonSupermarkets">
+      <app-supermarket-card
+        *ngFor="let supermarket of supermarkets"
+        [supermarket]="supermarket"
+        (click)="handleSupermarketClick(supermarket)"
+      ></app-supermarket-card>
+    </ng-container>
   </ion-list>
   <ng-template #skeletonSupermarkets>
-        <app-supermarket-card *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]"></app-supermarket-card>
+    <app-supermarket-card
+      *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]"
+    ></app-supermarket-card>
   </ng-template>
 </ion-content>
+
+<ng-template #errorMessage>
+  <app-error-message [message]="error"></app-error-message>
+</ng-template>

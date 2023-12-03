@@ -111,15 +111,20 @@ namespace R8titAPI.Controllers
                 {
                     if (passwordHash[index] != userForConfirmation.PasswordHash[index])
                     {
-                        return StatusCode(401, "Incorrect password!");
+                        return new ObjectResult(new { message = "Password is wrong!" })
+                        {
+                            StatusCode = 401
+                        };
                     }
                 }
-                string token = _authHelper.CreateToken(userForConfirmation.UserId);
-                return Ok(new { token, userId = userForConfirmation.UserId });
+
+                DateTime dateOfExpiration = DateTime.Now.AddDays(1);
+                string token = _authHelper.CreateToken(userForConfirmation.UserId, dateOfExpiration);
+                return Ok(new { token, userId = userForConfirmation.UserId, dateOfExpiration });
             }
             catch (System.Exception)
             {
-                return StatusCode(401, "User with this email does not exist!");
+                return StatusCode(404, "User with this email does not exist!");
             }
         }
 
@@ -136,14 +141,15 @@ namespace R8titAPI.Controllers
         [HttpPut("refreshToken")]
         public IActionResult RefreshToken()
         {
-            var userIdClaim = User.FindFirst("userId");
-            if (userIdClaim == null)
+            var userId = User.FindFirst("userId");
+            if (userId == null)
             {
                 return Unauthorized();
             }
 
-            string token = _authHelper.CreateToken(int.Parse(userIdClaim.Value));
-            return Ok(new { token });
+            DateTime dateOfExpiration = DateTime.Now.AddDays(1);
+            string token = _authHelper.CreateToken(int.Parse(userId.Value), dateOfExpiration);
+            return Ok(new { userId = userId.Value, token, dateOfExpiration });
         }
     }
 }

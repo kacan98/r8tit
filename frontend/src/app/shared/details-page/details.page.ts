@@ -24,6 +24,7 @@ import { ErrorMessage } from '../components/error-message/error-message.model';
 import { RatingService } from '../services/rating/rating.service';
 import { Rating } from '../services/rating/rating.model';
 import { AuthService } from '../../auth/auth.service';
+import { AddRatingModalComponent } from '../components/add-rating-modal/add-rating-modal.component';
 
 export type DetailEntity = SupermarketComplete;
 
@@ -209,7 +210,11 @@ export class DetailsPage implements OnInit, OnDestroy {
     );
   }
 
-  openAddRating() {
-    //TODO
+  async openAddRating() {
+    const modal = await this.modalController.create({
+      component: AddRatingModalComponent,
+    });
+
+    await modal.present();
   }
 }

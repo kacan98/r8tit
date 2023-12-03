@@ -38,7 +38,7 @@ namespace R8titAPI.Helpers
         }
 
 
-        public string CreateToken(int userId)
+        public string CreateToken(int userId, DateTime dateOfExpiration)
         {
             Claim[] claims = new Claim[] {
                 new("userId", userId.ToString())
@@ -62,7 +62,7 @@ namespace R8titAPI.Helpers
             {
                 Subject = new ClaimsIdentity(claims),
                 SigningCredentials = credentials,
-                Expires = DateTime.Now.AddDays(1)
+                Expires = dateOfExpiration
             };
 
             JwtSecurityTokenHandler tokenHandler = new();
@@ -104,6 +104,20 @@ namespace R8titAPI.Helpers
 
             // Use Regex.IsMatch to check if the email matches the pattern
             return Regex.IsMatch(email, pattern);
+        }
+
+        internal static bool IsPasswordStrongEnough(string password)
+        {
+            const string Lowercase = @"[a-z]";
+            const string Uppercase = @"[A-Z]";
+            const string Digit = @"\d";
+            const string SpecialChar = @"[^A-Za-z0-9]";
+
+            return password.Length >= 6 &&
+                   Regex.IsMatch(password, Lowercase) &&
+                   Regex.IsMatch(password, Uppercase) &&
+                   Regex.IsMatch(password, Digit) &&
+                   Regex.IsMatch(password, SpecialChar);
         }
     }
 }

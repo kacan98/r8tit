@@ -23,4 +23,18 @@ export class RatingService {
       },
     );
   }
+
+  addRating(
+    objectId: number,
+    tableName: 'Supermarkets',
+    rating: number,
+    comment: string,
+  ): Observable<Rating> {
+    return this.http.post<Rating>(`http://localhost:5204/api/Rating/add`, {
+      objectId: objectId,
+      tableName: tableName,
+      rating: rating,
+      comment: comment,
+    });
+  }
 }

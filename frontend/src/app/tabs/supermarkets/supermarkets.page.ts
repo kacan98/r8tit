@@ -73,6 +73,13 @@ export class SupermarketsPage implements OnInit, OnDestroy {
           this.supermarkets = supermarkets;
           event?.target.complete();
         },
+        error: (error) => {
+          this.error = {
+            text: error.message,
+            header: 'Error while loading supermarkets',
+          };
+          event?.target.complete();
+        },
       }),
     );
   }

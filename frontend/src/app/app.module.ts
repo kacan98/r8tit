@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
@@ -22,6 +22,13 @@ import { AuthService } from './auth/auth.service';
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     {
       provide: AuthService,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (authService: AuthService) => () =>
+        authService.refreshToken(),
+      deps: [AuthService],
+      multi: true,
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],

@@ -7,5 +7,5 @@ CREATE TABLE R8titSchema.Users
     , Active BIT NOT NULL
     , Username NVARCHAR(50) NOT NULL
     , Email NVARCHAR(50) NOT NULL
-    , AdminRights BIT NOT NULL
+    , AdminRights BIT NOT NULL --not used yet
 );

@@ -1,0 +1,82 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title *ngIf="header" [class.primary-text]="headerColor === 'primary'">
+      <ion-icon
+        *ngIf="headerIcon"
+        [class.primary-text]="headerColor === 'primary'"
+        [name]="headerIcon"
+        class="ion-padding-end"
+      ></ion-icon>
+      {{ header }}</ion-title
+    >
+    <ion-buttons [slot]="showButton ? 'start' : 'end'">
+      <ion-button (click)="closeModal()" [color]="headerColor" [title]="'Close modal'">
+        <ion-icon name="close" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-chip
+      (click)="all.emit()"
+      (keydown.enter)="all.emit()"
+      *ngIf="showButton === 'all'; else showClearButton"
+      [title]="allButtonTitle"
+      class="clear-chip"
+      color="primary"
+      role="button"
+      slot="end"
+      tabindex="0"
+    >
+      <ion-label>{{ 'All' }}</ion-label>
+    </ion-chip>
+    <ng-template #showClearButton>
+      <ion-chip
+        (click)="clear.emit()"
+        (keydown.enter)="clear.emit()"
+        *ngIf="showButton === 'clear'"
+        [title]="clearButtonTitle"
+        class="clear-chip"
+        color="primary"
+        role="button"
+        slot="end"
+        tabindex="0"
+      >
+        <ion-label>{{ 'Clear' }}</ion-label>
+      </ion-chip>
+    </ng-template>
+  </ion-toolbar>
+</ion-header>
+
+<ng-content></ng-content>
+
+<ng-container *ngIf="customFooterButtons; else showDefault">
+  <ion-footer *ngIf="customFooterButtons.length">
+    <div class="custom-buttons">
+      <ion-button
+        (click)="footerBtn.onClick()"
+        *ngFor="let footerBtn of customFooterButtons; let last = last"
+        [expand]="'block'"
+        [fill]="last ? 'solid' : 'clear'"
+        [title]="footerBtn.label"
+        class="ion-padding-horizontal"
+        color="primary"
+      >
+        {{ footerBtn.label }}
+      </ion-button>
+    </div>
+  </ion-footer>
+</ng-container>
+<ng-template #showDefault>
+  <ion-footer>
+    <div id="footer-buttons">
+      <ion-button (click)="closeModal()" [title]="'Close'" fill="clear">{{
+        'Close'
+      }}</ion-button>
+      <ion-button
+        (click)="apply.emit()"
+        [disabled]="applyDisabled"
+        [title]="applyButtonTitle"
+        fill="clear"
+        >{{ applyButtonTitle }}</ion-button
+      >
+    </div>
+  </ion-footer>
+</ng-template>

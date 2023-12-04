@@ -7,6 +7,8 @@ import { TakePhotoComponent } from './components/take-photo/take-photo.component
 import { WebcamModule } from 'ngx-webcam';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { RatingComponent } from './components/rating/rating.component';
+import { ModalDialogBaseComponent } from './modal-dialog-base/modal-dialog-base.component';
+import { AddRatingModalComponent } from './components/add-rating-modal/add-rating-modal.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +16,8 @@ import { RatingComponent } from './components/rating/rating.component';
     TakePhotoComponent,
     ErrorMessageComponent,
     RatingComponent,
+    ModalDialogBaseComponent,
+    AddRatingModalComponent,
   ],
   imports: [CommonModule, IonicModule, NgxStarsModule, WebcamModule],
   exports: [
@@ -21,6 +25,7 @@ import { RatingComponent } from './components/rating/rating.component';
     TakePhotoComponent,
     ErrorMessageComponent,
     RatingComponent,
+    ModalDialogBaseComponent,
   ],
 })
 export class SharedModule {}

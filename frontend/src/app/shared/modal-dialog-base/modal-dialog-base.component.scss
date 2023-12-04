@@ -1,0 +1,29 @@
+.primary-text {
+  color: var(--ion-color-primary);
+}
+
+.clear-chip {
+  &.md {
+    margin-right: 16px;
+  }
+
+  &:focus {
+    --background: var(--ion-color-light);
+  }
+}
+
+#footer-buttons {
+  padding: 8px 0;
+  text-align: right;
+}
+
+.custom-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+
+  ion-button {
+    width: 100%;
+  }
+}

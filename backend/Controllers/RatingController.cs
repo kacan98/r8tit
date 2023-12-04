@@ -87,7 +87,7 @@ namespace R8titAPI.Controllers
             }
         }
 
-        [HttpPost("rating")]
+        [HttpPost("add")]
         public IActionResult AddRating(Rating rating)
         {
             var userIdClaim = User.FindFirst("userId");
@@ -190,6 +190,37 @@ namespace R8titAPI.Controllers
                 RatingCategory upsertedRatingCategory = _dapper.UpsertSql<RatingCategory>(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters);
 
                 return Ok(new { Message = "Rating category added successfully", RatingCategory = upsertedRatingCategory });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // Should get all rating categories for a specific object that a user has enabled and all also global rating categories for the object
+        //TODO: Currently only returns global rating categories
+        [HttpGet("categoriesForTable")]
+        public IActionResult GetRatingCategoriesForTable(string tableName)
+        {
+            // Check if relatedObjectTable exists
+            if (_dapper.DoesTableExist(tableName.ToString()) == false)
+            {
+                return new ObjectResult(new { message = "Invalid relatedObjectTable" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+            string sql = @"SELECT * FROM R8titSchema.RatingCategories WHERE RelatedObjectTable = @RelatedObjectTable AND Global = 1";
+
+            DynamicParameters sqlParameters = new DynamicParameters();
+            sqlParameters.Add("@RelatedObjectTable", tableName, DbType.String);
+
+            try
+            {
+                IEnumerable<RatingCategory> ratingCategories = _dapper.LoadData<RatingCategory>(sql, sqlParameters);
+
+                return Ok(new { message = "Rating categories retrieved successfully", global = ratingCategories, user = "Not implemented yet" });
             }
             catch (Exception ex)
             {

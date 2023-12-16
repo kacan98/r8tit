@@ -40,13 +40,18 @@
         <app-stars></app-stars>
       </div>
       <div class="ion-margin-vertical ratings"></div>
-      <ion-button
-        *ngIf="!haveWeRatedYet"
-        expand="full"
-        (click)="openAddRating()"
-        >+ Add a rating</ion-button
-      >
-      <app-rating [rating]="rating" *ngFor="let rating of ratings"></app-rating>
+      <ng-container>
+        <ion-button
+          *ngIf="!currentUserRated"
+          expand="full"
+          (click)="openAddRating(detailEntity)"
+          >+ Add a rating</ion-button
+        >
+        <app-rating
+          [rating]="rating"
+          *ngFor="let rating of ratings"
+        ></app-rating>
+      </ng-container>
     </div>
   </ion-content>
 

@@ -51,27 +51,23 @@ namespace R8titAPI.Controllers
         {
 
             // Check if relatedObjectTable exists
-            if (_dapper.DoesTableExist(tableName.ToString()) == false)
+            IActionResult? tableValidityResult = ValidityOfTable(tableName);
+            if (tableValidityResult != null)
             {
-                return new ObjectResult(new { message = "Invalid relatedObjectTable" })
-                {
-                    StatusCode = 400
-                };
+                return tableValidityResult;
             }
 
             //check if object exists
-            if (_dapper.DoesObjectExist(tableName, objectId) == false)
+            IActionResult? objectValidityResult = ValidityOfObject(tableName, objectId);
+            if (objectValidityResult != null)
             {
-                return new ObjectResult(new { message = "Invalid objectId" })
-                {
-                    StatusCode = 400
-                };
+                return objectValidityResult;
             }
 
 
             string sql = @"R8titSchema.spRating_GetRatingsForObject @RelatedObjectId, @RelatedObjectTable";
 
-            DynamicParameters sqlParameters = new DynamicParameters();
+            DynamicParameters sqlParameters = new();
             sqlParameters.Add("@RelatedObjectId", objectId, DbType.Int32);
             sqlParameters.Add("@RelatedObjectTable", tableName, DbType.String);
 
@@ -87,8 +83,8 @@ namespace R8titAPI.Controllers
             }
         }
 
-        [HttpPost("add")]
-        public IActionResult AddRating(Rating rating)
+        [HttpPost("upsertRating")]
+        public IActionResult AddRating(RatingForUpsertDTO rating)
         {
             var userIdClaim = User.FindFirst("userId");
             if (userIdClaim == null)
@@ -97,7 +93,7 @@ namespace R8titAPI.Controllers
             }
 
             //validate if rating can be inserted
-            ObjectResult validationResult = _ratingHelper.ValidateIfRatingCanBeInsterted(rating, int.Parse(userIdClaim.Value));
+            ObjectResult validationResult = _ratingHelper.ValidateIfRatingCanBeUpserted(rating, int.Parse(userIdClaim.Value));
             if (validationResult.StatusCode != 200)
             {
                 return validationResult;
@@ -107,7 +103,7 @@ namespace R8titAPI.Controllers
 
             try
             {
-                Rating upsertedRating = _ratingHelper.UpsertRating(rating, currentUserId);
+                RatingComplete upsertedRating = _ratingHelper.UpsertRating(rating, currentUserId);
 
                 return Ok(new { message = "Rating upserted successfully", rating = upsertedRating });
             }
@@ -120,8 +116,8 @@ namespace R8titAPI.Controllers
             }
         }
 
-        [HttpPost("ratings")]
-        public IActionResult AddRatings(IEnumerable<Rating> ratings)
+        [HttpPost("upsertRatings")]
+        public IActionResult UpsertRatings(IEnumerable<RatingForUpsertDTO> ratings)
         {
             var userIdClaim = User.FindFirst("userId");
             if (userIdClaim == null)
@@ -132,23 +128,22 @@ namespace R8titAPI.Controllers
             int currentUserId = int.Parse(userIdClaim.Value);
 
             // make sure none of the ratings are invalid
-            foreach (Rating rating in ratings)
+            foreach (RatingForUpsertDTO rating in ratings)
             {
-                //This method will overwrite (or insert) the ratingId if it already exists in the database
-                ObjectResult result = _ratingHelper.ValidateIfRatingCanBeInsterted(rating, currentUserId);
+                ObjectResult result = _ratingHelper.ValidateIfRatingCanBeUpserted(rating, currentUserId);
                 if (result.StatusCode != 200)
                 {
                     return result;
                 }
             }
 
-            List<Rating> upsertedRatings = new();
+            List<RatingComplete> upsertedRatings = new();
             // All ratings can be upserted
-            foreach (Rating rating in ratings)
+            foreach (RatingForUpsertDTO rating in ratings)
             {
                 try
                 {
-                    Rating upsertedRating = _ratingHelper.UpsertRating(rating, currentUserId);
+                    RatingComplete upsertedRating = _ratingHelper.UpsertRating(rating, currentUserId);
                     upsertedRatings.Add(upsertedRating);
                 }
                 catch (Exception ex)
@@ -203,12 +198,10 @@ namespace R8titAPI.Controllers
         public IActionResult GetRatingCategoriesForTable(string tableName)
         {
             // Check if relatedObjectTable exists
-            if (_dapper.DoesTableExist(tableName.ToString()) == false)
+            IActionResult? tableValidityResult = ValidityOfTable(tableName);
+            if (tableValidityResult != null)
             {
-                return new ObjectResult(new { message = "Invalid relatedObjectTable" })
-                {
-                    StatusCode = 400
-                };
+                return tableValidityResult;
             }
 
             string sql = @"SELECT * FROM R8titSchema.RatingCategories WHERE RelatedObjectTable = @RelatedObjectTable AND Global = 1";
@@ -226,6 +219,34 @@ namespace R8titAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        IActionResult? ValidityOfObject(string tableName, int objectId)
+        {
+            //check if object exists
+            if (_dapper.DoesObjectExist(tableName, objectId) == false)
+            {
+                return new ObjectResult(new { message = "Invalid objectId" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+            return null;
+        }
+
+        IActionResult? ValidityOfTable(string tableName)
+        {
+            // Check if relatedObjectTable exists
+            if (_dapper.DoesTableExist(tableName) == false)
+            {
+                return new ObjectResult(new { message = "Invalid relatedObjectTable" })
+                {
+                    StatusCode = 400
+                };
+            }
+
+            return null;
         }
     }
 }

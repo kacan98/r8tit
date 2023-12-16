@@ -22,9 +22,9 @@ import { WebcamImage } from 'ngx-webcam';
 import { ImageService } from '../services/image/image.service';
 import { ErrorMessage } from '../components/error-message/error-message.model';
 import { RatingService } from '../services/rating/rating.service';
-import { Rating } from '../services/rating/rating.model';
+import { RatingComplete } from '../services/rating/rating.model';
 import { AuthService } from '../../auth/auth.service';
-import { AddRatingModalComponent } from '../components/add-rating-modal/add-rating-modal.component';
+import { AddRatingsModalComponent } from '../components/add-ratings-modal/add-ratings-modal.component';
 
 export type DetailEntity = SupermarketComplete;
 
@@ -43,11 +43,12 @@ export class DetailsPage implements OnInit, OnDestroy {
   image$?: Observable<SafeUrl>;
   place?: string;
   detailEntity?: DetailEntity;
+  currentUserId?: number;
 
   editImageButtonsDisplayed = false;
 
-  ratings?: Rating[];
-  haveWeRatedYet?: boolean;
+  ratings?: RatingComplete[];
+  currentUserRated?: boolean;
 
   error?: ErrorMessage;
 
@@ -67,6 +68,7 @@ export class DetailsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.supermarketId = this.activatedRoute.snapshot.params['supermarketId'];
     if (this.supermarketId) {
+      this.initializeRatings(this.supermarketId);
       this.initializeSupermarket(this.supermarketId);
     }
   }
@@ -189,15 +191,41 @@ export class DetailsPage implements OnInit, OnDestroy {
           console.error(e);
         },
       }),
+    );
+  }
+
+  async openAddRating(detailEntity: DetailEntity) {
+    const modal = await this.modalController.create({
+      component: AddRatingsModalComponent,
+      componentProps: {
+        objectType: 'Supermarkets',
+        title: 'Rate ' + detailEntity.name,
+        objectId: detailEntity.supermarketId,
+      },
+    });
+
+    await modal.present();
+    const { role } = await modal.onWillDismiss();
+    if (role === 'apply') {
+      this.initializeRatings(detailEntity.supermarketId);
+    }
+  }
+
+  private initializeRatings(supermarketId: number) {
+    this.subscriptions.push(
       this.ratingService
         .getRatingsForObject(supermarketId, 'Supermarkets')
         .pipe(combineLatestWith(this.authService.getCurrentUserId()))
         .subscribe({
           next: ([ratings, currentUser]) => {
             this.ratings = ratings;
-            this.haveWeRatedYet = ratings.some(
+            console.log(currentUser);
+            console.log(ratings);
+            this.currentUserRated = ratings.some(
               (rating) => rating.userId === currentUser,
             );
+            console.log(this.currentUserRated);
+            this.currentUserId = currentUser;
           },
           error: (e) => {
             this.error = {
@@ -208,13 +236,5 @@ export class DetailsPage implements OnInit, OnDestroy {
           },
         }),
     );
-  }
-
-  async openAddRating() {
-    const modal = await this.modalController.create({
-      component: AddRatingModalComponent,
-    });
-
-    await modal.present();
   }
 }

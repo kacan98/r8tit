@@ -1,9 +1,9 @@
 using System.Data;
 using Dapper;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using R8titAPI.Data;
 using R8titAPI.Models;
+using R8titAPI.Dtos;
 
 namespace R8titAPI.Helpers
 {
@@ -15,7 +15,7 @@ namespace R8titAPI.Helpers
             _dapper = new DataContextDapper(config);
         }
 
-        public Rating UpsertRating(Rating rating, int currentUserId)
+        public RatingComplete UpsertRating(RatingForUpsertDTO rating, int currentUserId)
         {
             string sql = @"EXEC R8titSchema.spRatings_Upsert ";
 
@@ -30,7 +30,7 @@ namespace R8titAPI.Helpers
             sqlParameters.Add("@RatingCategoryIdParam", rating.RatingCategoryId, DbType.Int32);
             sql += "@RatingCategoryId = @RatingCategoryIdParam, ";
 
-            sqlParameters.Add("@RatingValueParam", rating.RatingValue, DbType.Int32);
+            sqlParameters.Add("@RatingValueParam", rating.RatingValue, DbType.Decimal);
             sql += "@RatingValue = @RatingValueParam, ";
 
             sqlParameters.Add("@CreatedByUserIdParam", currentUserId, DbType.Int32);
@@ -39,10 +39,11 @@ namespace R8titAPI.Helpers
             sqlParameters.Add("@RelatedObjectIdParam", rating.RelatedObjectId, DbType.Int32);
             sql += "@RelatedObjectId = @RelatedObjectIdParam, ";
 
-            return _dapper.UpsertSql<Rating>(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters);
+            return _dapper.UpsertSql<RatingComplete>(sql.TrimEnd(new char[] { ',', ' ' }), sqlParameters);
         }
 
-        public ObjectResult ValidateIfRatingCanBeInsterted(Rating rating, int currentUserId)
+        //This method will overwrite the ratingId to the existing one if it already exists in the database
+        public ObjectResult ValidateIfRatingCanBeUpserted(RatingForUpsertDTO rating, int currentUserId)
         {
             RatingCategory ratingCategory = GetRatingCategoryById(rating.RatingCategoryId);
 
@@ -62,7 +63,7 @@ namespace R8titAPI.Helpers
             sqlPar.Add("@RatingCategoryIdParam", rating.RatingCategoryId, DbType.Int32);
             sqlPar.Add("@CreatedByUserIdParam", currentUserId, DbType.Int32);
 
-            Rating? existingRating = _dapper.LoadDataSingleOrDefaultToNull<Rating>(existingRatingSql, sqlPar);
+            RatingComplete? existingRating = _dapper.LoadDataSingleOrDefaultToNull<RatingComplete>(existingRatingSql, sqlPar);
 
             if (existingRating != null)
             {

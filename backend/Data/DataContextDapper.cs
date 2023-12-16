@@ -88,7 +88,7 @@ namespace R8titAPI.Data
             string sql = "SELECT CASE WHEN EXISTS ((SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = @TableName)) THEN 1 ELSE 0 END";
             DynamicParameters dynParams = new();
             dynParams.Add("@TableName", tableName);
-
+            
             bool exists = dbConnection.ExecuteScalar<bool>(sql, dynParams);
             return exists;
         }

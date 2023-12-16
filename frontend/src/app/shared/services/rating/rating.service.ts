@@ -1,7 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Rating, RatingCategoryForObjectType } from './rating.model';
+import {
+  RatingComplete,
+  RatingCategoriesForObjectType,
+  RatingForUpsert,
+} from './rating.model';
 
 @Injectable({
   providedIn: 'root',
@@ -12,8 +16,8 @@ export class RatingService {
   getRatingsForObject(
     objectId: number,
     tableName: 'Supermarkets',
-  ): Observable<Rating[]> {
-    return this.http.get<Rating[]>(
+  ): Observable<RatingComplete[]> {
+    return this.http.get<RatingComplete[]>(
       `http://localhost:5204/api/Rating/ratingsForObject`,
       {
         params: {
@@ -26,8 +30,8 @@ export class RatingService {
 
   getCategoriesForObjectType(
     type: 'Supermarkets',
-  ): Observable<RatingCategoryForObjectType[]> {
-    return this.http.get<RatingCategoryForObjectType[]>(
+  ): Observable<RatingCategoriesForObjectType> {
+    return this.http.get<RatingCategoriesForObjectType>(
       `http://localhost:5204/api/Rating/categoriesForTable`,
       {
         params: {
@@ -37,17 +41,12 @@ export class RatingService {
     );
   }
 
-  addRating(
-    objectId: number,
-    tableName: 'Supermarkets',
-    rating: number,
-    comment: string,
-  ): Observable<Rating> {
-    return this.http.post<Rating>(`http://localhost:5204/api/Rating/add`, {
-      objectId: objectId,
-      tableName: tableName,
-      rating: rating,
-      comment: comment,
-    });
+  upsertRatings(
+    ratings: RatingForUpsert[],
+  ): Observable<{ message: string; ratings: RatingComplete[] }> {
+    return this.http.post<{ message: string; ratings: RatingComplete[] }>(
+      `http://localhost:5204/api/Rating/upsertRatings`,
+      ratings,
+    );
   }
 }

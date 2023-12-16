@@ -1,4 +1,4 @@
-export interface Rating {
+export interface RatingComplete {
   ratingValue: number;
   ratingCategoryId: number;
   userId: number;
@@ -6,6 +6,12 @@ export interface Rating {
   username: string;
   categoryName: string;
   global: boolean;
+}
+
+export interface RatingForUpsert {
+  relatedObjectId: number;
+  ratingValue: number;
+  ratingCategoryId: number;
 }
 
 export interface RatingCategory {
@@ -18,7 +24,7 @@ export interface RatingCategory {
   categoryUpdated?: Date;
 }
 
-export interface RatingCategoryForObjectType {
+export interface RatingCategoriesForObjectType {
   global: RatingCategory[];
   user: 'Not implemented yet';
   message: string;

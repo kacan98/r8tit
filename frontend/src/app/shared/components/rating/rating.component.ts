@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Rating } from '../../services/rating/rating.model';
+import { RatingComplete } from '../../services/rating/rating.model';
 
 @Component({
   selector: 'app-rating',
@@ -7,7 +7,7 @@ import { Rating } from '../../services/rating/rating.model';
   styleUrls: ['./rating.component.scss'],
 })
 export class RatingComponent implements OnInit {
-  @Input() rating?: Rating;
+  @Input() rating?: RatingComplete;
 
   constructor() {}
 

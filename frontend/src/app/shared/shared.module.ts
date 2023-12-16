@@ -8,7 +8,8 @@ import { WebcamModule } from 'ngx-webcam';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
 import { RatingComponent } from './components/rating/rating.component';
 import { ModalDialogBaseComponent } from './modal-dialog-base/modal-dialog-base.component';
-import { AddRatingModalComponent } from './components/add-rating-modal/add-rating-modal.component';
+import { AddRatingsModalComponent } from './components/add-ratings-modal/add-ratings-modal.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -17,9 +18,15 @@ import { AddRatingModalComponent } from './components/add-rating-modal/add-ratin
     ErrorMessageComponent,
     RatingComponent,
     ModalDialogBaseComponent,
-    AddRatingModalComponent,
+    AddRatingsModalComponent,
   ],
-  imports: [CommonModule, IonicModule, NgxStarsModule, WebcamModule],
+  imports: [
+    CommonModule,
+    IonicModule,
+    NgxStarsModule,
+    WebcamModule,
+    ReactiveFormsModule,
+  ],
   exports: [
     StarsComponent,
     TakePhotoComponent,

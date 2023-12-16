@@ -1,0 +1,19 @@
+<app-modal-dialog-base [header]="title" class="ion-page" (apply)="dismissModal('apply')" (cancel)="dismissModal('cancel')">
+  <ion-content>
+    <ng-container *ngIf="ratingCategories; else spinner">
+      <ng-container *ngFor="let category of ratingCategories.global">
+        <ion-item [lines]="false">
+          <ion-label position="floating">{{ category.categoryName }}</ion-label>
+          <app-stars
+            [control]="form.controls.global.controls[category.categoryName]"
+            [readonly]="false"
+            [starSize]="2"
+          ></app-stars>
+        </ion-item>
+      </ng-container>
+    </ng-container>
+    <ng-template #spinner>
+      <ion-spinner></ion-spinner>
+    </ng-template>
+  </ion-content>
+</app-modal-dialog-base>

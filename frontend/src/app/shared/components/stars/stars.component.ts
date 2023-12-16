@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-stars',
@@ -7,7 +8,9 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class StarsComponent implements OnInit {
   @Input() readonly: boolean = true;
-  @Input() initialStars: number = 2.5;
+  @Input() initialNrStars: number = 2.5;
+  @Input() starSize: number = 1;
+  @Input() control?: FormControl<number | null>;
 
   //TODO: Custom stars
   // starUrls = {
@@ -19,4 +22,8 @@ export class StarsComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
+
+  updateControl($event: number) {
+    this.control?.setValue($event);
+  }
 }

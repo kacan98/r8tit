@@ -85,7 +85,6 @@ namespace R8titAPI.Controllers
                 }
 
                 // Compress to 800kb
-                Console.WriteLine("Compressing image of size " + file.Length + " bytes");
                 if (file.Length > 800000)
                 {
                     file = _imageHelper.CompressImage(file, 800, 100);

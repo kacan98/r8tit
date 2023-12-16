@@ -4,7 +4,7 @@ GO
 CREATE OR ALTER PROCEDURE R8titSchema.spRatings_Upsert
 -- EXEC R8titSchema.spRatings_Upsert @RatingId = 1, @RatingValue = 1, @RatingCategoryId = 1, @CreatedByUserId = 1, @RelatedObjectId = 5
     @RatingId INT = NULL,
-    @RatingValue INT,
+    @RatingValue DECIMAL(18, 2),
     @RatingCategoryId INT,
     @CreatedByUserId INT,
     @RelatedObjectId INT

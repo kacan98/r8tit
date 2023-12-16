@@ -47,7 +47,7 @@ export class AuthService {
   refreshToken() {
     if (localStorage.getItem('token') === null) return EMPTY;
     return this.httpClient
-      .put<{ token: string; userId: number }>(
+      .put<{ token: string; userId: string }>(
         'http://localhost:5204/api/Auth/refreshToken',
         {},
       )
@@ -68,7 +68,7 @@ export class AuthService {
             localStorage.setItem('userId', newAuth.userId.toString());
             this.currentAuth$.next({
               token: newAuth.token,
-              userId: newAuth.userId,
+              userId: +newAuth.userId,
             });
           },
         }),

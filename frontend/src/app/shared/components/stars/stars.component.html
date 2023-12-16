@@ -1,1 +1,1 @@
-<ngx-stars [size]="1" color="white" [initialStars]="initialStars" [readonly]="true"></ngx-stars>
+<ngx-stars (ratingOutput)="updateControl($event)" [size]="starSize" color="white" [initialStars]="initialNrStars" [readonly]="readonly"></ngx-stars>

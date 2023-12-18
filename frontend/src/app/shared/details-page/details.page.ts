@@ -42,8 +42,8 @@ export class DetailsPage implements OnInit, OnDestroy {
   title?: string;
   image$?: Observable<SafeUrl>;
   place?: string;
+  averageRating?: number | null;
   detailEntity?: DetailEntity;
-  currentUserId?: number;
 
   editImageButtonsDisplayed = false;
 
@@ -178,7 +178,10 @@ export class DetailsPage implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.supermarketService.getSupermarketDetails(supermarketId).subscribe({
         next: (supermarket) => {
-          this.image$ = supermarket.imageURL$;
+          this.image$ = this.imageService.getImage(
+            supermarket.imageId,
+            'assets/placeholders/placeholder-image-dark.jpg',
+          );
           this.title = supermarket.name;
           this.place = `${supermarket.city}, ${supermarket.country}`;
           this.detailEntity = supermarket;
@@ -219,13 +222,10 @@ export class DetailsPage implements OnInit, OnDestroy {
         .subscribe({
           next: ([ratings, currentUser]) => {
             this.ratings = ratings;
-            console.log(currentUser);
-            console.log(ratings);
+            this.averageRating = this.getAverageRating(ratings);
             this.currentUserRated = ratings.some(
               (rating) => rating.userId === currentUser,
             );
-            console.log(this.currentUserRated);
-            this.currentUserId = currentUser;
           },
           error: (e) => {
             this.error = {
@@ -235,6 +235,28 @@ export class DetailsPage implements OnInit, OnDestroy {
             console.error(e);
           },
         }),
+    );
+  }
+
+  private getAverageRating(ratings: RatingComplete[]): number | null {
+    const ratingsGroupedByUser = ratings.reduce(
+      (acc, rating) => {
+        if (!acc[rating.userId]) {
+          acc[rating.userId] = [];
+        }
+        acc[rating.userId].push(rating.ratingValue);
+        return acc;
+      },
+      {} as { [key: number]: number[] },
+    );
+    const averagesPerUser: number[] = Object.values(ratingsGroupedByUser).map(
+      (ratings) =>
+        ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length,
+    );
+    if (averagesPerUser.length === 0) return null;
+    return (
+      averagesPerUser.reduce((acc, average) => acc + average, 0) /
+      averagesPerUser.length
     );
   }
 }

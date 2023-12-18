@@ -8,7 +8,7 @@ namespace R8titAPI.Controllers;
 
 [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class UserController : ControllerBase
 {
     private readonly DataContextDapper _dapper;
@@ -20,8 +20,7 @@ public class UserController : ControllerBase
     [HttpGet("currentUser")]
     public User GetCurrentUser()
     {
-        string sql = @"SELECT * FROM R8titSchema.Users WHERE
-                         =@UserIdParameter";
+        string sql = @"SELECT * FROM R8titSchema.Users WHERE R8titSchema.Users.UserId = @UserIdParameter";
         DynamicParameters sqlParameters = new DynamicParameters();
         string? userId = this.User.FindFirst("userId")?.Value;
         sqlParameters.Add("@UserIdParameter", userId);

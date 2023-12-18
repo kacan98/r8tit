@@ -5,7 +5,7 @@ using R8titAPI.Models;
 namespace R8titAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class LocationController : ControllerBase
     {
         private readonly HttpClient _httpClient;

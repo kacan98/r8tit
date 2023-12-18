@@ -9,7 +9,7 @@ using Dapper;
 
 [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class SupermarketController : ControllerBase
 {
     private readonly ILogger<SupermarketController> _logger;

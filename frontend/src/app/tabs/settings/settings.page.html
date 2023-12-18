@@ -1,3 +1,18 @@
-<ion-content [fullscreen]="true">
- <ion-button (click)="signOut()" class="ion-margin" fill="outline" expand="block">Sign out</ion-button>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-card class="ion-no-margin">
+    <ion-card-content>
+      <ion-item lines="none" *ngIf="currentUser$ | async as currentUser">
+        <ion-thumbnail slot="start">
+          <img
+            alt="User profile picture"
+            [src]="currentUserImage | async"
+          />
+        </ion-thumbnail>
+        <ion-label>{{currentUser.username}}</ion-label>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <ion-button (click)="signOut()" fill="outline" expand="block"
+    >Sign out</ion-button
+  >
 </ion-content>

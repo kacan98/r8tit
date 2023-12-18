@@ -13,5 +13,6 @@ namespace R8titAPI.Dtos
         public decimal Latitude { get; set; }
         public decimal Longitude { get; set; }
         public bool? Active { get; set; }
+        public decimal? AverageRating { get; set; }
     }
 }

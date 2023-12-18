@@ -1,6 +1,6 @@
 CREATE OR ALTER PROCEDURE R8titSchema.spUser_Upsert
     @UserId INT,
-    @ImageId INT,
+    @ImageId INT = NULL,
     @Username NVARCHAR(50),
     @Email NVARCHAR(50),
     @Active BIT

@@ -35,7 +35,7 @@ export class LocationService {
     return from(Geolocation.getCurrentPosition()).pipe(
       switchMap((position) => {
         return this.http.get<LocationData>(
-          `http://localhost:5204/Location/GetLocationDetails?longitude=${position.coords.longitude}&latitude=${position.coords.latitude}`,
+          `http://localhost:5204/api/Location/GetLocationDetails?longitude=${position.coords.longitude}&latitude=${position.coords.latitude}`,
         );
       }),
     );

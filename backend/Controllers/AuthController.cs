@@ -11,7 +11,6 @@ using Dapper;
 
 namespace R8titAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

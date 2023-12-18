@@ -9,6 +9,7 @@ export interface SupermarketComplete extends SupermarketForUpsert {
   supermarketId: number;
   active: boolean;
   imageId: number | null;
+  averageRating: number | null;
 
   imageURL$?: Observable<SafeUrl>;
   ratings: RatingComplete[];

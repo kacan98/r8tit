@@ -15,7 +15,6 @@ import {
   SupermarketForUpsert,
 } from './supermarkets.model';
 import { ImageService } from '../image/image.service';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +26,6 @@ export class SupermarketService {
   constructor(
     private http: HttpClient,
     private imageService: ImageService,
-    private readonly sanitizer: DomSanitizer,
   ) {}
 
   getAllSupermarkets(): Observable<SupermarketComplete[]> {
@@ -49,18 +47,17 @@ export class SupermarketService {
   refreshSupermarkets(): Observable<SupermarketComplete[]> {
     return this.http
       .get<SupermarketComplete[]>(
-        'http://localhost:5204/Supermarket/GetAllList',
+        'http://localhost:5204/api/Supermarket/GetAllList',
       )
       .pipe(
         map((supermarkets) => {
-          return supermarkets
-            .map((supermarket) => ({
-              ...supermarket,
-              imageURL$: this.getImageForSupermarket(supermarket),
-            }))
-            .sort((a, b) =>
-              a.supermarketUpdatedDate > b.supermarketUpdatedDate ? 1 : -1,
-            );
+          return supermarkets.map((supermarket) => ({
+            ...supermarket,
+            imageURL$: this.imageService.getImage(
+              supermarket.imageId,
+              'assets/placeholders/placeholder-image-dark.jpg',
+            ),
+          }));
         }),
       );
   }
@@ -68,16 +65,9 @@ export class SupermarketService {
   getSupermarketDetails(
     supermarketId: number,
   ): Observable<SupermarketComplete> {
-    return this.http
-      .get<SupermarketComplete>(
-        `http://localhost:5204/Supermarket/GetById/${supermarketId}`,
-      )
-      .pipe(
-        map((supermarket) => ({
-          ...supermarket,
-          imageURL$: this.getImageForSupermarket(supermarket),
-        })),
-      );
+    return this.http.get<SupermarketComplete>(
+      `http://localhost:5204/api/Supermarket/GetById/${supermarketId}`,
+    );
   }
 
   upsertSupermarket(
@@ -85,7 +75,7 @@ export class SupermarketService {
   ): Observable<SupermarketCreatedResponse> {
     return this.http
       .put<SupermarketCreatedResponse>(
-        'http://localhost:5204/Supermarket/Upsert',
+        'http://localhost:5204/api/Supermarket/Upsert',
         supermarket,
       )
       .pipe(map((result) => result));
@@ -107,18 +97,5 @@ export class SupermarketService {
           return result;
         }),
       );
-  }
-
-  private getImageForSupermarket(
-    supermarket: SupermarketComplete,
-  ): Observable<SafeUrl> {
-    return supermarket.imageId === null
-      ? of('assets/placeholders/placeholder-image-dark.jpg')
-      : this.imageService.getImage(supermarket.imageId).pipe(
-          map((blob) => {
-            let objectURL = URL.createObjectURL(blob);
-            return this.sanitizer.bypassSecurityTrustUrl(objectURL);
-          }),
-        );
   }
 }

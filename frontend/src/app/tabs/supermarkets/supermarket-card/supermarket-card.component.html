@@ -15,7 +15,7 @@
     <span *ngIf="supermarket.address">{{ supermarket.address }}, </span>
     <span *ngIf="supermarket.city">{{ supermarket.city }}, </span>
     <span *ngIf="supermarket.country">{{ supermarket.country }}</span>
-    <app-stars></app-stars>
+    <app-stars *ngIf="supermarket.averageRating" [initialNrStars]="supermarket.averageRating"></app-stars>
   </ion-card-content>
 </ion-card>
 

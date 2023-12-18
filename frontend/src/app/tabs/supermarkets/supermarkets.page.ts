@@ -32,8 +32,8 @@ export class SupermarketsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.getSupermarkets();
   }
-  handleRefresh($event?: RefresherEventDetail) {
-    this.subscriptions.push(this.refresh($event).subscribe());
+  handleRefresh(refresher?: RefresherEventDetail) {
+    this.subscriptions.push(this.refresh(refresher).subscribe());
   }
 
   ngOnDestroy() {
@@ -84,20 +84,20 @@ export class SupermarketsPage implements OnInit, OnDestroy {
     );
   }
 
-  private refresh($event?: RefresherEventDetail) {
+  private refresh(refresher?: RefresherEventDetail) {
     this.error = undefined;
     return this.supermarketService.refreshSupermarkets().pipe(
       tap({
         next: (supermarkets) => {
           this.supermarkets = supermarkets;
-          $event?.complete();
+          refresher?.complete();
         },
         error: (error) => {
           this.error = {
             text: error.message,
             header: 'Error while refreshing',
           };
-          $event?.complete();
+          refresher?.complete();
         },
       }),
     );

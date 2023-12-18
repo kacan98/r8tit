@@ -4,7 +4,7 @@
     <ng-container *ngIf="image$">
       <img
         (click)="editImageButtonsDisplayed = !editImageButtonsDisplayed"
-        *ngIf="image$ | async as Image; else imagePlaceholder"
+        *ngIf="image$ | async as Image"
         alt="supermarket-image"
         [src]="Image"
       />
@@ -36,8 +36,13 @@
         <div class="place" *ngIf="place">
           <ion-icon name="location" class="place-icon"></ion-icon>{{place}}
         </div>
-        <!--        TODO: Add the average of all ratings on each supermarket -->
-        <app-stars></app-stars>
+        <app-stars
+          *ngIf="averageRating !== null && averageRating !== undefined; else noRatings"
+          [initialNrStars]="averageRating"
+        ></app-stars>
+        <ng-template #noRatings>
+          <div class="no-ratings">No ratings yet</div>
+        </ng-template>
       </div>
       <div class="ion-margin-vertical ratings"></div>
       <ng-container>
@@ -54,13 +59,6 @@
       </ng-container>
     </div>
   </ion-content>
-
-  <ng-template #imagePlaceholder>
-    <img
-      alt="supermarket-image"
-      src="assets/placeholders/placeholder-image-dark.jpg"
-    />
-  </ng-template>
 
   <input
     *ngIf="detailEntity"

@@ -29,3 +29,8 @@ export interface RatingCategoriesForObjectType {
   user: 'Not implemented yet';
   message: string;
 }
+
+export interface RatingSummary {
+  ratings: RatingComplete[];
+  average: number;
+}

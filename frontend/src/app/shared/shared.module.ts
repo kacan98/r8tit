@@ -6,19 +6,19 @@ import { NgxStarsModule } from 'ngx-stars';
 import { TakePhotoComponent } from './components/take-photo/take-photo.component';
 import { WebcamModule } from 'ngx-webcam';
 import { ErrorMessageComponent } from './components/error-message/error-message.component';
-import { RatingComponent } from './components/rating/rating.component';
 import { ModalDialogBaseComponent } from './modal-dialog-base/modal-dialog-base.component';
 import { AddRatingsModalComponent } from './components/add-ratings-modal/add-ratings-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RatingsComponent } from './components/ratings/ratings.component';
 
 @NgModule({
   declarations: [
     StarsComponent,
     TakePhotoComponent,
     ErrorMessageComponent,
-    RatingComponent,
     ModalDialogBaseComponent,
     AddRatingsModalComponent,
+    RatingsComponent,
   ],
   imports: [
     CommonModule,
@@ -31,8 +31,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     StarsComponent,
     TakePhotoComponent,
     ErrorMessageComponent,
-    RatingComponent,
     ModalDialogBaseComponent,
+    RatingsComponent,
   ],
 })
 export class SharedModule {}

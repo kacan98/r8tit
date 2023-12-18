@@ -1,0 +1,39 @@
+<ng-container *ngIf="userRatingsMapping">
+  <ion-card
+    *ngFor="let id of userIdsWhoRated; let first = first"
+    [color]="id === currentUserId ? 'primary' : ''"
+    class="ion-no-margin ion-margin-vertical"
+    (click)="id === currentUserId && editRatingClicked.emit(userRatingsMapping[currentUserId])"
+  >
+    <ion-card-content>
+      <ion-item [color]="id === currentUserId ? 'primary' : ''" lines="none">
+        <ion-thumbnail slot="start">
+          <img
+            alt="Silhouette of mountains"
+            src="https://ionicframework.com/docs/img/demos/thumbnail.svg"
+          />
+        </ion-thumbnail>
+        <div>
+          <ion-label>{{
+            userRatingsMapping[id].ratings[0].username | titlecase
+          }}</ion-label>
+          <app-stars
+            [color]="id === currentUserId ? 'black' : 'white'"
+            [initialNrStars]="userRatingsMapping[id].average"
+          ></app-stars>
+        </div>
+        <ion-buttons slot="end">
+          <ion-button
+            *ngIf="id === currentUserId"
+          >
+            <ion-icon name="pencil"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+
+  <ng-template #skeleton>
+    <!--TODO-->
+  </ng-template>
+</ng-container>

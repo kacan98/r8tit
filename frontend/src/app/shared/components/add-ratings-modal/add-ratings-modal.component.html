@@ -1,4 +1,9 @@
-<app-modal-dialog-base [header]="title" class="ion-page" (apply)="dismissModal('apply')" (cancel)="dismissModal('cancel')">
+<app-modal-dialog-base
+  [header]="title"
+  class="ion-page"
+  (apply)="dismissModal('apply')"
+  (cancel)="dismissModal('cancel')"
+>
   <ion-content>
     <ng-container *ngIf="ratingCategories; else spinner">
       <ng-container *ngFor="let category of ratingCategories.global">

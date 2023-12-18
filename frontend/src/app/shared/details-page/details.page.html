@@ -49,13 +49,11 @@
         <ion-button
           *ngIf="!currentUserRated"
           expand="full"
-          (click)="openAddRating(detailEntity)"
+          (click)="openRatingModal(detailEntity)"
           >+ Add a rating</ion-button
         >
-        <app-rating
-          [rating]="rating"
-          *ngFor="let rating of ratings"
-        ></app-rating>
+        <app-ratings [ratings]="ratings" [currentUserId]="currentUserId" (editRatingClicked)="openRatingModal(detailEntity, $event)">
+        </app-ratings>
       </ng-container>
     </div>
   </ion-content>

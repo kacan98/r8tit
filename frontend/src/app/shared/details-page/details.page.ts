@@ -22,7 +22,7 @@ import { WebcamImage } from 'ngx-webcam';
 import { ImageService } from '../services/image/image.service';
 import { ErrorMessage } from '../components/error-message/error-message.model';
 import { RatingService } from '../services/rating/rating.service';
-import { RatingComplete } from '../services/rating/rating.model';
+import { RatingComplete, RatingSummary } from '../services/rating/rating.model';
 import { AuthService } from '../../auth/auth.service';
 import { AddRatingsModalComponent } from '../components/add-ratings-modal/add-ratings-modal.component';
 
@@ -49,6 +49,7 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   ratings?: RatingComplete[];
   currentUserRated?: boolean;
+  currentUserId?: number;
 
   error?: ErrorMessage;
 
@@ -197,13 +198,17 @@ export class DetailsPage implements OnInit, OnDestroy {
     );
   }
 
-  async openAddRating(detailEntity: DetailEntity) {
+  async openRatingModal(
+    detailEntity: DetailEntity,
+    currentUsersRatings?: RatingSummary,
+  ) {
     const modal = await this.modalController.create({
       component: AddRatingsModalComponent,
       componentProps: {
         objectType: 'Supermarkets',
         title: 'Rate ' + detailEntity.name,
         objectId: detailEntity.supermarketId,
+        ratings: currentUsersRatings,
       },
     });
 
@@ -226,6 +231,7 @@ export class DetailsPage implements OnInit, OnDestroy {
             this.currentUserRated = ratings.some(
               (rating) => rating.userId === currentUser,
             );
+            this.currentUserId = currentUser;
           },
           error: (e) => {
             this.error = {

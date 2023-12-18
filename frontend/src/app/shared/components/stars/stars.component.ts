@@ -11,6 +11,7 @@ export class StarsComponent implements OnInit {
   @Input() initialNrStars: number = 2.5;
   @Input() starSize: number = 1;
   @Input() control?: FormControl<number | null>;
+  @Input() color = 'white';
 
   //TODO: Custom stars
   // starUrls = {

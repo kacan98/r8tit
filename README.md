@@ -4,10 +4,7 @@ I developed it for me and my girlfriend, because we love to visit supermarkets.
 </br>
 </br>
 ## Screenshots
-<img src="./screenshots/Login%20page.png" width="200" height="400" />
-<img src="./screenshots/List%20of%20supermarkets.png" width="200" height="400" />
-<img src="./screenshots/Supermarket%20detail.png" width="200" height="400" />
-
+<img src="./screenshots/Screenshots%20in%20one.png" style="border-radius: 6px;">
 
 ## Features
 - **User Authentication**: Secure login and user-friendly registration process.

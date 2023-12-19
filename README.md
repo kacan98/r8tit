@@ -5,23 +5,36 @@ I developed it for me and my girlfriend, because we love to visit supermarkets.
 </br>
 ## Screenshots
 <img src="./screenshots/Screenshots%20in%20one.png" style="border-radius: 6px;">
-
-## Features
-- **User Authentication**: Secure login and user-friendly registration process.
-- **Supermarket Logging**: Automatically detects and logs the address of supermarkets based on user's coordinates.
-- **Photo Uploads**: Users can add pictures of each supermarket.
-- **Ratings and Reviews**: Users can rate supermarkets and view ratings from others.
+- from the prototype
 
 ## Development
 The app's UI was designed using Figma. You can find the [prototype here](https://www.figma.com/proto/Le7UTdR0B2QOqqvKVVoq1k?page-id=0%3A1&type=design&node-id=0-1&t=REDLm52qAj1xvM2I-0&scaling=scale-down&starting-point-node-id=6%3A1113&show-proto-sidebar=1).
+- feel free to create pull requests, if you want to contribute
 - **Running the App**:
   - Frontend: 
-    - You will need to install [Node.js](https://nodejs.org/en)
+    - You will need [Node.js](https://nodejs.org/en)
     - Run `npm install` followed by `npm run` in the 'frontend' 
-    folder.
+    folder to start the app.
   - Backend
-    - You will need to install [.NET Core](https://dotnet.microsoft.com/download)
+    - You will also need [.NET Core](https://dotnet.microsoft.com/download)
     - Use `dotnet run` in the 'backend' folder to start the server.
 
 ## Future Plans
-- A link to the deployed application will be provided once it's available.
+A link to the deployed application will be provided once it's available.
+ - **Features:** 
+    - [✔] Login
+    - [✔] Registration
+    - [✔] Supermarket Logging
+    - [✔] Finding address of current coordinates
+    - [✔] Photo Uploads
+      - [✔] From Camera
+      - [✔] From Gallery
+    - [✔] Adding a review
+    - [✔] Viewing ratings
+    - [✔] Adding ratings
+    - [ ] Uplading a profile picture
+    - [ ] Add a map view of supermarkets.
+    - [ ] Deploy the app and add a link here, so that people can use it
+
+Maybe one day: [ ] create a copy of this repository for rating and gathering recipes
+      - or generalize it, so that anything can be rated

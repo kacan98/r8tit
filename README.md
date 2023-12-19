@@ -5,6 +5,7 @@ I developed it for me and my girlfriend, because we love to visit supermarkets.
 </br>
 ## Screenshots
 <img src="./screenshots/Screenshots%20in%20one.png" style="border-radius: 6px;">
+- from the prototype
 
 ## Features
 - **User Authentication**: Secure login and user-friendly registration process.
@@ -24,4 +25,21 @@ The app's UI was designed using Figma. You can find the [prototype here](https:/
     - Use `dotnet run` in the 'backend' folder to start the server.
 
 ## Future Plans
-- A link to the deployed application will be provided once it's available.
+A link to the deployed application will be provided once it's available.
+ - **Features:** 
+    - [✔] Login
+    - [✔] Registration
+    - [✔] Supermarket Logging
+    - [✔] Finding address of current coordinates
+    - [✔] Photo Uploads
+      - [✔] From Camera
+      - [✔] From Gallery
+    - [✔] Adding a review
+    - [✔] Viewing ratings
+    - [✔] Adding ratings
+    - [ ] Uplading a profile picture
+    - [ ] Add a map view of supermarkets.
+    - [ ] Deploy the app and add a link here, so that people can use it
+
+Maybe one day: [ ] create a copy of this repository for rating and gathering recipes
+      - or generalize it, so that anything can be rated

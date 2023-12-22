@@ -208,14 +208,23 @@ export class DetailsPage implements OnInit, OnDestroy {
         objectType: 'Supermarkets',
         title: 'Rate ' + detailEntity.name,
         objectId: detailEntity.supermarketId,
-        ratings: currentUsersRatings,
+        currentRating: currentUsersRatings,
       },
     });
 
     await modal.present();
-    const { role } = await modal.onWillDismiss();
+    const { role, data } = await modal.onWillDismiss();
     if (role === 'apply') {
-      this.initializeRatings(detailEntity.supermarketId);
+      const ratingsChanged: RatingComplete[] = data;
+      this.ratings = this.ratings?.map((rating) => {
+        const changedRating = ratingsChanged.find(
+          (r) => r.ratingCategoryId === rating.ratingCategoryId,
+        );
+        if (changedRating) {
+          rating.ratingValue = changedRating.ratingValue;
+        }
+        return rating;
+      });
     }
   }
 

@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   RatingCategoriesForObjectType,
   RatingForUpsert,
+  RatingSummary,
 } from '../../services/rating/rating.model';
 import { RatingService } from '../../services/rating/rating.service';
 import { ErrorMessage } from '../error-message/error-message.model';
@@ -18,6 +19,8 @@ export class AddRatingsModalComponent implements OnInit, OnDestroy {
   @Input() objectType?: 'Supermarkets'; //this is based on the ratable objects
   @Input() title?: string = 'Add Rating';
   @Input() objectId?: number;
+  @Input() currentRating?: RatingSummary;
+
   ratingCategories?: RatingCategoriesForObjectType;
   form: FormGroup<{
     global: FormGroup<{ [key: string]: FormControl<number | null> }>;
@@ -41,7 +44,7 @@ export class AddRatingsModalComponent implements OnInit, OnDestroy {
       this.ratingService.getCategoriesForObjectType(this.objectType).subscribe({
         next: (categories) => {
           this.ratingCategories = categories;
-          this.initializeControls(categories);
+          this.initializeControls(categories, this.currentRating);
         },
         error: (e) => {
           this.errorMessage = e;
@@ -80,12 +83,19 @@ export class AddRatingsModalComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
-  private initializeControls(categories: RatingCategoriesForObjectType) {
+  private initializeControls(
+    categories: RatingCategoriesForObjectType,
+    currentRating?: RatingSummary,
+  ) {
     categories.global.forEach((category) => {
       //add a control to the global group
+      const currentRatingValue = currentRating?.ratings.find(
+        (r) => r.ratingCategoryId === category.ratingCategoryId,
+      )?.ratingValue;
+
       this.form.controls.global.registerControl(
         category.categoryName,
-        new FormControl(null),
+        new FormControl(currentRatingValue || null),
       );
     });
   }

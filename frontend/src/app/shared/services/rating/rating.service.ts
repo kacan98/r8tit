@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
-  RatingComplete,
+  RatingForObjectDTO,
   RatingCategoriesForObjectType,
   RatingForUpsert,
 } from './rating.model';
@@ -16,8 +16,8 @@ export class RatingService {
   getRatingsForObject(
     objectId: number,
     tableName: 'Supermarkets',
-  ): Observable<RatingComplete[]> {
-    return this.http.get<RatingComplete[]>(
+  ): Observable<RatingForObjectDTO[]> {
+    return this.http.get<RatingForObjectDTO[]>(
       `http://localhost:5204/api/Rating/ratingsForObject`,
       {
         params: {
@@ -43,8 +43,8 @@ export class RatingService {
 
   upsertRatings(
     ratings: RatingForUpsert[],
-  ): Observable<{ message: string; ratings: RatingComplete[] }> {
-    return this.http.post<{ message: string; ratings: RatingComplete[] }>(
+  ): Observable<{ message: string; ratings: RatingForObjectDTO[] }> {
+    return this.http.post<{ message: string; ratings: RatingForObjectDTO[] }>(
       `http://localhost:5204/api/Rating/upsertRatings`,
       ratings,
     );

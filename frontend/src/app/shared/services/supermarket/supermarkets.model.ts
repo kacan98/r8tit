@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
-import { RatingComplete } from '../rating/rating.model';
+import { RatingForObjectDTO } from '../rating/rating.model';
 
 export interface SupermarketComplete extends SupermarketForUpsert {
   supermarketCreatedByUserName: string;
@@ -12,7 +12,7 @@ export interface SupermarketComplete extends SupermarketForUpsert {
   averageRating: number | null;
 
   imageURL$?: Observable<SafeUrl>;
-  ratings: RatingComplete[];
+  ratings: RatingForObjectDTO[];
 }
 
 export interface SupermarketForUpsert {

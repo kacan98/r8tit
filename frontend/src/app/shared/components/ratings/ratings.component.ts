@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import {
-  RatingComplete,
+  RatingForObjectDTO,
   RatingSummary,
 } from '../../services/rating/rating.model';
 
@@ -16,29 +16,31 @@ import {
   styleUrls: ['./ratings.component.scss'],
 })
 export class RatingsComponent implements OnChanges {
-  @Input() ratings?: RatingComplete[];
+  @Input() ratings?: RatingForObjectDTO[];
   @Input() currentUserId?: number;
+
   userIdsWhoRated?: number[];
   userRatingsMapping?: {
     [key: string]: RatingSummary;
   };
-  @Output() editRatingClicked = new EventEmitter<RatingSummary>();
+  currentUserRated?: boolean;
+  @Output() editRatingClicked = new EventEmitter<RatingSummary | undefined>();
 
   constructor() {}
 
   ngOnChanges() {
     if (this.ratings) {
-      this.sortRatings(this.ratings);
+      this.sortRatings(this.ratings, this.currentUserId);
     }
   }
 
-  private sortRatings(ratings: RatingComplete[]) {
-    const userIdsWhoRated = ratings.map((r) => r.userId);
+  private sortRatings(ratings: RatingForObjectDTO[], currentUserId?: number) {
+    const userIdsWhoRated = ratings.map((r) => r.createdByUserId);
     const uniqueUserIdsWhoRated = [...new Set(userIdsWhoRated)];
     const ratingsSorted: RatingsComponent['userRatingsMapping'] = {};
 
     uniqueUserIdsWhoRated.forEach((userId) => {
-      const userRatings = ratings.filter((r) => r.userId === userId);
+      const userRatings = ratings.filter((r) => r.createdByUserId === userId);
       ratingsSorted[userId] = {
         ratings: userRatings,
         average:
@@ -55,5 +57,9 @@ export class RatingsComponent implements OnChanges {
       this.userIdsWhoRated.splice(currentUserIndex, 1);
       this.userIdsWhoRated.unshift(this.currentUserId!);
     }
+
+    this.currentUserRated = ratings.some(
+      (rating) => rating.createdByUserId === currentUserId,
+    );
   }
 }

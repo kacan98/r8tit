@@ -22,7 +22,10 @@ import { WebcamImage } from 'ngx-webcam';
 import { ImageService } from '../services/image/image.service';
 import { ErrorMessage } from '../components/error-message/error-message.model';
 import { RatingService } from '../services/rating/rating.service';
-import { RatingComplete, RatingSummary } from '../services/rating/rating.model';
+import {
+  RatingForObjectDTO,
+  RatingSummary,
+} from '../services/rating/rating.model';
 import { AuthService } from '../../auth/auth.service';
 import { AddRatingsModalComponent } from '../components/add-ratings-modal/add-ratings-modal.component';
 
@@ -47,7 +50,7 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   editImageButtonsDisplayed = false;
 
-  ratings?: RatingComplete[];
+  ratings?: RatingForObjectDTO[];
   currentUserRated?: boolean;
   currentUserId?: number;
 
@@ -113,7 +116,6 @@ export class DetailsPage implements OnInit, OnDestroy {
     await modal.present();
     const { data } = await modal.onWillDismiss();
     const webcamImage: WebcamImage | undefined = data;
-    //convert to a file
 
     if (!webcamImage) return;
 
@@ -215,16 +217,19 @@ export class DetailsPage implements OnInit, OnDestroy {
     await modal.present();
     const { role, data } = await modal.onWillDismiss();
     if (role === 'apply') {
-      const ratingsChanged: RatingComplete[] = data;
-      this.ratings = this.ratings?.map((rating) => {
+      const ratingsChanged: RatingForObjectDTO[] = data;
+      const newRatings: RatingForObjectDTO[] = data;
+      this.ratings = (this.ratings || []).map((rating) => {
         const changedRating = ratingsChanged.find(
           (r) => r.ratingCategoryId === rating.ratingCategoryId,
         );
         if (changedRating) {
           rating.ratingValue = changedRating.ratingValue;
+          newRatings.splice(newRatings.indexOf(changedRating), 1);
         }
         return rating;
       });
+      this.ratings = [...this.ratings, ...newRatings];
     }
   }
 
@@ -237,15 +242,12 @@ export class DetailsPage implements OnInit, OnDestroy {
           next: ([ratings, currentUser]) => {
             this.ratings = ratings;
             this.averageRating = this.getAverageRating(ratings);
-            this.currentUserRated = ratings.some(
-              (rating) => rating.userId === currentUser,
-            );
             this.currentUserId = currentUser;
           },
           error: (e) => {
             this.error = {
-              text: 'Failed to load supermarket ratings',
-              header: 'Error',
+              text: e.message,
+              header: 'Failed to load supermarket ratings',
             };
             console.error(e);
           },
@@ -253,13 +255,13 @@ export class DetailsPage implements OnInit, OnDestroy {
     );
   }
 
-  private getAverageRating(ratings: RatingComplete[]): number | null {
+  private getAverageRating(ratings: RatingForObjectDTO[]): number | null {
     const ratingsGroupedByUser = ratings.reduce(
       (acc, rating) => {
-        if (!acc[rating.userId]) {
-          acc[rating.userId] = [];
+        if (!acc[rating.createdByUserId]) {
+          acc[rating.createdByUserId] = [];
         }
-        acc[rating.userId].push(rating.ratingValue);
+        acc[rating.createdByUserId].push(rating.ratingValue);
         return acc;
       },
       {} as { [key: number]: number[] },

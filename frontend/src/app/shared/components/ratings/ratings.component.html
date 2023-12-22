@@ -1,4 +1,10 @@
 <ng-container *ngIf="userRatingsMapping">
+  <ion-button
+    *ngIf="!currentUserRated"
+    expand="full"
+    (click)="editRatingClicked.emit()"
+  >+ Add a rating</ion-button
+  >
   <ion-card
     *ngFor="let id of userIdsWhoRated; let first = first"
     [color]="id === currentUserId ? 'primary' : ''"

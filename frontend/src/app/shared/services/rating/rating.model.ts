@@ -1,7 +1,7 @@
-export interface RatingComplete {
+export interface RatingForObjectDTO {
   ratingValue: number;
   ratingCategoryId: number;
-  userId: number;
+  createdByUserId: number;
   imageId: number;
   username: string;
   categoryName: string;
@@ -31,6 +31,6 @@ export interface RatingCategoriesForObjectType {
 }
 
 export interface RatingSummary {
-  ratings: RatingComplete[];
+  ratings: RatingForObjectDTO[];
   average: number;
 }

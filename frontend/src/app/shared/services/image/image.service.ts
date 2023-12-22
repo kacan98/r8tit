@@ -35,13 +35,7 @@ export class ImageService {
     });
   }
 
-  private getImageFromDatabase(id: number): Observable<Blob> {
-    return this.http.get(`http://localhost:5204/api/Image/${id}`, {
-      responseType: 'blob',
-    });
-  }
-
-  private convertToBlob(base64Image: string): Blob {
+  convertToBlob(base64Image: string): Blob {
     const parts = base64Image.split(';base64,');
     const imageContent = parts[1];
     const byteString = window.atob(imageContent);
@@ -53,5 +47,11 @@ export class ImageService {
     }
 
     return new Blob([arrayBuffer], { type: 'image/jpeg' });
+  }
+
+  private getImageFromDatabase(id: number): Observable<Blob> {
+    return this.http.get(`http://localhost:5204/api/Image/${id}`, {
+      responseType: 'blob',
+    });
   }
 }

@@ -51,7 +51,6 @@ namespace R8titAPI.Controllers
                     };
                 }
 
-                // Check if object exists
                 // Should be safe to use relatedObjectTable here because we checked if it exists above
                 string relatedObjectColumnName = relatedObjectTable.TrimEnd(new char[] { 's' }) + "Id"; //eg. SupermarketId
                 string sqlToGetObject = $@"SELECT * FROM R8titSchema.{relatedObjectTable}
@@ -69,8 +68,7 @@ namespace R8titAPI.Controllers
 
                 // Check if user created object
                 string sqlToGetRelatedObject = $@"SELECT * FROM R8titSchema.{relatedObjectTable}
-                                            WHERE {relatedObjectColumnName} = @RelatedObjectIdParam 
-                                            AND CreatedByUserId = @UserMakingRequest";
+                                            WHERE {relatedObjectColumnName} = @RelatedObjectIdParam";
 
                 DynamicParameters parametersToGetRelatedObject = new DynamicParameters();
                 parametersToGetRelatedObject.Add("@RelatedObjectIdParam", relatedObjectId);
@@ -87,7 +85,7 @@ namespace R8titAPI.Controllers
                 // Compress to 800kb
                 if (file.Length > 800000)
                 {
-                    file = _imageHelper.CompressImage(file, 800, 100);
+                    file = _imageHelper.CompressImage(file, 1500, 100);
                 }
 
                 // Convert file to byte array

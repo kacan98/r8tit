@@ -3,4 +3,8 @@ ion-card-content {
   ion-item ion-label {
     padding-bottom: 6px;
   }
+
+  ion-thumbnail {
+    --border-radius: 6px;
+  }
 }

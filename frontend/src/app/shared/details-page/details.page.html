@@ -12,14 +12,14 @@
         class="image-actions ion-padding"
         *ngIf="detailEntity && editImageButtonsDisplayed"
       >
-        <ion-button
-          color="danger"
-          expand="block"
-          fill="outline"
-          [disabled]="true"
-          class="ion-margin-horizontal"
-          >Delete image</ion-button
-        >
+<!--        <ion-button-->
+<!--          color="danger"-->
+<!--          expand="block"-->
+<!--          fill="outline"-->
+<!--          [disabled]="true"-->
+<!--          class="ion-margin-horizontal"-->
+<!--          >Delete image</ion-button-->
+<!--        >-->
         <ion-button
           expand="block"
           class="ion-margin-end"
@@ -46,12 +46,6 @@
       </div>
       <div class="ion-margin-vertical ratings"></div>
       <ng-container>
-        <ion-button
-          *ngIf="!currentUserRated"
-          expand="full"
-          (click)="openRatingModal(detailEntity)"
-          >+ Add a rating</ion-button
-        >
         <app-ratings [ratings]="ratings" [currentUserId]="currentUserId" (editRatingClicked)="openRatingModal(detailEntity, $event)">
         </app-ratings>
       </ng-container>

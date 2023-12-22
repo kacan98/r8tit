@@ -2,10 +2,10 @@
   <ion-card class="ion-no-margin">
     <ion-card-content>
       <ion-item lines="none" *ngIf="currentUser$ | async as currentUser">
-        <ion-thumbnail slot="start">
+        <ion-thumbnail slot="start" (click)="updateUserImage()">
           <img
             alt="User profile picture"
-            [src]="currentUserImage | async"
+            [src]="currentUserImage$ | async"
           />
         </ion-thumbnail>
         <ion-label>{{currentUser.username}}</ion-label>
@@ -16,3 +16,11 @@
     >Sign out</ion-button
   >
 </ion-content>
+
+<input
+  #fileInput
+  type="file"
+  accept="image/*"
+  hidden
+  (change)="updateUserImageFromDevice($any($event.target))"
+/>

@@ -58,7 +58,7 @@ namespace R8titAPI.Helpers
 
             if (size > 5000000) // Check if the size is greater than 5MB
             {
-                throw new Exception("Image is too big. It must be less than 10MB");
+                throw new Exception("Image is too big. It must be less than 5MB");
             }
 
             while (size > maxSizeInKb)
@@ -66,7 +66,7 @@ namespace R8titAPI.Helpers
                 quality -= 5;
                 if (quality < 5)
                 {
-                    throw new Exception("Unable to compress image enough to meet the size requirement. Consider increasing the maximum size or choosing a different image.");
+                    throw new Exception("Unable to compress image enough to meet the size requirement.");
                 }
                 var ms = new MemoryStream();
                 image.Quality = quality;

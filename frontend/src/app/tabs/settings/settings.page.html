@@ -1,14 +1,17 @@
 <ion-content [fullscreen]="true" class="ion-padding">
   <ion-card class="ion-no-margin">
     <ion-card-content>
-      <ion-item lines="none" *ngIf="currentUser$ | async as currentUser">
-        <ion-thumbnail slot="start" (click)="updateUserImage()">
+      <ion-item lines="none" *ngIf="currentUser$ | async as currentUser" (click)="updateUserImage()">
+        <ion-thumbnail slot="start">
           <img
             alt="User profile picture"
             [src]="currentUserImage$ | async"
           />
         </ion-thumbnail>
         <ion-label>{{currentUser.username}}</ion-label>
+        <ion-button>
+          <ion-icon name="camera"></ion-icon>
+        </ion-button>
       </ion-item>
     </ion-card-content>
   </ion-card>

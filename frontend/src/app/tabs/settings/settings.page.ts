@@ -1,8 +1,8 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { UserService } from '../../shared/services/user/user.service';
 import { User } from '../../shared/services/user/user.model';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { ImageService } from '../../shared/services/image/image.service';
 import { SafeUrl } from '@angular/platform-browser';
 import {
@@ -18,10 +18,12 @@ import { TakePhotoComponent } from '../../shared/components/take-photo/take-phot
   templateUrl: 'settings.page.html',
   styleUrls: ['settings.page.scss'],
 })
-export class SettingsPage {
+export class SettingsPage implements OnDestroy {
   @ViewChild('fileInput') fileInput?: ElementRef;
   currentUser$: Observable<User>;
   currentUserImage$: Observable<SafeUrl>;
+
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private authService: AuthService,
@@ -37,6 +39,10 @@ export class SettingsPage {
 
   signOut() {
     this.authService.signOut();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
   async updateUserImage(): Promise<void> {
@@ -89,15 +95,17 @@ export class SettingsPage {
   }
 
   private uploadUserImage(file: File) {
-    this.userService.upsertUserImage(file).subscribe({
-      next: (image) => {
-        this.currentUserImage$ = of(image);
-        this.showToast(true);
-      },
-      error: (e) => {
-        this.showToast(false, e.message);
-      },
-    });
+    this.subscriptions.push(
+      this.userService.upsertUserImage(file).subscribe({
+        next: (image) => {
+          this.currentUserImage$ = of(image);
+          this.showToast(true);
+        },
+        error: (e) => {
+          this.showToast(false, e.message);
+        },
+      }),
+    );
   }
 
   private showToast(success: boolean, errorMessage?: string) {

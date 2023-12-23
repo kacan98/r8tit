@@ -35,7 +35,6 @@ export class UserService {
   getCurrentUserImage(): Observable<SafeUrl> {
     return this.userImageUpdated$.pipe(
       switchMap(() => {
-        console.log('getting image');
         return this.getCurrentUser().pipe(
           switchMap((user) => {
             return this.imageService.getImage(

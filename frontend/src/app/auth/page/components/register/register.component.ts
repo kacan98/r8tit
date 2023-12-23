@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -10,13 +10,14 @@ import {
 import { AuthService } from '../../../auth.service';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { ErrorMessage } from '../../../../shared/components/error-message/error-message.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnDestroy {
   @Output() registrationSuccessful = new EventEmitter<{ email: string }>();
 
   passwordValidators: {
@@ -88,6 +89,8 @@ export class RegisterComponent {
 
   error?: ErrorMessage;
 
+  subscriptions: Subscription[] = [];
+
   constructor(
     private authService: AuthService,
     private loadingController: LoadingController,
@@ -108,39 +111,45 @@ export class RegisterComponent {
 
     await loading.present();
 
-    this.authService
-      .register(username, email, password, passwordConfirm)
-      .subscribe({
-        next: () => {
-          loading.dismiss();
+    this.subscriptions.push(
+      this.authService
+        .register(username, email, password, passwordConfirm)
+        .subscribe({
+          next: () => {
+            loading.dismiss();
 
-          this.toastController
-            .create({
-              message: 'Registration successful',
-              duration: 3000,
-              color: 'success',
-            })
-            .then((toast) => {
-              toast.present();
-            });
+            this.toastController
+              .create({
+                message: 'Registration successful',
+                duration: 3000,
+                color: 'success',
+              })
+              .then((toast) => {
+                toast.present();
+              });
 
-          this.registrationSuccessful.emit({ email });
-        },
-        error: (error) => {
-          loading.dismiss();
-          if (error.status === 0) {
-            this.error = {
-              header: 'Error',
-              text: 'Could not connect to the backend',
-            };
-          } else {
-            this.error = {
-              header: 'Error',
-              text: error.message,
-            };
-          }
-        },
-      });
+            this.registrationSuccessful.emit({ email });
+          },
+          error: (error) => {
+            loading.dismiss();
+            if (error.status === 0) {
+              this.error = {
+                header: 'Error',
+                text: 'Could not connect to the backend',
+              };
+            } else {
+              this.error = {
+                header: 'Error',
+                text: error.message,
+              };
+            }
+          },
+        }),
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }
 

@@ -69,14 +69,17 @@ export class AddRatingsModalComponent implements OnInit, OnDestroy {
         ratingValue: formValue.global[key],
       } as RatingForUpsert;
     });
-    this.ratingService.upsertRatings(ratingsInGlobalCategories).subscribe({
-      next: () => {
-        this.modalController.dismiss(undefined, role);
-      },
-      error: (e) => {
-        this.errorMessage = e;
-      },
-    });
+
+    this.subscriptions.push(
+      this.ratingService.upsertRatings(ratingsInGlobalCategories).subscribe({
+        next: () => {
+          this.modalController.dismiss(undefined, role);
+        },
+        error: (e) => {
+          this.errorMessage = e;
+        },
+      }),
+    );
   }
 
   ngOnDestroy() {

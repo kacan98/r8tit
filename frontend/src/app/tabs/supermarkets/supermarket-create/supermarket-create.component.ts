@@ -48,28 +48,31 @@ export class SupermarketCreateComponent implements OnInit, OnDestroy {
       latitude: this.formGroup.value.latitude || undefined,
       longitude: this.formGroup.value.longitude || undefined,
     };
-    this.supermarketService.upsertSupermarket(supermarket).subscribe({
-      next: (supermarketCreated) => {
-        this.toastController
-          .create({
-            message: 'Supermarket created successfully',
-            duration: 2000,
-          })
-          .then((toast) => toast.present());
-        void this.modalController.dismiss(
-          { supermarketId: supermarketCreated.supermarket.supermarketId },
-          'successfully created',
-        );
-      },
-      error: (e) => {
-        this.toastController
-          .create({
-            message: `Something went wrong: ${e.error.message}`,
-            duration: 3000,
-          })
-          .then((toast) => toast.present());
-      },
-    });
+
+    this.subscriptions.push(
+      this.supermarketService.upsertSupermarket(supermarket).subscribe({
+        next: (supermarketCreated) => {
+          this.toastController
+            .create({
+              message: 'Supermarket created successfully',
+              duration: 2000,
+            })
+            .then((toast) => toast.present());
+          void this.modalController.dismiss(
+            { supermarketId: supermarketCreated.supermarket.supermarketId },
+            'successfully created',
+          );
+        },
+        error: (e) => {
+          this.toastController
+            .create({
+              message: `Something went wrong: ${e.error.message}`,
+              duration: 3000,
+            })
+            .then((toast) => toast.present());
+        },
+      }),
+    );
   }
 
   async setDefaultLocation() {

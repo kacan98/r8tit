@@ -32,7 +32,7 @@
     </ng-container>
     <div class="container">
       <div class="header">
-        <h2>{{title}}</h2>
+        <h2>{{title | titlecase}}</h2>
         <div class="place" *ngIf="place">
           <ion-icon name="location" class="place-icon"></ion-icon>{{place}}
         </div>

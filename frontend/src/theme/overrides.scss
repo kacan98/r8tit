@@ -22,6 +22,19 @@
   font-style: italic;
 }
 
+@font-face{
+  font-family: 'Montserrat';
+  src: url('../assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face{
+  font-family: 'Montserrat';
+  src: url('../assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf') format('truetype');
+  font-style: italic;
+}
+
+
 html{
   --ion-font-family: 'Mulsih', sans-serif;
 
@@ -29,8 +42,8 @@ html{
   --app-margin: 16px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'MuseoModerno', sans-serif;
+h1, h2, h3, h4, h5, h6, ion-card-header {
+  font-family: 'Montserrat', sans-serif;
   font-weight: normal;
 }
 

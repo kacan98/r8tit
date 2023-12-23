@@ -9,6 +9,7 @@ import {
   RatingForObjectDTO,
   RatingSummary,
 } from '../../services/rating/rating.model';
+import { ImageService } from '../../services/image/image.service';
 
 @Component({
   selector: 'app-ratings',
@@ -26,7 +27,7 @@ export class RatingsComponent implements OnChanges {
   currentUserRated?: boolean;
   @Output() editRatingClicked = new EventEmitter<RatingSummary | undefined>();
 
-  constructor() {}
+  constructor(private imageService: ImageService) {}
 
   ngOnChanges() {
     if (this.ratings) {
@@ -42,6 +43,7 @@ export class RatingsComponent implements OnChanges {
     uniqueUserIdsWhoRated.forEach((userId) => {
       const userRatings = ratings.filter((r) => r.createdByUserId === userId);
       ratingsSorted[userId] = {
+        pictureUrl$: this.imageService.getImageUrlForUser(userId),
         ratings: userRatings,
         average:
           userRatings.reduce((acc, curr) => acc + curr.ratingValue, 0) /

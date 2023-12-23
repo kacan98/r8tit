@@ -70,8 +70,8 @@ export class AddRatingsModalComponent implements OnInit, OnDestroy {
       } as RatingForUpsert;
     });
     this.ratingService.upsertRatings(ratingsInGlobalCategories).subscribe({
-      next: (response) => {
-        this.modalController.dismiss(response.ratings, role);
+      next: () => {
+        this.modalController.dismiss(undefined, role);
       },
       error: (e) => {
         this.errorMessage = e;

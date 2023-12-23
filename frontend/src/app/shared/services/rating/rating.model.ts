@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { SafeUrl } from '@angular/platform-browser';
+
 export interface RatingForObjectDTO {
   ratingValue: number;
   ratingCategoryId: number;
@@ -32,5 +35,6 @@ export interface RatingCategoriesForObjectType {
 
 export interface RatingSummary {
   ratings: RatingForObjectDTO[];
+  pictureUrl$: Observable<SafeUrl>;
   average: number;
 }

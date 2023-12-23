@@ -54,4 +54,17 @@ export class ImageService {
       responseType: 'blob',
     });
   }
+
+  getImageUrlForUser(userId: number): Observable<SafeUrl> {
+    return this.http
+      .get(`http://localhost:5204/api/Image/byUserId/${userId}`, {
+        responseType: 'blob',
+      })
+      .pipe(
+        map((blob) => {
+          let objectURL = URL.createObjectURL(blob);
+          return this.sanitizer.bypassSecurityTrustUrl(objectURL);
+        }),
+      );
+  }
 }

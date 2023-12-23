@@ -161,5 +161,37 @@ namespace R8titAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [AllowAnonymous]
+        [HttpGet("byUserId/{id}")]
+        public IActionResult GetImagesByUserId(int id)
+        {
+            try
+            {
+                // get user by id
+                string sqlToGetUser = @"SELECT * FROM R8titSchema.Users WHERE UserId = @UserIdParam";
+                DynamicParameters parametersToGetUser = new DynamicParameters();
+                parametersToGetUser.Add("@UserIdParam", id);
+                var user = _dapper.LoadDataSingle<User>(sqlToGetUser, parametersToGetUser);
+
+                if (user == null)
+                {
+                    return NotFound("User not found");
+                }
+
+                // get images by imageId on user
+                string sqlToGetImages = @"SELECT * FROM R8titSchema.Images WHERE ImageId = @ImageIdParam";
+                DynamicParameters parametersToGetImages = new DynamicParameters();
+                parametersToGetImages.Add("@ImageIdParam", user.ImageId);
+                var image = _dapper.LoadDataSingle<Image>(sqlToGetImages, parametersToGetImages);
+
+                return File(image.ImageData, "image/jpeg");
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

@@ -1,12 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SupermarketService } from '../../shared/services/supermarket/supermarket.service';
-import { Subscription, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SupermarketComplete } from '../../shared/services/supermarket/supermarkets.model';
-import {
-  ModalController,
-  NavController,
-  RefresherEventDetail,
-} from '@ionic/angular';
+import { IonRefresher, ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { SupermarketCreateComponent } from './supermarket-create/supermarket-create.component';
 import { ErrorMessage } from '../../shared/components/error-message/error-message.model';
@@ -17,6 +13,9 @@ import { ErrorMessage } from '../../shared/components/error-message/error-messag
   styleUrls: ['supermarkets.page.scss'],
 })
 export class SupermarketsPage implements OnInit, OnDestroy {
+  @ViewChild(IonRefresher, { static: false })
+  refresher?: IonRefresher;
+
   supermarkets?: SupermarketComplete[];
   private subscriptions: Subscription[] = [];
 
@@ -32,9 +31,6 @@ export class SupermarketsPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.getSupermarkets();
   }
-  handleRefresh(refresher?: RefresherEventDetail) {
-    this.subscriptions.push(this.refresh(refresher).subscribe());
-  }
 
   ngOnDestroy() {
     this.subscriptions.forEach((s) => s.unsubscribe());
@@ -49,13 +45,13 @@ export class SupermarketsPage implements OnInit, OnDestroy {
 
     const { data, role } = await modal.onWillDismiss();
     if (role === 'successfully created') {
-      this.refresh().subscribe({
-        next: () => {
-          this.navController.navigateForward(['details', data.supermarketId], {
-            relativeTo: this.route,
-          });
+      this.refreshSupermarkets();
+      await this.navController.navigateForward(
+        ['details', data.supermarketId],
+        {
+          relativeTo: this.route,
         },
-      });
+      );
     }
   }
 
@@ -66,38 +62,24 @@ export class SupermarketsPage implements OnInit, OnDestroy {
     );
   }
 
-  private getSupermarkets(event?: any) {
+  refreshSupermarkets() {
+    this.error = undefined;
+    this.supermarketService.refreshSupermarkets();
+  }
+
+  private getSupermarkets() {
     this.subscriptions.push(
       this.supermarketService.getAllSupermarkets().subscribe({
-        next: (supermarkets) => {
+        next: async (supermarkets) => {
+          await this.refresher?.complete();
           this.supermarkets = supermarkets;
-          event?.target.complete();
         },
-        error: (error) => {
+        error: async (error) => {
           this.error = {
             text: error.message,
             header: 'Error while loading supermarkets',
           };
-          event?.target.complete();
-        },
-      }),
-    );
-  }
-
-  private refresh(refresher?: RefresherEventDetail) {
-    this.error = undefined;
-    return this.supermarketService.refreshSupermarkets().pipe(
-      tap({
-        next: (supermarkets) => {
-          this.supermarkets = supermarkets;
-          refresher?.complete();
-        },
-        error: (error) => {
-          this.error = {
-            text: error.message,
-            header: 'Error while refreshing',
-          };
-          refresher?.complete();
+          await this.refresher?.complete();
         },
       }),
     );

@@ -7,7 +7,13 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SupermarketService } from '../services/supermarket/supermarket.service';
-import { combineLatestWith, from, Observable, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatestWith,
+  from,
+  Observable,
+  Subscription,
+} from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
 import {
   AlertController,
@@ -41,6 +47,9 @@ export type DetailEntity = SupermarketComplete;
  * */
 export class DetailsPage implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput?: ElementRef;
+
+  ratingsChanged$ = new BehaviorSubject(undefined);
+
   supermarketId?: number;
   title?: string;
   image$?: Observable<SafeUrl>;
@@ -215,34 +224,28 @@ export class DetailsPage implements OnInit, OnDestroy {
     });
 
     await modal.present();
-    const { role, data } = await modal.onWillDismiss();
+    const { role } = await modal.onWillDismiss();
     if (role === 'apply') {
-      const ratingsChanged: RatingForObjectDTO[] = data;
-      const newRatings: RatingForObjectDTO[] = data;
-      this.ratings = (this.ratings || []).map((rating) => {
-        const changedRating = ratingsChanged.find(
-          (r) => r.ratingCategoryId === rating.ratingCategoryId,
-        );
-        if (changedRating) {
-          rating.ratingValue = changedRating.ratingValue;
-          newRatings.splice(newRatings.indexOf(changedRating), 1);
-        }
-        return rating;
-      });
-      this.ratings = [...this.ratings, ...newRatings];
+      this.ratingsChanged$.next(undefined);
+      this.supermarketService.refreshSupermarkets();
     }
   }
 
   private initializeRatings(supermarketId: number) {
     this.subscriptions.push(
-      this.ratingService
-        .getRatingsForObject(supermarketId, 'Supermarkets')
-        .pipe(combineLatestWith(this.authService.getCurrentUserId()))
+      this.ratingsChanged$
+        .pipe(
+          switchMap(() => {
+            return this.ratingService
+              .getRatingsForObject(supermarketId, 'Supermarkets')
+              .pipe(combineLatestWith(this.authService.getCurrentUserId()));
+          }),
+        )
         .subscribe({
-          next: ([ratings, currentUser]) => {
+          next: ([ratings, currentUserId]) => {
             this.ratings = ratings;
             this.averageRating = this.getAverageRating(ratings);
-            this.currentUserId = currentUser;
+            this.currentUserId = currentUserId;
           },
           error: (e) => {
             this.error = {

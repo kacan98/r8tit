@@ -1,5 +1,5 @@
 <ion-content *ngIf="supermarkets; else errorMessage">
-  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($any($event))">
+  <ion-refresher slot="fixed" (ionRefresh)="refreshSupermarkets()" >
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list class="ion-margin-horizontal">

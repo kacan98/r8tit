@@ -1,14 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {
-  BehaviorSubject,
-  map,
-  Observable,
-  of,
-  shareReplay,
-  switchMap,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
 import {
   SupermarketComplete,
   SupermarketCreatedResponse,
@@ -20,8 +12,7 @@ import { ImageService } from '../image/image.service';
   providedIn: 'root',
 })
 export class SupermarketService {
-  allSupermarkets$: BehaviorSubject<SupermarketComplete[] | undefined> =
-    new BehaviorSubject<SupermarketComplete[] | undefined>(undefined);
+  somethingChanged$ = new BehaviorSubject<undefined>(undefined);
 
   constructor(
     private http: HttpClient,
@@ -29,37 +20,27 @@ export class SupermarketService {
   ) {}
 
   getAllSupermarkets(): Observable<SupermarketComplete[]> {
-    return this.allSupermarkets$.pipe(
-      switchMap((supermarkets) => {
-        if (supermarkets === undefined) {
-          return this.refreshSupermarkets().pipe(
-            tap((supermarkets) => {
-              this.allSupermarkets$.next(supermarkets);
-            }),
-          );
-        }
-        return of(supermarkets);
+    return this.somethingChanged$.pipe(
+      switchMap(() => {
+        return this.http.get<SupermarketComplete[]>(
+          'http://localhost:5204/api/Supermarket/GetAllList',
+        );
       }),
-      shareReplay(),
+
+      map((supermarkets) => {
+        return supermarkets.map((supermarket) => ({
+          ...supermarket,
+          imageURL$: this.imageService.getImage(
+            supermarket.imageId,
+            'assets/placeholders/placeholder-image-dark.jpg',
+          ),
+        }));
+      }),
     );
   }
 
-  refreshSupermarkets(): Observable<SupermarketComplete[]> {
-    return this.http
-      .get<SupermarketComplete[]>(
-        'http://localhost:5204/api/Supermarket/GetAllList',
-      )
-      .pipe(
-        map((supermarkets) => {
-          return supermarkets.map((supermarket) => ({
-            ...supermarket,
-            imageURL$: this.imageService.getImage(
-              supermarket.imageId,
-              'assets/placeholders/placeholder-image-dark.jpg',
-            ),
-          }));
-        }),
-      );
+  refreshSupermarkets(): void {
+    this.somethingChanged$.next(undefined);
   }
 
   getSupermarketDetails(

@@ -32,6 +32,15 @@ export class AuthService {
     this.currentAuth$ = this.initCurrentUser();
   }
 
+  canActivate(): Observable<boolean | UrlTree> {
+    return this.currentAuth$.pipe(
+      switchMap((currentAuth) => {
+        if (!currentAuth) return this.navController.navigateRoot('/auth');
+        return of(true);
+      }),
+    );
+  }
+
   isSomeoneLoggedIn(): Observable<boolean> {
     return this.currentAuth$.pipe(map((user) => !!user));
   }
@@ -41,7 +50,10 @@ export class AuthService {
   }
 
   getCurrentUserId(): Observable<number | undefined> {
-    return this.currentAuth$.pipe(map((user) => user?.userId));
+    return this.currentAuth$.pipe(
+      map((user) => user?.userId),
+      first(),
+    );
   }
 
   refreshToken() {
@@ -94,33 +106,6 @@ export class AuthService {
       );
   }
 
-  signOut() {
-    this.currentAuth$.next(undefined);
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    void this.navController.navigateRoot('/auth');
-  }
-
-  canActivate(): Observable<boolean | UrlTree> {
-    return this.currentAuth$.pipe(
-      switchMap((currentAuth) => {
-        if (!currentAuth) return this.navController.navigateRoot('/auth');
-        return of(true);
-      }),
-    );
-  }
-
-  private initCurrentUser(): BehaviorSubject<CurrentAuth | undefined> {
-    let token = localStorage.getItem('token');
-    let userId = localStorage.getItem('userId');
-    if (!this.currentAuth$ && token && userId) {
-      return new BehaviorSubject<CurrentAuth | undefined>({
-        token,
-        userId: +userId,
-      });
-    } else return new BehaviorSubject<CurrentAuth | undefined>(undefined);
-  }
-
   register(
     username: string,
     email: string,
@@ -137,5 +122,23 @@ export class AuthService {
       },
       { headers: { skipToken: 'true' } },
     );
+  }
+
+  signOut() {
+    this.currentAuth$.next(undefined);
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    void this.navController.navigateRoot('/auth');
+  }
+
+  private initCurrentUser(): BehaviorSubject<CurrentAuth | undefined> {
+    let token = localStorage.getItem('token');
+    let userId = localStorage.getItem('userId');
+    if (!this.currentAuth$ && token && userId) {
+      return new BehaviorSubject<CurrentAuth | undefined>({
+        token,
+        userId: +userId,
+      });
+    } else return new BehaviorSubject<CurrentAuth | undefined>(undefined);
   }
 }

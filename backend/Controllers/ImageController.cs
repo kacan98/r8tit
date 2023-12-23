@@ -124,7 +124,7 @@ namespace R8titAPI.Controllers
                 {
                     Image upsertedImage = _dapper.UpsertSql<Image>(sql, parameters);
 
-                    return Ok(new { message = "Image uploaded successfully", image = upsertedImage });
+                    return File(upsertedImage.ImageData, "image/jpeg");
                 }
                 catch (Exception ex)
                 {

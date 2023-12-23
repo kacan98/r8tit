@@ -32,7 +32,7 @@ A link to the deployed application will be provided once it's available.
     - [✔] Adding a review
     - [✔] Viewing ratings
     - [✔] Adding ratings
-    - [ ] Uplading a profile picture
+    - [✔] Uplading a profile picture
     - [ ] Add a map view of supermarkets.
     - [ ] Deploy the app and add a link here, so that people can use it
 

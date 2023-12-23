@@ -10,13 +10,17 @@ import { SupermarketService } from '../services/supermarket/supermarket.service'
 import {
   BehaviorSubject,
   combineLatestWith,
+  delayWhen,
   from,
+  map,
   Observable,
+  of,
   Subscription,
 } from 'rxjs';
 import { SafeUrl } from '@angular/platform-browser';
 import {
   AlertController,
+  IonRefresher,
   LoadingController,
   ModalController,
   ToastController,
@@ -47,8 +51,10 @@ export type DetailEntity = SupermarketComplete;
  * */
 export class DetailsPage implements OnInit, OnDestroy {
   @ViewChild('fileInput') fileInput?: ElementRef;
+  @ViewChild(IonRefresher, { static: false }) refresher?: IonRefresher;
 
   ratingsChanged$ = new BehaviorSubject(undefined);
+  supermarketChanged$ = new BehaviorSubject(undefined);
 
   supermarketId?: number;
   title?: string;
@@ -84,6 +90,10 @@ export class DetailsPage implements OnInit, OnDestroy {
       this.initializeRatings(this.supermarketId);
       this.initializeSupermarket(this.supermarketId);
     }
+  }
+
+  refreshEverything() {
+    this.supermarketChanged$.next(undefined);
   }
 
   async updateImage(detailEntity: DetailEntity): Promise<void> {
@@ -158,10 +168,11 @@ export class DetailsPage implements OnInit, OnDestroy {
           switchMap(() => {
             return this.supermarketService.updateImage(supermarket, file);
           }),
-          switchMap(() => loadingElement.dismiss()),
+          map((file) => this.imageService.blobToUrl(file)),
+          delayWhen(() => loadingElement.dismiss()),
         )
         .subscribe({
-          next: () => {
+          next: (imageUrl) => {
             void loadingElement.dismiss();
             void this.toastController
               .create({
@@ -170,7 +181,7 @@ export class DetailsPage implements OnInit, OnDestroy {
                 duration: 3000,
               })
               .then((toast) => toast.present());
-            this.initializeSupermarket(supermarket.supermarketId);
+            this.image$ = of(imageUrl);
           },
           error: (e) => {
             void loadingElement.dismiss();
@@ -188,24 +199,33 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   private initializeSupermarket(supermarketId: number) {
     this.subscriptions.push(
-      this.supermarketService.getSupermarketDetails(supermarketId).subscribe({
-        next: (supermarket) => {
-          this.image$ = this.imageService.getImage(
-            supermarket.imageId,
-            'assets/placeholders/placeholder-image-dark.jpg',
-          );
-          this.title = supermarket.name;
-          this.place = `${supermarket.city}, ${supermarket.country}`;
-          this.detailEntity = supermarket;
-        },
-        error: (e) => {
-          this.error = {
-            text: 'Failed to load supermarket details',
-            header: 'Error',
-          };
-          console.error(e);
-        },
-      }),
+      this.supermarketChanged$
+        .pipe(
+          switchMap(() => {
+            return this.supermarketService.getSupermarketDetails(supermarketId);
+          }),
+        )
+        .subscribe({
+          next: (supermarket) => {
+            this.image$ = this.imageService.getImage(
+              supermarket.imageId,
+              'assets/placeholders/placeholder-image-dark.jpg',
+            );
+            this.title = supermarket.name;
+            this.place = `${supermarket.city}, ${supermarket.country}`;
+            this.detailEntity = supermarket;
+
+            this.refresher?.complete();
+          },
+          error: (e) => {
+            this.error = {
+              text: 'Failed to load supermarket details',
+              header: 'Error',
+            };
+            console.error(e);
+            this.refresher?.complete();
+          },
+        }),
     );
   }
 

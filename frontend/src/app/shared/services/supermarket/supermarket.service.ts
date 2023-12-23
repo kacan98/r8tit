@@ -62,21 +62,16 @@ export class SupermarketService {
       .pipe(map((result) => result));
   }
 
-  updateImage(supermarket: SupermarketComplete, file: File) {
+  updateImage(supermarket: SupermarketComplete, file: File): Observable<Blob> {
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    return this.http
-      .post('http://localhost:5204/api/Image/upload', formData, {
-        params: {
-          relatedObjectId: supermarket.supermarketId,
-          relatedObjectTable: 'Supermarkets',
-        },
-      })
-      .pipe(
-        map((result) => {
-          return result;
-        }),
-      );
+    return this.http.post('http://localhost:5204/api/Image/upload', formData, {
+      params: {
+        relatedObjectId: supermarket.supermarketId,
+        relatedObjectTable: 'Supermarkets',
+      },
+      responseType: 'blob',
+    });
   }
 }

@@ -20,11 +20,13 @@ export class ImageService {
     return imageId === null
       ? of(fallbackImage)
       : this.getImageFromDatabase(imageId).pipe(
-          map((blob) => {
-            let objectURL = URL.createObjectURL(blob);
-            return this.sanitizer.bypassSecurityTrustUrl(objectURL);
-          }),
+          map((blob) => this.blobToUrl(blob)),
         );
+  }
+
+  blobToUrl(blob: Blob): SafeUrl {
+    let objectURL = URL.createObjectURL(blob);
+    return this.sanitizer.bypassSecurityTrustUrl(objectURL);
   }
 
   webcamImageToFile(webcamImage: WebcamImage): File {
@@ -60,11 +62,6 @@ export class ImageService {
       .get(`http://localhost:5204/api/Image/byUserId/${userId}`, {
         responseType: 'blob',
       })
-      .pipe(
-        map((blob) => {
-          let objectURL = URL.createObjectURL(blob);
-          return this.sanitizer.bypassSecurityTrustUrl(objectURL);
-        }),
-      );
+      .pipe(map((blob) => this.blobToUrl(blob)));
   }
 }

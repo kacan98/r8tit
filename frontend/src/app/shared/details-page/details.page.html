@@ -1,5 +1,8 @@
 <ng-container *ngIf="detailEntity; else loading">
   <ion-content *ngIf="!error; else showError">
+    <ion-refresher slot="fixed" (ionRefresh)="refreshEverything()" >
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
     <ion-back-button defaultHref="/tabs/supermarkets"></ion-back-button>
     <ng-container *ngIf="image$">
       <img

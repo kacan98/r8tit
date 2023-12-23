@@ -12,7 +12,7 @@ BEGIN
 ,[Categories].[Global]
 ,[Ratings].[RatingValue]
 ,[Ratings].[RatingCategoryId]
-,[Users].[UserId]
+,[Users].[UserId] as CreatedByUserId
 ,[Users].[ImageId]
 ,[Users].[Username]
   FROM [R8titSchema].[Ratings] as Ratings

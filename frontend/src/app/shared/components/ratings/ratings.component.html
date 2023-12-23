@@ -6,7 +6,7 @@
   >+ Add a rating</ion-button
   >
   <ion-card
-    *ngFor="let id of userIdsWhoRated; let first = first"
+    *ngFor="let id of userIdsWhoRated"
     [color]="id === currentUserId ? 'primary' : ''"
     class="ion-no-margin ion-margin-vertical"
     (click)="id === currentUserId && editRatingClicked.emit(userRatingsMapping[currentUserId])"

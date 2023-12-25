@@ -1,6 +1,3 @@
-USE master 
-GO
-
 CREATE OR ALTER PROCEDURE R8titSchema.spRatings_Upsert
 -- EXEC R8titSchema.spRatings_Upsert @RatingId = 1, @RatingValue = 1, @RatingCategoryId = 1, @CreatedByUserId = 1, @RelatedObjectId = 5
     @RatingId INT = NULL,
@@ -17,7 +14,8 @@ BEGIN
         END
     IF @RatingId IS NOT NULL AND NOT EXISTS (SELECT * FROM R8titSchema.Ratings WHERE RatingId = @RatingId)
         BEGIN
-            THROW 50000, 'The rating you are trying to edit does not exist', 1;
+            RAISERROR('The rating you are trying to edit does not exist', 16, 1)
+            RETURN
         END
     IF NOT EXISTS (SELECT * FROM R8titSchema.Ratings WHERE RatingId = @RatingId)
         BEGIN

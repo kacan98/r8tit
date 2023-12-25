@@ -1,6 +1,3 @@
-USE master
-GO
-
 CREATE OR ALTER PROCEDURE R8titSchema.spSupermarkets_Upsert
 -- EXEC R8titSchema.spSupermarkets_Upsert
 --     @SupermarketId = 1

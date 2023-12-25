@@ -1,6 +1,3 @@
-USE master
-GO
-
 CREATE OR ALTER PROCEDURE R8titSchema.spImages_Upsert
 -- EXEC R8titSchema.spImages_Upsert
     @ImageId INT = NULL,
@@ -49,12 +46,5 @@ BEGIN
                     SET Users.ImageId = @ImageId
                     WHERE UserId = @RelatedObjectId
             END
-        --TODO: Make it possible to add pictures to ratings
-        ELSE IF @RelatedObjectTable = 'Ratings'
-            BEGIN
-                UPDATE R8titSchema.Ratings
-                    SET Rating.ImageId = @ImageId
-                    WHERE RatingId = @RelatedObjectId
-            END
-    SELECT * FROM R8titSchema.Images WHERE ImageId = @ImageId
+    SELECT * FROM R8titSchema.Images WHERE Images.ImageId = @ImageId
 END

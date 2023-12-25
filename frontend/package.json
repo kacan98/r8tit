@@ -1,11 +1,12 @@
 {
   "name": "r8tit",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "Karel Čančara",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"

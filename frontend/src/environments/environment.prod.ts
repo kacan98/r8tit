@@ -5,5 +5,5 @@ export interface Environment {
 
 export const environment: Environment = {
   production: true,
-  apiUrl: '',
+  apiUrl: 'https://r8titapi1.azurewebsites.net',
 };

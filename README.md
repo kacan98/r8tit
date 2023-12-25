@@ -3,8 +3,11 @@ This app, developed using Angular, Ionic, C#, and SQL, is designed for supermark
 I developed it for me and my girlfriend, because we love to visit supermarkets.
 </br>
 </br>
+You can find the deployed app [here](https://r8tit.azurewebsites.net/).
+</br>
+</br>
 ## Screenshots
-<img src="./screenshots/Screenshots%20in%20one.png" style="border-radius: 6px;">
+<img src="./screenshots/Screenshots%20in%20one.png" style="border-radius: 6px;" alt="Screenshots of the app">
 - from the prototype
 
 ## Development

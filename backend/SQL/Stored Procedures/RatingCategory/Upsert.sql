@@ -1,6 +1,3 @@
-USE master
-GO
-
 CREATE OR ALTER PROCEDURE R8titSchema.spRatingCategories_Upsert
 -- EXEC R8titSchema.spRatingCategories_Upsert @RatingCategoryId = 1, @CategoryName = 'Test', @CreatedByUserId = 1, @RelatedObjectTable = 'Supermarkets'
     @RatingCategoryId INT = NULL,
@@ -11,13 +8,15 @@ AS
 BEGIN
     IF EXISTS (SELECT * FROM R8titSchema.RatingCategories WHERE CategoryName = @CategoryName AND RatingCategoryId <> @RatingCategoryId)
         BEGIN
-            THROW 50000, 'Category name already exists', 1;
+            RAISERROR('Category name already exists', 16, 1);
+            RETURN
         END
         --TODO: Ideally all upserts should behave like this 
         -- but I'm too lazy to do it now. I think it should be fine if it's handled in the controllers
     IF @RatingCategoryId IS NOT NULL AND NOT EXISTS (SELECT * FROM R8titSchema.RatingCategories WHERE RatingCategoryId = @RatingCategoryId)
         BEGIN
-            THROW 50000, 'The category you are trying to edit does not exist', 1;
+            RAISERROR('The category you are trying to edit does not exist', 16, 1);
+            RETURN
         END
     IF NOT EXISTS (SELECT * FROM R8titSchema.RatingCategories WHERE RatingCategoryId = @RatingCategoryId)
         BEGIN

@@ -3,7 +3,7 @@ CREATE OR ALTER PROCEDURE R8titSchema.spLoginConfirmation_Get
 AS
 IF NOT EXISTS (SELECT * FROM R8titSchema.Users WHERE Email = @Email)
 BEGIN
-    RAISERROR('User does not exist');
+    RAISERROR('User does not exist', 16, 1);
     RETURN;
 END;
 BEGIN

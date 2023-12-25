@@ -1,6 +1,3 @@
-USE master 
-GO
-
 CREATE OR ALTER PROCEDURE R8titSchema.spRating_GetRatingsForObject
 -- EXEC R8titSchema.spRating_GetRatingsForObject 1, 'Supermarkets'
     @ObjectId INT,

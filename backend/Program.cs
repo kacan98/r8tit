@@ -26,7 +26,7 @@ builder.Services.AddCors((options) =>
         options.AddPolicy("ProdCors", (corsBuilder) =>
             {
                 //TODO: change to production site
-                corsBuilder.WithOrigins("https://myProductionSite.com")
+                corsBuilder.WithOrigins("https://r8tit.azurewebsites.net")
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
@@ -56,9 +56,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseCors("DevCors");
+} else {
+    app.UseCors("ProdCors");
 }
-
-app.UseCors("DevCors");  // Apply the CORS policy here
 
 app.UseHttpsRedirection();
 

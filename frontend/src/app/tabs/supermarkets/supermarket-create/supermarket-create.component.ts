@@ -56,6 +56,7 @@ export class SupermarketCreateComponent implements OnInit, OnDestroy {
             .create({
               message: 'Supermarket created successfully',
               duration: 2000,
+              color: 'success',
             })
             .then((toast) => toast.present());
           void this.modalController.dismiss(

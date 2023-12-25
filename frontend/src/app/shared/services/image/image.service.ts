@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable, of } from 'rxjs';
 import { WebcamImage } from 'ngx-webcam';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -52,14 +53,14 @@ export class ImageService {
   }
 
   private getImageFromDatabase(id: number): Observable<Blob> {
-    return this.http.get(`http://localhost:5204/api/Image/${id}`, {
+    return this.http.get(`${environment.apiUrl}/api/Image/${id}`, {
       responseType: 'blob',
     });
   }
 
   getImageUrlForUser(userId: number): Observable<SafeUrl> {
     return this.http
-      .get(`http://localhost:5204/api/Image/byUserId/${userId}`, {
+      .get(`${environment.apiUrl}/api/Image/byUserId/${userId}`, {
         responseType: 'blob',
       })
       .pipe(map((blob) => this.blobToUrl(blob)));

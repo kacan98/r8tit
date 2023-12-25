@@ -7,6 +7,7 @@ import {
   SupermarketForUpsert,
 } from './supermarkets.model';
 import { ImageService } from '../image/image.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +24,7 @@ export class SupermarketService {
     return this.somethingChanged$.pipe(
       switchMap(() => {
         return this.http.get<SupermarketComplete[]>(
-          'http://localhost:5204/api/Supermarket/GetAllList',
+          `${environment.apiUrl}/api/Supermarket/GetAllList`,
         );
       }),
 
@@ -47,7 +48,7 @@ export class SupermarketService {
     supermarketId: number,
   ): Observable<SupermarketComplete> {
     return this.http.get<SupermarketComplete>(
-      `http://localhost:5204/api/Supermarket/GetById/${supermarketId}`,
+      `${environment.apiUrl}/api/Supermarket/GetById/${supermarketId}`,
     );
   }
 
@@ -56,7 +57,7 @@ export class SupermarketService {
   ): Observable<SupermarketCreatedResponse> {
     return this.http
       .put<SupermarketCreatedResponse>(
-        'http://localhost:5204/api/Supermarket/Upsert',
+        `${environment.apiUrl}/api/Supermarket/Upsert`,
         supermarket,
       )
       .pipe(map((result) => result));
@@ -66,7 +67,7 @@ export class SupermarketService {
     const formData = new FormData();
     formData.append('file', file, file.name);
 
-    return this.http.post('http://localhost:5204/api/Image/upload', formData, {
+    return this.http.post(`${environment.apiUrl}/api/Image/upload`, formData, {
       params: {
         relatedObjectId: supermarket.supermarketId,
         relatedObjectTable: 'Supermarkets',

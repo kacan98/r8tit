@@ -13,6 +13,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { UrlTree } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { environment } from '../../environments/environment';
 
 interface CurrentAuth {
   token: string;
@@ -60,7 +61,7 @@ export class AuthService {
     if (localStorage.getItem('token') === null) return EMPTY;
     return this.httpClient
       .put<{ token: string; userId: string }>(
-        'http://localhost:5204/api/Auth/refreshToken',
+        `${environment.apiUrl}/api/Auth/refreshToken`,
         {},
       )
       .pipe(
@@ -90,7 +91,7 @@ export class AuthService {
   logIn(email: string, password: string) {
     return this.httpClient
       .post<{ token: string; userId: number }>(
-        'http://localhost:5204/api/Auth/login',
+        `${environment.apiUrl}/api/Auth/login`,
         {
           email,
           password,
@@ -113,7 +114,7 @@ export class AuthService {
     passwordConfirm: string,
   ) {
     return this.httpClient.post<{ token: string; userId: number }>(
-      'http://localhost:5204/api/Auth/register',
+      `${environment.apiUrl}/api/Auth/register`,
       {
         username,
         email,

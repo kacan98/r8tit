@@ -6,6 +6,7 @@ import {
   RatingCategoriesForObjectType,
   RatingForUpsert,
 } from './rating.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +19,7 @@ export class RatingService {
     tableName: 'Supermarkets',
   ): Observable<RatingForObjectDTO[]> {
     return this.http.get<RatingForObjectDTO[]>(
-      `http://localhost:5204/api/Rating/ratingsForObject`,
+      `${environment.apiUrl}/api/Rating/ratingsForObject`,
       {
         params: {
           objectId: objectId,
@@ -32,7 +33,7 @@ export class RatingService {
     type: 'Supermarkets',
   ): Observable<RatingCategoriesForObjectType> {
     return this.http.get<RatingCategoriesForObjectType>(
-      `http://localhost:5204/api/Rating/categoriesForTable`,
+      `${environment.apiUrl}/api/Rating/categoriesForTable`,
       {
         params: {
           tableName: type,
@@ -45,7 +46,7 @@ export class RatingService {
     ratings: RatingForUpsert[],
   ): Observable<{ message: string; ratings: RatingForObjectDTO[] }> {
     return this.http.post<{ message: string; ratings: RatingForObjectDTO[] }>(
-      `http://localhost:5204/api/Rating/upsertRatings`,
+      `${environment.apiUrl}/api/Rating/upsertRatings`,
       ratings,
     );
   }

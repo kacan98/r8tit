@@ -4,6 +4,7 @@ import { User } from './user.model';
 import { BehaviorSubject, map, Observable, of, switchMap, tap } from 'rxjs';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ImageService } from '../image/image.service';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,7 @@ export class UserService {
   getCurrentUser(): Observable<User> {
     if (this.currentUser$.getValue() === undefined) {
       return this.http
-        .get<User>('http://localhost:5204/api/User/currentUser')
+        .get<User>(`${environment.apiUrl}/api/User/currentUser`)
         .pipe(
           tap((user) => {
             this.currentUser$.next(user);
@@ -53,7 +54,7 @@ export class UserService {
 
     return this.getCurrentUser().pipe(
       switchMap((user) =>
-        this.http.post('http://localhost:5204/api/Image/upload', formData, {
+        this.http.post(`${environment.apiUrl}/api/Image/upload`, formData, {
           params: {
             relatedObjectId: user.userId,
             relatedObjectTable: 'Users',

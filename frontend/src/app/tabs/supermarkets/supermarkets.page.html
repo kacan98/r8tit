@@ -1,5 +1,5 @@
-<ion-content *ngIf="supermarkets; else errorMessage">
-  <ion-refresher slot="fixed" (ionRefresh)="refreshSupermarkets()" >
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="refreshSupermarkets()">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
   <ion-list class="ion-margin-horizontal">
@@ -11,12 +11,14 @@
       size="medium"
       >+ Add Supermarket</ion-button
     >
-    <ng-container *ngIf="supermarkets else skeletonSupermarkets">
-      <app-supermarket-card
-        *ngFor="let supermarket of supermarkets"
-        [supermarket]="supermarket"
-        (click)="handleSupermarketClick(supermarket)"
-      ></app-supermarket-card>
+    <ng-container *ngIf="!error">
+      <ng-container *ngIf="supermarkets else skeletonSupermarkets">
+        <app-supermarket-card
+          *ngFor="let supermarket of supermarkets"
+          [supermarket]="supermarket"
+          (click)="handleSupermarketClick(supermarket)"
+        ></app-supermarket-card>
+      </ng-container>
     </ng-container>
   </ion-list>
   <ng-template #skeletonSupermarkets>
@@ -24,8 +26,5 @@
       *ngFor="let i of [1,2,3,4,5,6,7,8,9,10]"
     ></app-supermarket-card>
   </ng-template>
-</ion-content>
-
-<ng-template #errorMessage>
   <app-error-message [message]="error"></app-error-message>
-</ng-template>
+</ion-content>

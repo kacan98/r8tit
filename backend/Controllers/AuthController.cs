@@ -64,7 +64,7 @@ namespace R8titAPI.Controllers
             DynamicParameters sqlParameters = new();
             sqlParameters.Add("@EmailParam", userForRegistration.Email, DbType.String);
 
-            IEnumerable<string> existingUsers = _dapper.LoadData<string>(sqlCheckUserExists);
+            IEnumerable<string> existingUsers = _dapper.LoadData<string>(sqlCheckUserExists, sqlParameters);
             if (existingUsers.Count() != 0)
             {
                 return BadRequest("User with this email already exists!");
@@ -73,7 +73,7 @@ namespace R8titAPI.Controllers
             //Check if there is a User with the same username
             string sqlCheckUsernameExists = "SELECT Username FROM R8titSchema.Users WHERE Username = @UsernameParam";
             sqlParameters.Add("@UsernameParam", userForRegistration.Username, DbType.String);
-            IEnumerable<string> existingUsernames = _dapper.LoadData<string>(sqlCheckUsernameExists);
+            IEnumerable<string> existingUsernames = _dapper.LoadData<string>(sqlCheckUsernameExists, sqlParameters);
             if (existingUsernames.Count() != 0)
             {
                 return BadRequest("User with this username already exists!");

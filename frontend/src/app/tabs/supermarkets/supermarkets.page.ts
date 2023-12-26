@@ -20,7 +20,6 @@ export class SupermarketsPage implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   error?: ErrorMessage;
-
   constructor(
     private supermarketService: SupermarketService,
     private navController: NavController,
@@ -73,6 +72,12 @@ export class SupermarketsPage implements OnInit, OnDestroy {
         next: async (supermarkets) => {
           await this.refresher?.complete();
           this.supermarkets = supermarkets;
+          if (this.supermarkets.length === 0) {
+            this.error = {
+              header: 'No supermarkets found',
+              text: 'You can add a supermarket by clicking the button above',
+            };
+          }
         },
         error: async (error) => {
           this.error = {

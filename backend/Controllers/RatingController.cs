@@ -109,10 +109,7 @@ namespace R8titAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new ObjectResult(new { message = "Failed to upsert rating: " + ex.Message })
-                {
-                    StatusCode = 500
-                };
+                return StatusCode(500, "Failed to upsert rating: " + ex.Message);
             }
         }
 
@@ -148,10 +145,7 @@ namespace R8titAPI.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return new ObjectResult(new { message = "Failed to upsert rating: " + ex.Message })
-                    {
-                        StatusCode = 500
-                    };
+                    return StatusCode(500, "Failed to upsert rating: " + ex.Message);
                 }
             }
 
@@ -226,10 +220,7 @@ namespace R8titAPI.Controllers
             //check if object exists
             if (_dapper.DoesObjectExist(tableName, objectId) == false)
             {
-                return new ObjectResult(new { message = "Invalid objectId" })
-                {
-                    StatusCode = 400
-                };
+                return StatusCode(400, "Invalid objectId");
             }
 
             return null;
@@ -240,10 +231,7 @@ namespace R8titAPI.Controllers
             // Check if relatedObjectTable exists
             if (_dapper.DoesTableExist(tableName) == false)
             {
-                return new ObjectResult(new { message = "Invalid relatedObjectTable" })
-                {
-                    StatusCode = 400
-                };
+                return StatusCode(400, "Invalid relatedObjectTable");
             }
 
             return null;

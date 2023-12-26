@@ -8,7 +8,12 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
 
+@media (max-width: 768px) {
+  .logOrRegOpen.container {
+    top: -20vh;
+  }
 }
 
 .cursor{
@@ -17,4 +22,8 @@
 
 .demo-by-karel{
   font-size: 12px;
+}
+
+.forms{
+  padding-top: 10px
 }

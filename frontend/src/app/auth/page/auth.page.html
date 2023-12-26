@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-  <div class="container" (click)="logOrRegOpen = true">
+  <div class="container" [class.logOrRegOpen]="logOrRegOpen" (click)="logOrRegOpen = true">
     <h1 [class.cursor]="!logOrRegOpen"><ion-icon name="storefront"></ion-icon> R8tit</h1>
     <ng-container *ngIf="!logOrRegOpen">
       <div class="cursor">

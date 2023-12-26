@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { from, Observable, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Geolocation } from '@capacitor/geolocation';
+import { Geolocation, PermissionStatus } from '@capacitor/geolocation';
 import { environment } from '../../../../environments/environment';
 
 export interface LocationData {
@@ -33,7 +33,23 @@ export class LocationService {
   constructor(private http: HttpClient) {}
 
   getLocationDetails(): Observable<LocationData> {
-    return from(Geolocation.getCurrentPosition()).pipe(
+    const permissionExist = from(Geolocation.checkPermissions());
+    return permissionExist.pipe(
+      switchMap((permission: PermissionStatus) => {
+        if (permission.location === 'granted') {
+          return Geolocation.getCurrentPosition();
+        } else {
+          return from(Geolocation.requestPermissions()).pipe(
+            switchMap((permission: PermissionStatus) => {
+              if (permission.location === 'granted') {
+                return Geolocation.getCurrentPosition();
+              } else {
+                throw new Error('Permission denied');
+              }
+            }),
+          );
+        }
+      }),
       switchMap((position) => {
         return this.http.get<LocationData>(
           `${environment.apiUrl}/api/Location/GetLocationDetails?longitude=${position.coords.longitude}&latitude=${position.coords.latitude}`,

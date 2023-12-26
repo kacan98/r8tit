@@ -60,13 +60,23 @@ namespace R8titAPI.Controllers
                 };
             }
 
-            string sqlCheckUserExists = "SELECT Email FROM R8titSchema.Auth WHERE Email = '" +
-                userForRegistration.Email + "'";
+            string sqlCheckUserExists = "SELECT Email FROM R8titSchema.Auth WHERE Email = @EmailParam";
+            DynamicParameters sqlParameters = new();
+            sqlParameters.Add("@EmailParam", userForRegistration.Email, DbType.String);
 
             IEnumerable<string> existingUsers = _dapper.LoadData<string>(sqlCheckUserExists);
             if (existingUsers.Count() != 0)
             {
                 return BadRequest("User with this email already exists!");
+            }
+
+            //Check if there is a User with the same username
+            string sqlCheckUsernameExists = "SELECT Username FROM R8titSchema.Users WHERE Username = @UsernameParam";
+            sqlParameters.Add("@UsernameParam", userForRegistration.Username, DbType.String);
+            IEnumerable<string> existingUsernames = _dapper.LoadData<string>(sqlCheckUsernameExists);
+            if (existingUsernames.Count() != 0)
+            {
+                return BadRequest("User with this username already exists!");
             }
 
             UserForLoginDto userForSetPassword = new UserForLoginDto()
@@ -110,10 +120,7 @@ namespace R8titAPI.Controllers
                 {
                     if (passwordHash[index] != userForConfirmation.PasswordHash[index])
                     {
-                        return new ObjectResult(new { message = "Password is wrong!" })
-                        {
-                            StatusCode = 401
-                        };
+                        return StatusCode(401, "Password is wrong!");
                     }
                 }
 
@@ -134,21 +141,29 @@ namespace R8titAPI.Controllers
             {
                 return Ok();
             }
-            throw new Exception("Failed to update password!");
+            return StatusCode(500, "Failed to update password!");
         }
 
         [HttpPut("refreshToken")]
         public IActionResult RefreshToken()
         {
-            var userId = User.FindFirst("userId");
-            if (userId == null)
+            try
             {
-                return Unauthorized();
-            }
+                var userId = User.FindFirst("userId");
+                if (userId == null)
+                {
+                    return Unauthorized();
+                }
 
-            DateTime dateOfExpiration = DateTime.Now.AddDays(1);
-            string token = _authHelper.CreateToken(int.Parse(userId.Value), dateOfExpiration);
-            return Ok(new { userId = userId.Value, token, dateOfExpiration });
+                DateTime dateOfExpiration = DateTime.Now.AddDays(1);
+                string token = _authHelper.CreateToken(int.Parse(userId.Value), dateOfExpiration);
+                return Ok(new { userId = userId.Value, token, dateOfExpiration });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

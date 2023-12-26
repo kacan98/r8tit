@@ -120,9 +120,10 @@ export class RegisterComponent implements OnDestroy {
 
             this.toastController
               .create({
-                message: 'Registration successful',
+                message: 'Registration successful! Please log in:',
                 duration: 3000,
                 color: 'success',
+                position: 'top',
               })
               .then((toast) => {
                 toast.present();
@@ -140,7 +141,7 @@ export class RegisterComponent implements OnDestroy {
             } else {
               this.error = {
                 header: 'Error',
-                text: error.message,
+                text: error.error || error.message,
               };
             }
           },

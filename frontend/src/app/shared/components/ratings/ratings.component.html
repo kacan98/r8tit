@@ -28,7 +28,7 @@
             userRatingsMapping[id].ratings[0].username | titlecase
           }}</ion-label>
           <app-stars
-            [color]="id === currentUserId ? 'black' : 'white'"
+            [class.current-user-stars]="id === currentUserId"
             [initialNrStars]="userRatingsMapping[id].average"
           ></app-stars>
         </div>

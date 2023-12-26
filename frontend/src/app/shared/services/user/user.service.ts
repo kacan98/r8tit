@@ -21,16 +21,19 @@ export class UserService {
   ) {}
 
   getCurrentUser(): Observable<User> {
-    if (this.currentUser$.getValue() === undefined) {
-      return this.http
-        .get<User>(`${environment.apiUrl}/api/User/currentUser`)
-        .pipe(
-          tap((user) => {
-            this.currentUser$.next(user);
-          }),
-        );
-    }
-    return of(this.currentUser$.getValue()) as Observable<User>;
+    return this.currentUser$.pipe(
+      switchMap((currentUser) => {
+        if (currentUser === undefined) {
+          return this.http
+            .get<User>(`${environment.apiUrl}/api/User/currentUser`)
+            .pipe(
+              tap((user) => {
+                this.currentUser$.next(user);
+              }),
+            );
+        } else return of(this.currentUser$.getValue()) as Observable<User>;
+      }),
+    );
   }
 
   getCurrentUserImage(): Observable<SafeUrl> {

@@ -67,7 +67,7 @@ export class SupermarketCreateComponent implements OnInit, OnDestroy {
         error: (e) => {
           this.toastController
             .create({
-              message: `Something went wrong: ${e.error.message}`,
+              message: `Something went wrong: ${e.error || e.error.message}`,
               duration: 3000,
             })
             .then((toast) => toast.present());

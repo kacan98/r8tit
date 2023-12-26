@@ -14,6 +14,7 @@ import { HttpClient } from '@angular/common/http';
 import { UrlTree } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { environment } from '../../environments/environment';
+import { UserService } from '../shared/services/user/user.service';
 
 interface CurrentAuth {
   token: string;
@@ -29,6 +30,7 @@ export class AuthService {
   constructor(
     private httpClient: HttpClient,
     private navController: NavController,
+    private userService: UserService,
   ) {
     this.currentAuth$ = this.initCurrentUser();
   }
@@ -103,6 +105,7 @@ export class AuthService {
           localStorage.setItem('token', token);
           localStorage.setItem('userId', userId.toString());
           this.currentAuth$.next({ token, userId });
+          this.userService.currentUser$.next(undefined);
         }),
       );
   }
@@ -130,6 +133,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     void this.navController.navigateRoot('/auth');
+    this.currentAuth$.next(undefined);
   }
 
   private initCurrentUser(): BehaviorSubject<CurrentAuth | undefined> {

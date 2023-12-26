@@ -110,7 +110,7 @@ public class SupermarketController : ControllerBase
             return BadRequest(ex.Message);
         }
 
-        throw new Exception("failed to upsert supermarket!");
+        throw new Exception("Failed to upsert supermarket!");
     }
 
     [HttpDelete("{supermarketId}")]

@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         next: () => {
           loading.dismiss();
           localStorage.setItem('latestEmailLogin', email);
-          void this.navController.navigateForward('/tabs');
+          void this.navController.navigateRoot('/tabs');
         },
         error: (error) => {
           loading.dismiss();

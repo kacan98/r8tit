@@ -32,6 +32,8 @@ export class StarsComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.initialNrStars = this.control?.value || this.initialNrStars;
+
+    //get current prefered color
   }
 
   ngOnChanges(changes: SimpleChanges) {

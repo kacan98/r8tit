@@ -7,6 +7,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
+    "build:prod:deploy": "npm run build:prod && cd www && az webapp up --name R8tit --html",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"

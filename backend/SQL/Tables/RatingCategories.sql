@@ -9,3 +9,7 @@ CREATE TABLE R8titSchema.RatingCategories(
     CategoryUpdated DATETIME,
     RelatedObjectTable NVARCHAR(50) NOT NULL,
 )
+
+-- add one overall feel category
+INSERT INTO R8titSchema.RatingCategories(CreatedByUserId, CategoryName, Global, CategoryCreated, RelatedObjectTable)
+VALUES(1, 'Overall Feel', 1, GETDATE(), 'Supermarkets')

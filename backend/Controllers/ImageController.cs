@@ -179,6 +179,11 @@ namespace R8titAPI.Controllers
                     return NotFound("User not found");
                 }
 
+                if (user.ImageId == null)
+                {
+                    return NotFound("User has no image");
+                }
+
                 // get images by imageId on user
                 string sqlToGetImages = @"SELECT * FROM R8titSchema.Images WHERE ImageId = @ImageIdParam";
                 DynamicParameters parametersToGetImages = new DynamicParameters();

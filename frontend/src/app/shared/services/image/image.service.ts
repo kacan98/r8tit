@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { WebcamImage } from 'ngx-webcam';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { environment } from '../../../../environments/environment';
@@ -16,7 +16,7 @@ export class ImageService {
 
   getImage(
     imageId: number | null,
-    fallbackImage = 'https://ionicframework.com/docs/img/demos/thumbnail.svg',
+    fallbackImage = 'assets/placeholders/thumbnail.svg',
   ): Observable<SafeUrl> {
     return imageId === null
       ? of(fallbackImage)
@@ -63,6 +63,9 @@ export class ImageService {
       .get(`${environment.apiUrl}/api/Image/byUserId/${userId}`, {
         responseType: 'blob',
       })
-      .pipe(map((blob) => this.blobToUrl(blob)));
+      .pipe(
+        map((blob) => this.blobToUrl(blob)),
+        catchError(() => of('/assets/placeholders/thumbnail.svg')),
+      );
   }
 }

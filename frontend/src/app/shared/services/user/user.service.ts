@@ -38,10 +38,7 @@ export class UserService {
       switchMap(() => {
         return this.getCurrentUser().pipe(
           switchMap((user) => {
-            return this.imageService.getImage(
-              user.imageId,
-              'https://ionicframework.com/docs/img/demos/thumbnail.svg',
-            );
+            return this.imageService.getImage(user.imageId);
           }),
         );
       }),

@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build": "ng build",
     "build:prod": "ng build --configuration production",
-    "build:prod:deploy": "npm run build:prod && cd www && az webapp up --name R8tit --html",
+    "deploy": "npm run build:prod && cd www && az webapp up --name R8tit --html",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
@@ -22,6 +22,7 @@
     "@angular/platform-browser": "16.0.0",
     "@angular/platform-browser-dynamic": "16.0.0",
     "@angular/router": "16.0.0",
+    "@angular/service-worker": "16.0.0",
     "@capacitor/app": "5.0.6",
     "@capacitor/core": "5.5.1",
     "@capacitor/geolocation": "^5.0.6",

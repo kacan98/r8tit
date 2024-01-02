@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SupermarketComplete } from '../../../shared/services/supermarket/supermarkets.model';
+import { SupermarketListDTO } from '../../../shared/services/supermarket/supermarkets.model';
 
 @Component({
   selector: 'app-supermarket-card',
@@ -7,7 +7,7 @@ import { SupermarketComplete } from '../../../shared/services/supermarket/superm
   styleUrls: ['./supermarket-card.component.scss'],
 })
 export class SupermarketCardComponent implements OnInit {
-  @Input() supermarket?: SupermarketComplete;
+  @Input() supermarket?: SupermarketListDTO;
   constructor() {}
 
   ngOnInit() {}

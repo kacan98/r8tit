@@ -1,5 +1,11 @@
 ::ng-deep{
-  ngx-stars div div span.star{
-    background-color: var(--ion-color-primary) !important;
+  ngx-stars {
+    div div span.star{
+      background-color: var(--ion-color-primary) !important;
+    }
   }
 }
+ngx-stars{
+  display: inline-block;
+}
+

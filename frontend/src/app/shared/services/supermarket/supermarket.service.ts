@@ -5,6 +5,7 @@ import {
   SupermarketComplete,
   SupermarketCreatedResponse,
   SupermarketForUpsert,
+  SupermarketListDTO,
 } from './supermarkets.model';
 import { ImageService } from '../image/image.service';
 import { environment } from '../../../../environments/environment';
@@ -20,10 +21,10 @@ export class SupermarketService {
     private imageService: ImageService,
   ) {}
 
-  getAllSupermarkets(): Observable<SupermarketComplete[]> {
+  getAllSupermarkets(): Observable<SupermarketListDTO[]> {
     return this.somethingChanged$.pipe(
       switchMap(() => {
-        return this.http.get<SupermarketComplete[]>(
+        return this.http.get<SupermarketListDTO[]>(
           `${environment.apiUrl}/api/Supermarket/GetAllList`,
         );
       }),

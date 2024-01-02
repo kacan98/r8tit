@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SupermarketService } from '../../shared/services/supermarket/supermarket.service';
 import { Subscription } from 'rxjs';
-import { SupermarketComplete } from '../../shared/services/supermarket/supermarkets.model';
+import { SupermarketListDTO } from '../../shared/services/supermarket/supermarkets.model';
 import { IonRefresher, ModalController, NavController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import { SupermarketCreateComponent } from './supermarket-create/supermarket-create.component';
@@ -16,7 +16,7 @@ export class SupermarketsPage implements OnInit, OnDestroy {
   @ViewChild(IonRefresher, { static: false })
   refresher?: IonRefresher;
 
-  supermarkets?: SupermarketComplete[];
+  supermarkets?: SupermarketListDTO[];
   private subscriptions: Subscription[] = [];
 
   error?: ErrorMessage;
@@ -54,7 +54,7 @@ export class SupermarketsPage implements OnInit, OnDestroy {
     }
   }
 
-  async handleSupermarketClick(supermarket: SupermarketComplete) {
+  async handleSupermarketClick(supermarket: SupermarketListDTO) {
     await this.navController.navigateForward(
       ['details', supermarket.supermarketId],
       { relativeTo: this.route },

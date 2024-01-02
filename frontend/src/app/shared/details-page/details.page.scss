@@ -12,6 +12,7 @@ ion-back-button {
   background-color: rgba(0,0,0,0.3);
   border-radius: 9999px;
   padding: 6px 8px 6px 6px;
+  color: white;
 }
 
 .container {
@@ -22,6 +23,12 @@ ion-back-button {
     .place-icon {
       padding-right: 4px;
     }
+  }
+
+  .date-created{
+    padding-top:11px;
+    font-size: 0.8rem;
+    color: var(--ion-color-medium);
   }
 }
 

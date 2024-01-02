@@ -61,6 +61,7 @@ export class DetailsPage implements OnInit, OnDestroy {
   image$?: Observable<SafeUrl | undefined>;
   place?: string;
   averageRating?: number | null;
+  dateCreated?: string;
   detailEntity?: DetailEntity;
 
   editImageButtonsDisplayed = false;
@@ -210,6 +211,7 @@ export class DetailsPage implements OnInit, OnDestroy {
             this.image$ = this.imageService.getImage(supermarket.imageId);
             this.title = supermarket.name;
             this.place = `${supermarket.city}, ${supermarket.country}`;
+            this.dateCreated = supermarket.dateCreated;
             this.detailEntity = supermarket;
 
             this.refresher?.complete();

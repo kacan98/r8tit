@@ -4,8 +4,8 @@ import { RatingForObjectDTO } from '../rating/rating.model';
 
 export interface SupermarketComplete extends SupermarketForUpsert {
   supermarketCreatedByUserName: string;
-  supermarketCreatedDate: string;
-  supermarketUpdatedDate: string;
+  dateCreated: string;
+  dateUpdated: string;
   supermarketId: number;
   active: boolean;
   imageId: number | null;
@@ -13,6 +13,23 @@ export interface SupermarketComplete extends SupermarketForUpsert {
 
   imageURL$?: Observable<SafeUrl | undefined>;
   ratings: RatingForObjectDTO[];
+}
+
+export interface SupermarketListDTO {
+  imageId: number;
+  supermarketCreatedDate: string;
+  supermarketUpdatedDate: string;
+  supermarketId: number;
+  supermarketCreatedByUserName: string;
+  name: string;
+  city: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  active: boolean;
+  averageRating: number;
+
+  imageURL$?: Observable<SafeUrl | undefined>;
 }
 
 export interface SupermarketForUpsert {

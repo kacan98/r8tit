@@ -43,6 +43,9 @@
           *ngIf="averageRating !== null && averageRating !== undefined; else noRatings"
           [initialNrStars]="averageRating"
         ></app-stars>
+        <div class="date-created">
+          Created: {{ dateCreated | date: "dd/MM/yyyy" }}
+        </div>
         <ng-template #noRatings>
           <div class="no-ratings">No ratings yet</div>
         </ng-template>

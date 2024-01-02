@@ -4,8 +4,9 @@
       <ion-item color="primary" lines="none" *ngIf="currentUser$ | async as currentUser; else userSkeleton" (click)="updateUserImage()">
         <ion-thumbnail slot="start">
           <img
+            *ngIf="currentUserImage$ | async as currentUserImage; else imagePlaceholder"
             alt="User profile picture"
-            [src]="currentUserImage$ | async"
+            [src]="currentUserImage"
           />
         </ion-thumbnail>
         <ion-label>{{currentUser.username}}</ion-label>
@@ -30,8 +31,12 @@
 
 <ng-template #userSkeleton>
   <ion-skeleton-text
-    animated
+    animated="true"
     style="width: 100%; height: 100px"
     [style]="{ 'margin-bottom': '10px' }"
   ></ion-skeleton-text>
+</ng-template>
+
+<ng-template #imagePlaceholder>
+  <ion-img src="assets/placeholders/avatar.svg"></ion-img>
 </ng-template>

@@ -31,10 +31,7 @@ export class SupermarketService {
       map((supermarkets) => {
         return supermarkets.map((supermarket) => ({
           ...supermarket,
-          imageURL$: this.imageService.getImage(
-            supermarket.imageId,
-            'assets/placeholders/placeholder-image-dark.jpg',
-          ),
+          imageURL$: this.imageService.getImage(supermarket.imageId),
         }));
       }),
     );

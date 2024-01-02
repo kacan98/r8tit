@@ -35,6 +35,6 @@ export interface RatingCategoriesForObjectType {
 
 export interface RatingSummary {
   ratings: RatingForObjectDTO[];
-  pictureUrl$: Observable<SafeUrl>;
+  pictureUrl$: Observable<SafeUrl | undefined>;
   average: number;
 }

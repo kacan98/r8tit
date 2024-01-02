@@ -58,7 +58,7 @@ export class DetailsPage implements OnInit, OnDestroy {
 
   supermarketId?: number;
   title?: string;
-  image$?: Observable<SafeUrl>;
+  image$?: Observable<SafeUrl | undefined>;
   place?: string;
   averageRating?: number | null;
   detailEntity?: DetailEntity;
@@ -207,10 +207,7 @@ export class DetailsPage implements OnInit, OnDestroy {
         )
         .subscribe({
           next: (supermarket) => {
-            this.image$ = this.imageService.getImage(
-              supermarket.imageId,
-              'assets/placeholders/placeholder-image-dark.jpg',
-            );
+            this.image$ = this.imageService.getImage(supermarket.imageId);
             this.title = supermarket.name;
             this.place = `${supermarket.city}, ${supermarket.country}`;
             this.detailEntity = supermarket;

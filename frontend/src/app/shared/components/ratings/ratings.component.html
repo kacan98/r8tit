@@ -14,13 +14,13 @@
         editRatingClicked.emit(userRatingsMapping[currentUserId])
     "
   >
-    <ion-card-content *ngIf="userRatingsMapping[id].pictureUrl$ | async as pictureUrl">
+    <ion-card-content>
       <ion-item [color]="id === currentUserId ? 'primary' : ''" lines="none">
         <ion-thumbnail
           slot="start"
-
+          *ngIf="userRatingsMapping[id].pictureUrl$ | async as pictureUrl; else imagePlaceholder">
         >
-          <img alt="Silhouette of mountains" [src]="pictureUrl" />
+          <img alt="User image" [src]="pictureUrl" />
           <div>{{ pictureUrl }}</div>
         </ion-thumbnail>
         <div>
@@ -45,3 +45,9 @@
     <!--TODO-->
   </ng-template>
 </ng-container>
+
+<ng-template #imagePlaceholder>
+  <ion-thumbnail slot="start">
+    <ion-img alt="No user image" src="assets/placeholders/avatar.svg"></ion-img>
+  </ion-thumbnail>
+</ng-template>

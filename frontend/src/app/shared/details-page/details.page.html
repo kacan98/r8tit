@@ -4,12 +4,13 @@
       <ion-refresher-content></ion-refresher-content>
     </ion-refresher>
     <ion-back-button defaultHref="/tabs/supermarkets"></ion-back-button>
-    <ng-container *ngIf="image$| async as image; else imageSkeleton">
-      <img
-        (click)="editImageButtonsDisplayed = !editImageButtonsDisplayed"
-        alt="supermarket-image"
-        [src]="image"
-      />
+    <ng-container *ngIf="image$ !== undefined ; else imageSkeleton">
+      <span (click)="editImageButtonsDisplayed = !editImageButtonsDisplayed">
+        <img
+          *ngIf="image$| async as image; else imagePlaceholder"
+          alt="supermarket-image"
+          [src]="image"
+      /></span>
       <ion-buttons
         class="image-actions ion-padding"
         *ngIf="detailEntity && editImageButtonsDisplayed"
@@ -81,7 +82,15 @@
 <ng-template #imageSkeleton>
   <ion-skeleton-text
     class="image-skeleton"
-    animated
+    animated="true"
     style="width: 100%; height: 200px"
   ></ion-skeleton-text
 ></ng-template>
+
+<ng-template #imagePlaceholder>
+  <ion-img
+    class="image-placeholder"
+    src="assets/placeholders/placeholder-image-dark.jpg"
+    alt="placeholder"
+  ></ion-img>
+</ng-template>

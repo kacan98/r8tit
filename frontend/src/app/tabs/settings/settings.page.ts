@@ -21,7 +21,7 @@ import { TakePhotoComponent } from '../../shared/components/take-photo/take-phot
 export class SettingsPage implements OnDestroy {
   @ViewChild('fileInput') fileInput?: ElementRef;
   currentUser$: Observable<User>;
-  currentUserImage$: Observable<SafeUrl>;
+  currentUserImage$: Observable<SafeUrl | undefined>;
 
   private subscriptions: Subscription[] = [];
 

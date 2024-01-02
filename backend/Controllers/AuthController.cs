@@ -124,7 +124,7 @@ namespace R8titAPI.Controllers
                     }
                 }
 
-                DateTime dateOfExpiration = DateTime.Now.AddDays(1);
+                DateTime dateOfExpiration = DateTime.Now.AddMonths(1);
                 string token = _authHelper.CreateToken(userForConfirmation.UserId, dateOfExpiration);
                 return Ok(new { token, userId = userForConfirmation.UserId, dateOfExpiration });
             }
@@ -155,7 +155,7 @@ namespace R8titAPI.Controllers
                     return Unauthorized();
                 }
 
-                DateTime dateOfExpiration = DateTime.Now.AddDays(1);
+                DateTime dateOfExpiration = DateTime.Now.AddMonths(1);
                 string token = _authHelper.CreateToken(int.Parse(userId.Value), dateOfExpiration);
                 return Ok(new { userId = userId.Value, token, dateOfExpiration });
 

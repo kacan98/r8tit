@@ -14,12 +14,9 @@ export class ImageService {
     private readonly sanitizer: DomSanitizer,
   ) {}
 
-  getImage(
-    imageId: number | null,
-    fallbackImage = 'assets/placeholders/thumbnail.svg',
-  ): Observable<SafeUrl> {
+  getImage(imageId: number | null): Observable<SafeUrl | undefined> {
     return imageId === null
-      ? of(fallbackImage)
+      ? of(undefined)
       : this.getImageFromDatabase(imageId).pipe(
           map((blob) => this.blobToUrl(blob)),
         );
@@ -58,14 +55,14 @@ export class ImageService {
     });
   }
 
-  getImageUrlForUser(userId: number): Observable<SafeUrl> {
+  getImageUrlForUser(userId: number): Observable<SafeUrl | undefined> {
     return this.http
       .get(`${environment.apiUrl}/api/Image/byUserId/${userId}`, {
         responseType: 'blob',
       })
       .pipe(
         map((blob) => this.blobToUrl(blob)),
-        catchError(() => of('/assets/placeholders/thumbnail.svg')),
+        catchError(() => of(undefined)),
       );
   }
 }

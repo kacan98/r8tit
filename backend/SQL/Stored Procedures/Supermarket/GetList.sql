@@ -44,6 +44,6 @@ AS
         [Supermarkets].[DateUpdated],
         [Users].[Username],
         [Images].[ImageId]
-        Order By AverageRating DESC
+        Order By Supermarkets.DateCreated DESC
     END
 GO

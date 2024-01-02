@@ -11,7 +11,7 @@ export interface SupermarketComplete extends SupermarketForUpsert {
   imageId: number | null;
   averageRating: number | null;
 
-  imageURL$?: Observable<SafeUrl>;
+  imageURL$?: Observable<SafeUrl | undefined>;
   ratings: RatingForObjectDTO[];
 }
 

@@ -12,6 +12,7 @@ import {
 } from '@ionic/angular';
 import { WebcamImage } from 'ngx-webcam';
 import { TakePhotoComponent } from '../../shared/components/take-photo/take-photo.component';
+import { AboutComponent } from './about/about.component';
 
 @Component({
   selector: 'app-settings',
@@ -115,5 +116,13 @@ export class SettingsPage implements OnDestroy {
         duration: 2000,
       })
       .then((toast) => toast.present());
+  }
+
+  openAbout() {
+    this.modalController
+      .create({
+        component: AboutComponent,
+      })
+      .then((modal) => modal.present());
   }
 }

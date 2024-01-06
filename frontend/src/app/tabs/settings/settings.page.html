@@ -16,6 +16,17 @@
       </ion-item>
     </ion-card-content>
   </ion-card>
+  <ion-card class="ion-no-margin ion-margin-vertical cursor" (click)="openAbout()">
+    <ion-card-content>
+      <!--      item about why this app exists-->
+      <ion-item>
+        <ion-label>Why this app exists</ion-label>
+        <ion-button fill="outline" slot="end">
+          <ion-icon name="information-circle-outline"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
   <ion-button (click)="signOut()" fill="outline" expand="block"
     >Sign out</ion-button
   >

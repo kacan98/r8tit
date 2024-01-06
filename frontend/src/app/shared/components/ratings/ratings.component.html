@@ -19,7 +19,6 @@
         <ion-thumbnail
           slot="start"
           *ngIf="userRatingsMapping[id].pictureUrl$ | async as pictureUrl; else imagePlaceholder">
-        >
           <img alt="User image" [src]="pictureUrl" />
           <div>{{ pictureUrl }}</div>
         </ion-thumbnail>

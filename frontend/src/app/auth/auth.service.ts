@@ -9,6 +9,8 @@ import {
   of,
   switchMap,
   tap,
+  throwError,
+  timeout,
 } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { UrlTree } from '@angular/router';
@@ -90,9 +92,12 @@ export class AuthService {
       );
   }
 
-  logIn(email: string, password: string) {
+  logIn(email: string, password: string): Observable<CurrentAuth> {
+    let retriesCounter = 0;
+    const maxRetries = 30;
+
     return this.httpClient
-      .post<{ token: string; userId: number }>(
+      .post<CurrentAuth>(
         `${environment.apiUrl}/api/Auth/login`,
         {
           email,
@@ -101,6 +106,24 @@ export class AuthService {
         { headers: { skipToken: 'true' } },
       )
       .pipe(
+        timeout(5000), // Set a timeout of 5 seconds
+        catchError((error) => {
+          console.log(error);
+          console.log(retriesCounter, maxRetries);
+          // If a timeout occurs, or any other error, decide whether to retry
+          if (error.name === 'TimeoutError' && retriesCounter < maxRetries) {
+            retriesCounter++;
+            console.error(
+              `Attempt ${retriesCounter} to log in failed. Retrying...`,
+            );
+
+            return this.logIn(email, password);
+          } else if (retriesCounter >= maxRetries) {
+            // If max retries have been reached, rethrow the error
+            return throwError(() => new Error('Max retries reached, failing.'));
+          }
+          return throwError(() => error);
+        }),
         tap(({ token, userId }) => {
           localStorage.setItem('token', token);
           localStorage.setItem('userId', userId.toString());
@@ -116,7 +139,7 @@ export class AuthService {
     password: string,
     passwordConfirm: string,
   ) {
-    return this.httpClient.post<{ token: string; userId: number }>(
+    return this.httpClient.post<CurrentAuth>(
       `${environment.apiUrl}/api/Auth/register`,
       {
         username,

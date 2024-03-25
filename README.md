@@ -36,8 +36,9 @@ A link to the deployed application will be provided once it's available.
     - [✔] Viewing ratings
     - [✔] Adding ratings
     - [✔] Uplading a profile picture
+    - [✔] Deploy the app to Azure and add a link here
     - [ ] Add a map view of supermarkets.
-    - [ ] Deploy the app and add a link here, so that people can use it
+
 
 Maybe one day: [ ] create a copy of this repository for rating and gathering recipes
       - or generalize it, so that anything can be rated
